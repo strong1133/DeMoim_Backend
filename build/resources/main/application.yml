@@ -1,0 +1,36 @@
+# 서버 설정 -> 포트 8080, 인코딩 정보
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error: # 시큐리티에서 throw 한 Exception e 출력을 위함.
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    # 테스트용 H2 DB
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+#    # 배포용 My SQL
+#    url: jdbc:mysql://strong1133.cfzrnnoktpkb.ap-northeast-2.rds.amazonaws.com/strong1133
+#    username: strong1133
+#    password: tjrwls455
+
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+

@@ -37,10 +37,9 @@ public class User extends Timestamped {
     @Column(nullable = true)
     private String profileimage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
-
-    @JoinColumn
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Team> teams = new ArrayList<>();
+//    @JoinColumn
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    private List<Team> teams = new ArrayList<>();
 //
 //    @JoinColumn
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -49,7 +48,6 @@ public class User extends Timestamped {
 //    @JoinColumn
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 //    private List<SmallTalk> smallTalks = new ArrayList<>();
-
 
 
     // 회원가입 생성자

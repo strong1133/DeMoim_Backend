@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="caa4e67c-4a64-4bb0-ab43-0a2aa65447f2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries-with-intellij-classes.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/demoim.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/demoim.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/demoim.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/TeamRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/TeamRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,15 +37,32 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="show.run.dashboard.notification" value="false" />
   </component>
-  <component name="RunManager">
-    <configuration name="DemoimBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="DeMoim_Backend.main" />
+  <component name="RunManager" selected="Spring Boot.DemoimBackendApplication">
+    <configuration name="DemoimBackendApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demoim_backend.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.demoim_backend.demoim_backend.DemoimBackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DemoimBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demoim_backend.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.demoim_backend.demoim_backend.DemoimBackendApplication" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -49,6 +77,8 @@
       <option name="presentableId" value="Default" />
       <updated>1619709834660</updated>
       <workItem from="1619709837482" duration="49000" />
+      <workItem from="1619712139593" duration="108000" />
+      <workItem from="1619712357491" duration="327000" />
     </task>
     <servers />
   </component>
