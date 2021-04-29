@@ -11,6 +11,17 @@ server:
     include-message: always
     include-binding-errors: always
 
+cloud:
+  aws:
+    s3:
+      bucket: demoim-img
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
 spring:
   profiles:
     include:
@@ -36,13 +47,3 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
 
-cloud:
-  aws:
-    s3:
-      bucket: demoim-img
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      instanceProfile: true

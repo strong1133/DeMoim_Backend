@@ -11,7 +11,21 @@ server:
     include-message: always
     include-binding-errors: always
 
+cloud:
+  aws:
+    s3:
+      bucket: demoim-img
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
 spring:
+  profiles:
+    include:
+      - aws
   h2:
     console:
       enabled: true
@@ -26,7 +40,6 @@ spring:
 #    url: jdbc:mysql://strong1133.cfzrnnoktpkb.ap-northeast-2.rds.amazonaws.com/strong1133
 #    username: strong1133
 #    password: tjrwls455
-
 
   jpa:
     hibernate:
