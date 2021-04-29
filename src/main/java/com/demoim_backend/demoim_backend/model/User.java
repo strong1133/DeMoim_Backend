@@ -1,13 +1,13 @@
 package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
+import com.demoim_backend.demoim_backend.dto.UserUpdateProfileRequestDto;
+import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -35,7 +35,7 @@ public class User extends Timestamped {
     private String desc; // 자기소개
 
     @Column(nullable = true)
-    private String profileimage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
+    private String profileImage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
 //    @JoinColumn
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -56,7 +56,18 @@ public class User extends Timestamped {
         this.password = signupRequestDto.getPassword();
         this.nickname = signupRequestDto.getNickname();
         this.position = signupRequestDto.getPosition();
+        this.desc = "안녕하세요 " + signupRequestDto.getNickname() +"님";
     }
 
+    // 유저 정보 수정
+    public void update(UserUpdateProfileSaveDto userUpdateProfileSaveDto){
+        this.nickname = userUpdateProfileSaveDto.getNickname();
+        this.position = userUpdateProfileSaveDto.getPosition();
+        this.desc = userUpdateProfileSaveDto.getDesc();
+        this.profileImage = userUpdateProfileSaveDto.getProfileImage();
+    }
+    public void updateImg(String profileImage){
+        this.profileImage = profileImage;
+    }
 
 }

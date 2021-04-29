@@ -28,9 +28,10 @@ public class SignupService {
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
         }
         if (!duplicateChecker.duplicateChkUsername(username)) {
-            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+            map.put("msg", "false");
+            return map;
         }
-        map.put("msg", "사용 가능한 이메일 입니다.");
+        map.put("msg", "true");
         return map;
     }
 
@@ -38,9 +39,10 @@ public class SignupService {
     public Map<String, String> duplicateChkNickname(String nickname) {
         Map<String, String> map = new HashMap<>();
         if (!duplicateChecker.duplicateChkNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+            map.put("msg", "false");
+            return map;
         }
-        map.put("msg", "사용 가능한 닉네임 입니다.");
+        map.put("msg", "true");
         return map;
     }
 
@@ -50,6 +52,7 @@ public class SignupService {
         // username 유효성 검사
         String username = signupRequestDto.getUsername();
         String nickname = signupRequestDto.getNickname();
+
         if (!SignupValidator.usernameValid(username)){
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
         }
