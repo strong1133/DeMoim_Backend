@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "cloud.aws.s3",
+      "type": "com.demoim_backend.demoim_backend.s3.S3Component",
+      "sourceType": "com.demoim_backend.demoim_backend.s3.S3Component"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cloud.aws.s3.bucket",
+      "type": "java.lang.String",
+      "sourceType": "com.demoim_backend.demoim_backend.s3.S3Component"
+    }
+  ],
+  "hints": []
+}

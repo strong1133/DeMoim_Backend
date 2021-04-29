@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-@Builder
+//@Builder
 @NoArgsConstructor
 public class TeamRequestDto {
     private String title;

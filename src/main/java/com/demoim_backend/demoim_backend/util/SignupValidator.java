@@ -8,12 +8,12 @@ public class SignupValidator {
 
     //Username(Email)
     public static boolean usernameValid(String username) {
-        return Pattern.matches("^([\\w\\.\\_\\-])*[a-zA-Z0-9]+([\\w\\.\\_\\-])*([a-zA-Z0-9])+([\\w\\.\\_\\-])+@([a-zA-Z0-9]+\\.)+[a-zA-Z0-9]{2,8}$", username);
+        return Pattern.matches("^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$", username);
     }
 
     //PW
     public static boolean pwValid(String pw) {
-        return Pattern.matches("^[A-Za-z0-9]{4,20}$", pw);
+        return Pattern.matches("^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{4,20}$", pw);
     }
 
 
