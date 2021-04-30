@@ -38,17 +38,18 @@ public class User extends Timestamped {
     private String profileimage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
 
-    @JoinColumn
+//    @JoinColumn
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Team> teams = new ArrayList<>();
-//
-//    @JoinColumn
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "exhibitionUser",fetch = FetchType.LAZY)
 //    private List<Exhibition> exhibitions = new ArrayList<>();
-//
-//    @JoinColumn
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private List<SmallTalk> smallTalks = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "smallTalkUser", fetch = FetchType.LAZY)
+    private List<SmallTalk> smallTalks = new ArrayList<>();
+
 
 
 

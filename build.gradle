@@ -34,6 +34,11 @@ dependencies {
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.14.0'
     // Devtools
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    //valid
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
 }
 
 test {
