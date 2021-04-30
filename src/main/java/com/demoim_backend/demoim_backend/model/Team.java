@@ -1,32 +1,43 @@
 package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class Team extends Timestamped {
-
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-  
+
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String thumbnail;
 
-    @Column(nullable = false)
-    private LocalDateTime recruit;
+    //    @Column(nullable = false)
+//    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date recruit;
 
-    @Column(nullable = false)
-    private LocalDateTime begin;
+    //    @Column(nullable = false)
+//    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date begin;
 
-    @Column(nullable = false)
-    private LocalDateTime end;
+    //    @Column(nullable = false)
+//    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date end;
 
     @Column(nullable = false)
     private String location;

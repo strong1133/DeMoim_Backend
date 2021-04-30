@@ -1,4 +1,4 @@
-package com.demoim_backend.demoim_backend.dto;
+package com.demoim_backend.demoim_backend.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class TeamRequestDto {
     private String title;
-    //    private Date recruit;
+//    private Date recruit;
 //    private Date begin;
 //    private Date end;
     private Date recruit;
