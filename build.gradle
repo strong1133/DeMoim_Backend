@@ -38,6 +38,9 @@ dependencies {
     //valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    //S3
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
 
 }
 
