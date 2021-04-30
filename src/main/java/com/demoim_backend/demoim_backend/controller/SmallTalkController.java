@@ -31,7 +31,7 @@ public class SmallTalkController {
 
     //smalltalk List 조회
     @GetMapping("/api/smalltalk")
-    public List<SmallTalkResponseDto> getSmallTalkList(@RequestParam(name = "page_num") int page, @RequestParam(name = "size_num") int size){
+    public List<SmallTalkResponseDto> getSmallTalkList(@RequestParam int page, int size){
 //        System.out.println(page);
         return smallTalkService.getSmallTalkList(page, size);
     }
@@ -59,14 +59,14 @@ public class SmallTalkController {
         //삭제 성공 시
         if(result.equals("삭제 성공")){
             message = new HashMap<>();
-            message.put("Success",result);
+            message.put("msg",result);
             return new ResponseEntity<>(message, HttpStatus.OK);
 
         //삭제 실패 시
         }else{
             message = new HashMap<>();
-            message.put("Success", result);
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            message.put("msg", result);
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 
         }
     }
