@@ -141,10 +141,18 @@ public class SmallTalkService {
     }
 
     // 로그인된 유저의 스몰토크 조회
-    public List<SmallTalk> findMySmallTalk(Authentication authentication){
+    public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication){
         User user = this.getUser(authentication);
         Long userId = user.getId();
+
         List<SmallTalk> smallTalk = smallTalkRepository.findAllBySmallTalkUserId(userId);
-        return smallTalk;
+        List<SmallTalkResponseDto> smallTalkListResponseDtoList = new ArrayList<>();
+
+        for (SmallTalk smallTalk1 : smallTalk) {
+            smallTalkListResponseDtoList.add(this.toEntity(smallTalk1));
+        }
+
+        return smallTalkListResponseDtoList;
+
     }
 }

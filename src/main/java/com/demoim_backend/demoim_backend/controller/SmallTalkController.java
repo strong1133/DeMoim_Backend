@@ -59,14 +59,14 @@ public class SmallTalkController {
         //삭제 성공 시
         if(result.equals("삭제 성공")){
             message = new HashMap<>();
-            message.put("Success",result);
+            message.put("msg",result);
             return new ResponseEntity<>(message, HttpStatus.OK);
 
         //삭제 실패 시
         }else{
             message = new HashMap<>();
-            message.put("Success", result);
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            message.put("msg", result);
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 
         }
     }
