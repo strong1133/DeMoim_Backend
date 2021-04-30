@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -35,7 +36,7 @@ public class SmallTalkService {
     public SmallTalkResponseDto toEntity(SmallTalk smallTalk) {
         return SmallTalkResponseDto.builder()
                 .id(smallTalk.getId())
-                .content(smallTalk.getContents())
+                .contents(smallTalk.getContents())
                 .user(smallTalk.getSmallTalkUser())
                 .createdAt(smallTalk.getCreatedAt())
                 .modifiedAt(smallTalk.getModifiedAt())
@@ -60,7 +61,7 @@ public class SmallTalkService {
         User user = this.getUser(authentication);
 
         SmallTalk smallTalk = SmallTalk.builder()
-                .contents(smallTalkDto.getContent())
+                .contents(smallTalkDto.getContents())
                 .build();
 
         //양방향 매핑을 위해 객체 참조
@@ -76,10 +77,9 @@ public class SmallTalkService {
 
 
     //smallTalk List 조회
-    public List<SmallTalkResponseDto> getSmallTalkList(int page) {
+    public List<SmallTalkResponseDto> getSmallTalkList(int page, int size) {
 
-        int SIZE = 10;
-        Page<SmallTalk> pageSmallTalk = smallTalkRepository.findAll(PageRequest.of(page - 1, SIZE, Sort.by(Sort.Direction.DESC, "createdAt")));
+        Page<SmallTalk> pageSmallTalk = smallTalkRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt")));
 
         // 페이징한 Page<SmallTalk>를 Dto에 담아서 반환하기 위한 코드 (77~83)
         List<SmallTalk> smallTalkEntitys = pageSmallTalk.getContent();
@@ -92,6 +92,7 @@ public class SmallTalkService {
         return smallTalkListResponseDtoList;
     }
 
+    // 수정
     @Transactional
     public SmallTalkResponseDto updateSmallTalk(Authentication authentication, SmallTalkDto smallTalkDto, Long smallTalkId) {
 
@@ -101,12 +102,12 @@ public class SmallTalkService {
         User user = this.getUser(authentication);
 
         // SmallTalk 존재 여부 확인
-        SmallTalk smallTalk=smallTalkRepository.findById(smallTalkId).orElseThrow(
-                ()->new IllegalArgumentException("해당 피드가 존재하지않습니다.")
+        SmallTalk smallTalk = smallTalkRepository.findById(smallTalkId).orElseThrow(
+                () -> new IllegalArgumentException("해당 피드가 존재하지않습니다.")
         );
 
         // user와 smallTalk작성자가 일치한다면
-        if(user.getId() == smallTalk.getSmallTalkUser().getId()){
+        if (user.getId() == smallTalk.getSmallTalkUser().getId()) {
             smallTalk.Update(smallTalkDto);
             smallTalk.setUser(user);
             SmallTalk smallTalkResponse = smallTalkRepository.save(smallTalk);
@@ -114,30 +115,36 @@ public class SmallTalkService {
             responseDto = this.toEntity(smallTalkResponse);
             return responseDto;
 
-        }else{
+        } else {
             responseDto = null;
             return responseDto;
         }
     }
 
-
-    public String deleteSmallTalk(Authentication authentication,Long smallTalkId){
-
+    // 삭제
+    public String deleteSmallTalk(Authentication authentication, Long smallTalkId) {
         // user객체 가져옴
         User user = this.getUser(authentication);
         // SmallTalk 존재 여부 확인
-        SmallTalk smallTalk=smallTalkRepository.findById(smallTalkId).orElseThrow(
-                ()->new IllegalArgumentException("해당 피드가 존재하지않습니다.")
+        SmallTalk smallTalk = smallTalkRepository.findById(smallTalkId).orElseThrow(
+                () -> new IllegalArgumentException("해당 피드가 존재하지않습니다.")
         );
 
         // user와 smallTalk작성자가 일치한다면
-        if(user.getId() == smallTalk.getSmallTalkUser().getId()){
+        if (user.getId() == smallTalk.getSmallTalkUser().getId()) {
             smallTalkRepository.deleteById(smallTalkId);
             return "삭제 성공";
 
-        }else{
-            return "삭제 실패";
+        } else {
+            return "게시글 작성자가 아닙니다.";
         }
+    }
 
+    // 로그인된 유저의 스몰토크 조회
+    public List<SmallTalk> findMySmallTalk(Authentication authentication){
+        User user = this.getUser(authentication);
+        Long userId = user.getId();
+        List<SmallTalk> smallTalk = smallTalkRepository.findAllBySmallTalkUserId(userId);
+        return smallTalk;
     }
 }

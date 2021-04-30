@@ -11,11 +11,11 @@ import javax.validation.constraints.NotBlank;
 public class SmallTalkDto {
 
     @NotBlank
-    private String content;
+    private String contents;
 
     public SmallTalk toEntity(){
         return SmallTalk.builder()
-                .contents(content)
+                .contents(contents)
                 .build();
     }
 }

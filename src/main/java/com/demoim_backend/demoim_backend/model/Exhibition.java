@@ -18,7 +18,5 @@ public class Exhibition extends Timestamped {
     @Column(nullable = false)
     private String thumbnail;
 
-//    @JoinColumn(name = "user_id")
-//    @ManyToOne
-//    private User user;
+
 }
