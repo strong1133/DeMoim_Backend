@@ -31,7 +31,7 @@ public class SmallTalkController {
 
     //smalltalk List 조회
     @GetMapping("/api/smalltalk")
-    public List<SmallTalkResponseDto> getSmallTalkList(@RequestParam(name = "page_num") int page, @RequestParam(name = "size_num") int size){
+    public List<SmallTalkResponseDto> getSmallTalkList(@RequestParam int page, int size){
 //        System.out.println(page);
         return smallTalkService.getSmallTalkList(page, size);
     }
