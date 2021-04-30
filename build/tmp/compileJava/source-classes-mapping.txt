@@ -65,8 +65,8 @@ com/demoim_backend/demoim_backend/DemoimBackendApplication.java
 com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java
  com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter
  com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter$1
-com/demoim_backend/demoim_backend/service/ExhibitionService.java
- com.demoim_backend.demoim_backend.service.ExhibitionService
+com/demoim_backend/demoim_backend/controller/UserController.java
+ com.demoim_backend.demoim_backend.controller.UserController
 com/demoim_backend/demoim_backend/controller/ExhibitionController.java
  com.demoim_backend.demoim_backend.controller.ExhibitionController
 com/demoim_backend/demoim_backend/model/User.java
@@ -83,17 +83,21 @@ com/demoim_backend/demoim_backend/s3/FileUploadService.java
  com.demoim_backend.demoim_backend.s3.FileUploadService
 com/demoim_backend/demoim_backend/Exception/GlobalExceptionHandler.java
  com.demoim_backend.demoim_backend.Exception.GlobalExceptionHandler
-com/demoim_backend/demoim_backend/config/auth/PrincipalDetailsService.java
- com.demoim_backend.demoim_backend.config.auth.PrincipalDetailsService
+com/demoim_backend/demoim_backend/service/UserService.java
+ com.demoim_backend.demoim_backend.service.UserService
 com/demoim_backend/demoim_backend/service/TeamService.java
  com.demoim_backend.demoim_backend.service.TeamService
 com/demoim_backend/demoim_backend/model/Team.java
  com.demoim_backend.demoim_backend.model.Team
+com/demoim_backend/demoim_backend/dto/SmallTalkResponseDto.java
+ com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto
+ com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto$SmallTalkResponseDtoBuilder
 com/demoim_backend/demoim_backend/s3/S3ServiceImpl.java
  com.demoim_backend.demoim_backend.s3.S3ServiceImpl
 com/demoim_backend/demoim_backend/model/SmallTalk.java
  com.demoim_backend.demoim_backend.model.SmallTalk
-com/demoim_backend/demoim_backend/controller/UserController.java
- com.demoim_backend.demoim_backend.controller.UserController
-com/demoim_backend/demoim_backend/service/UserService.java
- com.demoim_backend.demoim_backend.service.UserService
+ com.demoim_backend.demoim_backend.model.SmallTalk$SmallTalkBuilder
+com/demoim_backend/demoim_backend/config/auth/PrincipalDetailsService.java
+ com.demoim_backend.demoim_backend.config.auth.PrincipalDetailsService
+com/demoim_backend/demoim_backend/service/ExhibitionService.java
+ com.demoim_backend.demoim_backend.service.ExhibitionService
