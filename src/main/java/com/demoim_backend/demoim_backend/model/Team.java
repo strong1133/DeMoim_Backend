@@ -55,7 +55,7 @@ public class Team extends Timestamped {
      */
 //    @Column(nullable = false)
 //    private Long leaderId; // 리더 유저Id 값이 담김
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     @ManyToOne
     private User user; // 리더에 대한 정보
 

@@ -41,7 +41,7 @@ public class SmallTalk extends Timestamped {
     }
 
     public void Update(SmallTalkDto smallTalkDto){
-        this.contents = smallTalkDto.getContent();
+        this.contents = smallTalkDto.getContents();
     }
 
 }

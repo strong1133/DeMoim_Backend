@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 @Getter
 public class SmallTalkResponseDto {
     private Long id;
-    private String content;
+    private String contents;
     private Long userid;
-    private String username;
+    private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     @Builder
-    public SmallTalkResponseDto(Long id, String content, User user, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public SmallTalkResponseDto(Long id, String contents, User user, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
-        this.content = content;
+        this.contents = contents;
         this.userid = user.getId();
-        this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
