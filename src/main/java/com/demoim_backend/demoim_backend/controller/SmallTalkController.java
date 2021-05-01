@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 public class SmallTalkController {
 
-    private SmallTalkService smallTalkService;
+    private final SmallTalkService smallTalkService;
 
     public SmallTalkController(SmallTalkService smallTalkService) {
         this.smallTalkService = smallTalkService;
@@ -57,7 +57,7 @@ public class SmallTalkController {
         HashMap<String, String> message;
 
         //삭제 성공 시
-        if(result.equals("삭제 성공")){
+        if(result.equals("Seccuess")){
             message = new HashMap<>();
             message.put("msg",result);
             return new ResponseEntity<>(message, HttpStatus.OK);
@@ -70,7 +70,5 @@ public class SmallTalkController {
 
         }
     }
-
-
 
 }

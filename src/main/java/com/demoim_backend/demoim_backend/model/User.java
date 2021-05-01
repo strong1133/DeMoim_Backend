@@ -43,9 +43,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Team> teams = new ArrayList<>();
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "exhibitionUser",fetch = FetchType.LAZY)
-//    private List<Exhibition> exhibitions = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "exhibitionUser",fetch = FetchType.LAZY)
+    private List<Exhibition> exhibitions = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "smallTalkUser", fetch = FetchType.LAZY)
