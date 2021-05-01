@@ -1,6 +1,6 @@
 package com.demoim_backend.demoim_backend.service;
 
-import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
+import com.demoim_backend.demoim_backend.dto.ResponseUser;
 import com.demoim_backend.demoim_backend.dto.SmallTalkDto;
 import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
 import com.demoim_backend.demoim_backend.model.SmallTalk;
@@ -31,16 +31,19 @@ public class SmallTalkService {
 
     // SmallTalk 엔티티를 DTo로 담아주는 메소드
     public SmallTalkResponseDto entityToDto(SmallTalk smallTalk) {
+
+        ResponseUser responseUser = new ResponseUser();
+
         return SmallTalkResponseDto.builder()
                 .id(smallTalk.getId())
                 .contents(smallTalk.getContents())
-                .user(smallTalk.getSmallTalkUser())
+                .user(responseUser.entityToDto(smallTalk.getSmallTalkUser()))
                 .createdAt(smallTalk.getCreatedAt())
                 .modifiedAt(smallTalk.getModifiedAt())
                 .build();
     }
 
-
+    // 해당 smallTalk의 존재여부 확인
     public SmallTalk findSmallTalk(Long smallTalkId){
         return smallTalkRepository.findById(smallTalkId).orElseThrow(
                 ()->new IllegalArgumentException("해당 피드가 존재하지않습니다.")
