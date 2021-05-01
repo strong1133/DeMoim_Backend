@@ -25,8 +25,8 @@ public class ExhibitionController {
 
     // exhibition 작성
     @PostMapping("/api/exhibition")
-    public ExhibitionResponseDto createExhibition(@RequestBody @Valid ExhibitionDto exhibitionDto, Authentication authentication,@RequestPart(required = false) MultipartFile file){
-        return exhibitionService.createExhibition(authentication,exhibitionDto,file);
+    public ExhibitionResponseDto createExhibition(@RequestBody @Valid ExhibitionDto exhibitionDto, Authentication authentication){
+        return exhibitionService.createExhibition(authentication,exhibitionDto);
     }
 
     // exhibtion 이미지 작성
@@ -51,9 +51,9 @@ public class ExhibitionController {
     @PutMapping("/api/exhibition/detail")
     public ExhibitionResponseDto getExhibitionDto(Authentication authentication,
                                                   @RequestBody @Valid ExhibitionDto exhibitionDto,
-                                                  @RequestParam(name = "exhibition_id") Long exhibitionId,
-                                                  MultipartFile file){
-        ExhibitionResponseDto exhibition = exhibitionService.updateExhibition(authentication,exhibitionDto,exhibitionId,file);
+                                                  @RequestParam(name = "exhibition_id") Long exhibitionId){
+
+        ExhibitionResponseDto exhibition = exhibitionService.updateExhibition(authentication,exhibitionDto,exhibitionId);
 
         if(exhibition == null){
             throw new IllegalArgumentException("게시글 작성자가 아닙니다.");

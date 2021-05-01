@@ -32,7 +32,7 @@ public class ExhibitionService {
     }
 
 
-    // exhibition 단건 조회
+    // exhibition 존재여부 조회
     public Exhibition findExhibition(Long exhibitionId){
         return exhibitionRepository.findById(exhibitionId).orElseThrow(
                 ()-> new IllegalArgumentException("해당 게시물이 없습니다.")
@@ -40,9 +40,7 @@ public class ExhibitionService {
     }
 
     // exhibition 생성
-    public ExhibitionResponseDto createExhibition(Authentication authentication, ExhibitionDto exhibitionDto,MultipartFile file) {
-
-        String thumbnail;
+    public ExhibitionResponseDto createExhibition(Authentication authentication, ExhibitionDto exhibitionDto) {
 
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
@@ -58,27 +56,7 @@ public class ExhibitionService {
     }
 
 
-//    // 이미지 저장 버젼 2
-//    @Transactional
-//    public ExhibitionResponseDto createExhibitionImg(Authentication authentication,Long exhibitionId,MultipartFile file){
-//        //user 조회
-//        User user = userService.findCurUser(authentication).orElseThrow(
-//                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
-//        );
-//
-//        //Exhibition 존재 여부 확인
-//        Exhibition exhibition = this.findExhibition(exhibitionId);
-//
-//        String thumbnail = fileUploadService.uploadImage(file);
-//        exhibition.updateImg(thumbnail);
-//
-//        ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
-//        exhibitionResponseDto.entityToDto(exhibition);
-//
-//        return exhibitionResponseDto;
-//    }
-
-     // 이미지 저장.
+    // 이미지 저장.
     public String createExhibitionImg(Authentication authentication ,MultipartFile file){
         //user 조회
         User user = userService.findCurUser(authentication).orElseThrow(
@@ -124,8 +102,7 @@ public class ExhibitionService {
     @Transactional
     public ExhibitionResponseDto updateExhibition(Authentication authentication,
                                                   ExhibitionDto exhibitionDto,
-                                                  Long exhibitionId,
-                                                  MultipartFile file){
+                                                  Long exhibitionId){
 
         ExhibitionResponseDto exhibitionResponseDto;
         String thumbnail = "";
@@ -138,12 +115,6 @@ public class ExhibitionService {
         //Exhibition 존재 여부 확인
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
-        if(file == null){
-            thumbnail = exhibition.getThumbnail();
-
-        }else{
-            thumbnail = fileUploadService.uploadImage(file);
-        }
 
         // 작성자와 로그인한 같다면
         if(user.getId() == exhibition.getExhibitionUser().getId()){

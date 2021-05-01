@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 public class SmallTalkDto {
 
-    @NotBlank
+    @NotBlank(message = "내용을 입력하세요.")
     private String contents;
 
     public SmallTalk toEntity(){

@@ -44,11 +44,11 @@ public class User extends Timestamped {
     private List<Team> teams = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "exhibitionUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exhibitionUser",cascade =  CascadeType.ALL)
     private List<Exhibition> exhibitions = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "smallTalkUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "smallTalkUser",cascade =  CascadeType.ALL)
     private List<SmallTalk> smallTalks = new ArrayList<>();
 
     @JsonIgnore
