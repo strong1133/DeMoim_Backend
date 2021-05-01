@@ -6,8 +6,6 @@ import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
 import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.SmallTalkRepository;
-import com.demoim_backend.demoim_backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,23 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service
 public class SmallTalkService {
 
     private SmallTalkRepository smallTalkRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    public SmallTalkService(SmallTalkRepository smallTalkRepository) {
+    private UserService userService;
+
+    public SmallTalkService(SmallTalkRepository smallTalkRepository,UserService userService) {
         this.smallTalkRepository = smallTalkRepository;
+        this.userService = userService;
     }
 
-
     // SmallTalk 엔티티를 DTo로 담아주는 메소드
-    public SmallTalkResponseDto toEntity(SmallTalk smallTalk) {
+    public SmallTalkResponseDto entityToDto(SmallTalk smallTalk) {
         return SmallTalkResponseDto.builder()
                 .id(smallTalk.getId())
                 .contents(smallTalk.getContents())
@@ -44,21 +42,19 @@ public class SmallTalkService {
     }
 
 
-    // 영속성 연결을 위해서 User객체 조회하는 메소드
-    public User getUser(Authentication authentication) {
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        // User 객체 조회
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
-                () -> new IllegalArgumentException("회원이 존재하지않습니다.")
+    public SmallTalk findSmallTalk(Long smallTalkId){
+        return smallTalkRepository.findById(smallTalkId).orElseThrow(
+                ()->new IllegalArgumentException("해당 피드가 존재하지않습니다.")
         );
-        return user;
     }
 
 
     //smallTalk 생성
     public SmallTalkResponseDto createSmallTalk(Authentication authentication, SmallTalkDto smallTalkDto) {
 
-        User user = this.getUser(authentication);
+        User user = userService.findCurUser(authentication).orElseThrow(
+                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
 
         SmallTalk smallTalk = SmallTalk.builder()
                 .contents(smallTalkDto.getContents())
@@ -70,7 +66,7 @@ public class SmallTalkService {
         SmallTalk smallTalkResponse = smallTalkRepository.save(smallTalk);
 
         //Dto에 담아서 반환.
-        SmallTalkResponseDto responseDto = this.toEntity(smallTalkResponse);
+        SmallTalkResponseDto responseDto = this.entityToDto(smallTalkResponse);
 
         return responseDto;
     }
@@ -86,7 +82,7 @@ public class SmallTalkService {
         List<SmallTalkResponseDto> smallTalkListResponseDtoList = new ArrayList<>();
 
         for (SmallTalk smallTalk : smallTalkEntitys) {
-            smallTalkListResponseDtoList.add(this.toEntity(smallTalk));
+            smallTalkListResponseDtoList.add(this.entityToDto(smallTalk));
         }
 
         return smallTalkListResponseDtoList;
@@ -99,20 +95,20 @@ public class SmallTalkService {
         SmallTalkResponseDto responseDto;
 
         // user객체 가져옴
-        User user = this.getUser(authentication);
+        User user = userService.findCurUser(authentication).orElseThrow(
+                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
 
         // SmallTalk 존재 여부 확인
-        SmallTalk smallTalk = smallTalkRepository.findById(smallTalkId).orElseThrow(
-                () -> new IllegalArgumentException("해당 피드가 존재하지않습니다.")
-        );
+        SmallTalk smallTalk = this.findSmallTalk(smallTalkId);
+
 
         // user와 smallTalk작성자가 일치한다면
         if (user.getId() == smallTalk.getSmallTalkUser().getId()) {
             smallTalk.Update(smallTalkDto);
             smallTalk.setUser(user);
-            SmallTalk smallTalkResponse = smallTalkRepository.save(smallTalk);
 
-            responseDto = this.toEntity(smallTalkResponse);
+            responseDto = this.entityToDto(smallTalk);
             return responseDto;
 
         } else {
@@ -123,33 +119,40 @@ public class SmallTalkService {
 
     // 삭제
     public String deleteSmallTalk(Authentication authentication, Long smallTalkId) {
+
         // user객체 가져옴
-        User user = this.getUser(authentication);
-        // SmallTalk 존재 여부 확인
-        SmallTalk smallTalk = smallTalkRepository.findById(smallTalkId).orElseThrow(
-                () -> new IllegalArgumentException("해당 피드가 존재하지않습니다.")
+        User user = userService.findCurUser(authentication).orElseThrow(
+                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
 
-        // user와 smallTalk작성자가 일치한다면
-        if (user.getId() == smallTalk.getSmallTalkUser().getId()) {
-            smallTalkRepository.deleteById(smallTalkId);
-            return "삭제 성공";
+        // SmallTalk 존재 여부 확인
+        SmallTalk smallTalk = this.findSmallTalk(smallTalkId);
 
-        } else {
-            return "게시글 작성자가 아닙니다.";
+        // user와 smallTalk작성자가 일치한다면
+        if(user.getId() == smallTalk.getSmallTalkUser().getId()){
+            user.getSmallTalks().remove(smallTalk);
+            smallTalkRepository.deleteById(smallTalkId);
+            return "Seccuess";
+
+        }else{
+            return "fail";
         }
     }
 
     // 로그인된 유저의 스몰토크 조회
     public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication){
-        User user = this.getUser(authentication);
+
+        User user = userService.findCurUser(authentication).orElseThrow(
+                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
         Long userId = user.getId();
 
         List<SmallTalk> smallTalk = smallTalkRepository.findAllBySmallTalkUserId(userId);
+
         List<SmallTalkResponseDto> smallTalkListResponseDtoList = new ArrayList<>();
 
         for (SmallTalk smallTalk1 : smallTalk) {
-            smallTalkListResponseDtoList.add(this.toEntity(smallTalk1));
+            smallTalkListResponseDtoList.add(this.entityToDto(smallTalk1));
         }
 
         return smallTalkListResponseDtoList;
