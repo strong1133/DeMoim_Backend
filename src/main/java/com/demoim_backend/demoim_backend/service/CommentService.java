@@ -2,6 +2,7 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.CommentRequestDto;
 import com.demoim_backend.demoim_backend.dto.CommentResponseDto;
+import com.demoim_backend.demoim_backend.dto.ResponseUser;
 import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
 import com.demoim_backend.demoim_backend.model.Comment;
 import com.demoim_backend.demoim_backend.model.SmallTalk;
@@ -21,11 +22,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
 
-    // response 객체로 만들어주는 매서드
-    public CommentResponseDto entityToDto(Comment comment) {
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
-        return commentResponseDto;
-    }
 
     // 현재 로그인 user 객체로 찾아주는 매서드
     public User curUser(Authentication authentication) {
@@ -35,13 +31,26 @@ public class CommentService {
         return user;
     }
 
+    public ResponseUser responseUser(User user) {
+        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname());
+        return responseUser;
+    }
+
+    // response 객체로 만들어주는 매서드
+    public CommentResponseDto entityToDto(Comment comment, ResponseUser responseUser) {
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+        return commentResponseDto;
+    }
+
+
     // SmallTalk Comments 작성
     public CommentResponseDto createCommentForSmallTalk(Authentication authentication, CommentRequestDto commentRequestDto, Long smallTalkId) {
         User user = curUser(authentication);
+        ResponseUser responseUser = responseUser(user);
         Comment comment = new Comment(commentRequestDto, user);
         comment.setSmallTalkId(smallTalkId);
         commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
         return commentResponseDto;
     }
 
@@ -50,10 +59,12 @@ public class CommentService {
 
         List<Comment> commentList = commentRepository.findBySmallTalkId(smallTalkId);
         List<CommentResponseDto> commentResponseDto = new ArrayList<>();
-
+//        ResponseUser responseUser = new ResponseUser()
 
         for (Comment comment : commentList) {
-            commentResponseDto.add(this.entityToDto(comment));
+            User user = comment.getCommentUser();
+            ResponseUser responseUser = responseUser(user);
+            commentResponseDto.add(this.entityToDto(comment, responseUser));
         }
         return commentResponseDto;
     }
@@ -61,10 +72,11 @@ public class CommentService {
     // Exhibition Comments 작성
     public CommentResponseDto createCommentForExhibition(Authentication authentication, CommentRequestDto commentRequestDto, Long exhibitionId) {
         User user = curUser(authentication);
+        ResponseUser responseUser = responseUser(user);
         Comment comment = new Comment(commentRequestDto, user);
         comment.setExhibitionId(exhibitionId);
         commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
         return commentResponseDto;
     }
 
@@ -75,7 +87,9 @@ public class CommentService {
         List<CommentResponseDto> commentResponseDto = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            commentResponseDto.add(this.entityToDto(comment));
+            User user = comment.getCommentUser();
+            ResponseUser responseUser = responseUser(user);
+            commentResponseDto.add(this.entityToDto(comment, responseUser));
         }
         return commentResponseDto;
     }

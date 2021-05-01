@@ -13,17 +13,15 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long id;
     private String comments;
-    private Long userid;
-    private String nickname;
+    private ResponseUser user;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     @Builder
-    public CommentResponseDto(Comment comment) {
+    public CommentResponseDto(Comment comment, ResponseUser responseUser) {
         this.id = comment.getId();
         this.comments = comment.getComments();
-        this.userid = comment.getCommentUser().getId();
-        this.nickname = comment.getCommentUser().getNickname();
+        this.user = responseUser;
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
     }
