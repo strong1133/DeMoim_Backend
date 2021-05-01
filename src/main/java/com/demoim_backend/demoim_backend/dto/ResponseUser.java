@@ -11,12 +11,14 @@ public class ResponseUser {
 
     private Long userid;
     private String username;
+    private String nickname;
     private String profileImage;
 
     @Builder
-    public ResponseUser(Long userid, String username, String profileImage) {
+    public ResponseUser(Long userid, String username, String nickname, String profileImage ) {
         this.userid = userid;
         this.username = username;
+        this.nickname = nickname;
         this.profileImage = profileImage;
     }
 

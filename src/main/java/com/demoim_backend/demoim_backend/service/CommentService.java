@@ -32,7 +32,7 @@ public class CommentService {
     }
 
     public ResponseUser responseUser(User user) {
-        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname());
+        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname(), user.getProfileImage());
         return responseUser;
     }
 
