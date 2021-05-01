@@ -22,7 +22,6 @@ import java.util.List;
 public class SmallTalkService {
 
     private SmallTalkRepository smallTalkRepository;
-
     private UserService userService;
 
     public SmallTalkService(SmallTalkRepository smallTalkRepository,UserService userService) {

@@ -51,6 +51,10 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "smallTalkUser", fetch = FetchType.LAZY)
     private List<SmallTalk> smallTalks = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "commentUser", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
 
 
 
