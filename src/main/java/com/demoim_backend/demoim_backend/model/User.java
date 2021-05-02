@@ -1,8 +1,7 @@
 package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileRequestDto;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveDto;
+import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,7 +67,7 @@ public class User extends Timestamped {
     }
 
     // 유저 정보 수정
-    public void update(UserUpdateProfileSaveDto userUpdateProfileSaveDto){
+    public void update(UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto){
         this.nickname = userUpdateProfileSaveDto.getNickname();
         this.position = userUpdateProfileSaveDto.getPosition();
         this.desc = userUpdateProfileSaveDto.getDesc();

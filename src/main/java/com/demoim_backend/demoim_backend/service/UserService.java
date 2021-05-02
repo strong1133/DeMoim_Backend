@@ -2,7 +2,7 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.UserUpdateProfileRequestDto;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveDto;
+import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
@@ -52,7 +52,7 @@ public class UserService {
             profileImage =  fileUploadService.uploadImage(file);
         }
 
-        UserUpdateProfileSaveDto userUpdateProfileSaveDto = new UserUpdateProfileSaveDto();
+        UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto = new UserUpdateProfileSaveRequestDto();
         userUpdateProfileSaveDto.setNickname(userUpdateProfileDto.getNickname());
         userUpdateProfileSaveDto.setPosition(userUpdateProfileDto.getPosition());
         userUpdateProfileSaveDto.setDesc(userUpdateProfileDto.getDesc());

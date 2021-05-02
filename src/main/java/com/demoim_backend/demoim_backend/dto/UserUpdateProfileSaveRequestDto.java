@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserUpdateProfileSaveDto {
+public class UserUpdateProfileSaveRequestDto {
     private String nickname;
     private String position;
     private String desc;

@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +69,7 @@ public class CommentService {
         return commentResponseDto;
     }
 
+
     // Exhibition Comments 작성
     public CommentResponseDto createCommentForExhibition(Authentication authentication, CommentRequestDto commentRequestDto, Long exhibitionId) {
         User user = curUser(authentication);
@@ -93,5 +94,39 @@ public class CommentService {
         }
         return commentResponseDto;
     }
+
+
+    // SmallTalk & Exhibition 댓글수정
+    @Transactional
+    public CommentResponseDto updateComment(Authentication authentication,CommentRequestDto commentRequestDto,  Long id){
+        User user = curUser(authentication);
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 없습니다.")
+        );
+        if (!user.getId().equals(comment.getCommentUser().getId())){
+            throw new IllegalArgumentException("자신의 댓글만 수정할 수 있습니다.");
+        }
+        comment.update(commentRequestDto);
+        ResponseUser responseUser = responseUser(user);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+        return commentResponseDto;
+    }
+
+    // SmallTalk & Exhibition 댓글수정
+    @Transactional
+    public Map<String, String> deleteComment(Authentication authentication, Long id){
+        User user = curUser(authentication);
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 없습니다.")
+        );
+        if (!user.getId().equals(comment.getCommentUser().getId())){
+            throw new IllegalArgumentException("자신의 댓글만 수정할 수 있습니다.");
+        }
+        commentRepository.deleteById(id);
+        Map<String, String> map = new HashMap<>();
+        map.put("msg","삭제가 완료 되었습니다.");
+        return map;
+    }
+
 }
 

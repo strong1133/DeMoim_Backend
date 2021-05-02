@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class CommentController {
         return commentService.getCommentForSmallTalk(smallTalkId);
     }
 
+
     //Exhibition 댓글 작성
     @PostMapping("/api/exhibition/comments")
     public CommentResponseDto createCommentForExhibition(Authentication authentication, @RequestBody CommentRequestDto commentRequestDto,
@@ -40,5 +42,19 @@ public class CommentController {
     @GetMapping("/api/exhibition/comments")
     public List<CommentResponseDto> getCommentForExhibition(@RequestParam(value = "exhibition_id") Long exhibitionId){
         return commentService.getCommentForExhibition(exhibitionId);
+    }
+
+    //SmallTalk & Exhibition 댓글 수정
+    @PutMapping("/api/update/comments")
+    public CommentResponseDto updateComment(Authentication authentication, @RequestBody CommentRequestDto commentRequestDto,
+                                                        @RequestParam(value = "comment_id") Long id){
+        return commentService.updateComment(authentication,commentRequestDto, id);
+    }
+
+    //SmallTalk & Exhibition 댓글 삭제
+    @DeleteMapping("/api/delete/comments")
+    public Map<String, String> deleteComment(Authentication authentication,
+                                                         @RequestParam(value = "comment_id") Long id){
+        return commentService.deleteComment(authentication, id);
     }
 }
