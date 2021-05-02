@@ -120,7 +120,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("해당 댓글이 없습니다.")
         );
         if (!user.getId().equals(comment.getCommentUser().getId())){
-            throw new IllegalArgumentException("자신의 댓글만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("자신의 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.deleteById(id);
         Map<String, String> map = new HashMap<>();

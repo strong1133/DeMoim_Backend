@@ -11,17 +11,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/ExhibitionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/ExhibitionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/ExhibitionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/ExhibitionService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/SmallTalkService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/SmallTalkService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/ExhibitionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/ExhibitionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/SmallTalkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/SmallTalkController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/ResponseUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/ResponseUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/ExhibitionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/ExhibitionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/SmallTalkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/SmallTalkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/CommentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/CommentService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +137,18 @@
       <recent name="com.demoim_backend.demoim_backend.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.DemoimBackendApplication">
+  <component name="RunManager" selected="Gradle.DeMoim_Backend [build]">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="DeMoim_Backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -239,7 +243,7 @@
       <workItem from="1619883228572" duration="1470000" />
       <workItem from="1619941224171" duration="3604000" />
       <workItem from="1619952545930" duration="889000" />
-      <workItem from="1619954700487" duration="5917000" />
+      <workItem from="1619954700487" duration="7412000" />
     </task>
     <task id="LOCAL-00001" summary="git iggnore">
       <created>1619714475398</created>

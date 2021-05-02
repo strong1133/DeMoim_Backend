@@ -93,8 +93,8 @@ com/demoim_backend/demoim_backend/controller/FileUploadController.java
 com/demoim_backend/demoim_backend/dto/SmallTalkResponseDto.java
  com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto
  com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto$SmallTalkResponseDtoBuilder
-com/demoim_backend/demoim_backend/controller/CommentController.java
- com.demoim_backend.demoim_backend.controller.CommentController
+com/demoim_backend/demoim_backend/service/ExhibitionService.java
+ com.demoim_backend.demoim_backend.service.ExhibitionService
 com/demoim_backend/demoim_backend/service/SmallTalkService.java
  com.demoim_backend.demoim_backend.service.SmallTalkService
 com/demoim_backend/demoim_backend/dto/ExhibitionResponseDto.java
@@ -106,13 +106,13 @@ com/demoim_backend/demoim_backend/dto/CommentResponseDto.java
 com/demoim_backend/demoim_backend/dto/ResponseUser.java
  com.demoim_backend.demoim_backend.dto.ResponseUser
  com.demoim_backend.demoim_backend.dto.ResponseUser$ResponseUserBuilder
-com/demoim_backend/demoim_backend/service/CommentService.java
- com.demoim_backend.demoim_backend.service.CommentService
+com/demoim_backend/demoim_backend/controller/ExhibitionController.java
+ com.demoim_backend.demoim_backend.controller.ExhibitionController
 com/demoim_backend/demoim_backend/controller/MyPageController.java
  com.demoim_backend.demoim_backend.controller.MyPageController
 com/demoim_backend/demoim_backend/controller/SmallTalkController.java
  com.demoim_backend.demoim_backend.controller.SmallTalkController
-com/demoim_backend/demoim_backend/controller/ExhibitionController.java
- com.demoim_backend.demoim_backend.controller.ExhibitionController
-com/demoim_backend/demoim_backend/service/ExhibitionService.java
- com.demoim_backend.demoim_backend.service.ExhibitionService
+com/demoim_backend/demoim_backend/controller/CommentController.java
+ com.demoim_backend.demoim_backend.controller.CommentController
+com/demoim_backend/demoim_backend/service/CommentService.java
+ com.demoim_backend.demoim_backend.service.CommentService
