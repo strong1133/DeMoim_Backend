@@ -134,7 +134,7 @@ public class SmallTalkService {
         if(user.getId() == smallTalk.getSmallTalkUser().getId()){
             user.getSmallTalks().remove(smallTalk);
             smallTalkRepository.deleteById(smallTalkId);
-            return "Seccuess";
+            return "Success";
 
         }else{
             return "fail";

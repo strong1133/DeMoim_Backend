@@ -11,24 +11,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/CommentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/CommentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/dto/CommentDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/dto/UserUpdateProfileSaveDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/s3/FileUploadController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/CommentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/source-classes-mapping.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/CommentDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/UserUpdateProfileSaveDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/UserUpdateProfileSaveRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/s3/FileUploadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/FileUploadController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/CommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/ExhibitionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/controller/ExhibitionController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/ExhibitionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/ExhibitionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/SmallTalkService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/service/SmallTalkService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/ExhibitionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/ExhibitionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/SmallTalkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/SmallTalkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/ResponseUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/ResponseUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/ExhibitionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/ExhibitionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/SmallTalkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/SmallTalkService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +50,12 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="demoim_backend" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="demoim_backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -137,6 +136,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="C:\Users\Administrator\Desktop\hh99\chapter06\git\DeMoim_Backend\src\main\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -145,17 +145,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.DemoimBackendApplication">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="DeMoim_Backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -217,8 +206,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.DeMoim_Backend [dependencies]" />
         <item itemvalue="Gradle.DeMoim_Backend [build]" />
+        <item itemvalue="Gradle.DeMoim_Backend [dependencies]" />
       </list>
     </recent_temporary>
   </component>
@@ -248,7 +237,9 @@
       <workItem from="1619875726625" duration="384000" />
       <workItem from="1619876183493" duration="370000" />
       <workItem from="1619883228572" duration="1470000" />
-      <workItem from="1619941224171" duration="2962000" />
+      <workItem from="1619941224171" duration="3604000" />
+      <workItem from="1619952545930" duration="889000" />
+      <workItem from="1619954700487" duration="5917000" />
     </task>
     <task id="LOCAL-00001" summary="git iggnore">
       <created>1619714475398</created>

@@ -79,15 +79,15 @@ public class ExhibitionController {
         HashMap<String, String> message;
 
         //삭제 성공 시
-        if(result.equals("Seccuess")){
+        if(result.equals("Success")){
             message = new HashMap<>();
-            message.put("Success",result);
+            message.put("msg",result);
             return new ResponseEntity<>(message, HttpStatus.OK);
 
             //삭제 실패 시
         }else{
             message = new HashMap<>();
-            message.put("Success", result);
+            message.put("msg", result);
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

@@ -46,8 +46,9 @@ com/demoim_backend/demoim_backend/controller/HelloController.java
  com.demoim_backend.demoim_backend.controller.HelloController
 com/demoim_backend/demoim_backend/controller/SignupController.java
  com.demoim_backend.demoim_backend.controller.SignupController
-com/demoim_backend/demoim_backend/service/ExhibitionService.java
- com.demoim_backend.demoim_backend.service.ExhibitionService
+com/demoim_backend/demoim_backend/model/Exhibition.java
+ com.demoim_backend.demoim_backend.model.Exhibition
+ com.demoim_backend.demoim_backend.model.Exhibition$ExhibitionBuilder
 com/demoim_backend/demoim_backend/repository/UserRepository.java
  com.demoim_backend.demoim_backend.repository.UserRepository
 com/demoim_backend/demoim_backend/config/jwt/JwtAuthorizationFilter.java
@@ -61,25 +62,26 @@ com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java
  com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter$1
 com/demoim_backend/demoim_backend/controller/UserController.java
  com.demoim_backend.demoim_backend.controller.UserController
-com/demoim_backend/demoim_backend/controller/ExhibitionController.java
- com.demoim_backend.demoim_backend.controller.ExhibitionController
-com/demoim_backend/demoim_backend/dto/CommentResponseDto.java
- com.demoim_backend.demoim_backend.dto.CommentResponseDto
- com.demoim_backend.demoim_backend.dto.CommentResponseDto$CommentResponseDtoBuilder
+com/demoim_backend/demoim_backend/model/Comment.java
+ com.demoim_backend.demoim_backend.model.Comment
+ com.demoim_backend.demoim_backend.model.Comment$CommentBuilder
+com/demoim_backend/demoim_backend/dto/SmallTalkDto.java
+ com.demoim_backend.demoim_backend.dto.SmallTalkDto
 com/demoim_backend/demoim_backend/config/SecurityConfig.java
  com.demoim_backend.demoim_backend.config.SecurityConfig
 com/demoim_backend/demoim_backend/model/User.java
  com.demoim_backend.demoim_backend.model.User
 com/demoim_backend/demoim_backend/controller/TeamController.java
  com.demoim_backend.demoim_backend.controller.TeamController
-com/demoim_backend/demoim_backend/service/SmallTalkService.java
- com.demoim_backend.demoim_backend.service.SmallTalkService
+com/demoim_backend/demoim_backend/config/auth/PrincipalDetails.java
+ com.demoim_backend.demoim_backend.config.auth.PrincipalDetails
 com/demoim_backend/demoim_backend/service/UserService.java
  com.demoim_backend.demoim_backend.service.UserService
-com/demoim_backend/demoim_backend/controller/MyPageController.java
- com.demoim_backend.demoim_backend.controller.MyPageController
-com/demoim_backend/demoim_backend/controller/SmallTalkController.java
- com.demoim_backend.demoim_backend.controller.SmallTalkController
+com/demoim_backend/demoim_backend/model/SmallTalk.java
+ com.demoim_backend.demoim_backend.model.SmallTalk
+ com.demoim_backend.demoim_backend.model.SmallTalk$SmallTalkBuilder
+com/demoim_backend/demoim_backend/config/auth/PrincipalDetailsService.java
+ com.demoim_backend.demoim_backend.config.auth.PrincipalDetailsService
 com/demoim_backend/demoim_backend/dto/UserUpdateProfileSaveRequestDto.java
  com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto
 com/demoim_backend/demoim_backend/service/TeamService.java
@@ -91,28 +93,26 @@ com/demoim_backend/demoim_backend/controller/FileUploadController.java
 com/demoim_backend/demoim_backend/dto/SmallTalkResponseDto.java
  com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto
  com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto$SmallTalkResponseDtoBuilder
-com/demoim_backend/demoim_backend/model/SmallTalk.java
- com.demoim_backend.demoim_backend.model.SmallTalk
- com.demoim_backend.demoim_backend.model.SmallTalk$SmallTalkBuilder
-com/demoim_backend/demoim_backend/dto/SmallTalkDto.java
- com.demoim_backend.demoim_backend.dto.SmallTalkDto
+com/demoim_backend/demoim_backend/controller/CommentController.java
+ com.demoim_backend.demoim_backend.controller.CommentController
+com/demoim_backend/demoim_backend/service/SmallTalkService.java
+ com.demoim_backend.demoim_backend.service.SmallTalkService
 com/demoim_backend/demoim_backend/dto/ExhibitionResponseDto.java
  com.demoim_backend.demoim_backend.dto.ExhibitionResponseDto
  com.demoim_backend.demoim_backend.dto.ExhibitionResponseDto$ExhibitionResponseDtoBuilder
-com/demoim_backend/demoim_backend/model/Comment.java
- com.demoim_backend.demoim_backend.model.Comment
- com.demoim_backend.demoim_backend.model.Comment$CommentBuilder
+com/demoim_backend/demoim_backend/dto/CommentResponseDto.java
+ com.demoim_backend.demoim_backend.dto.CommentResponseDto
+ com.demoim_backend.demoim_backend.dto.CommentResponseDto$CommentResponseDtoBuilder
 com/demoim_backend/demoim_backend/dto/ResponseUser.java
  com.demoim_backend.demoim_backend.dto.ResponseUser
  com.demoim_backend.demoim_backend.dto.ResponseUser$ResponseUserBuilder
-com/demoim_backend/demoim_backend/model/Exhibition.java
- com.demoim_backend.demoim_backend.model.Exhibition
- com.demoim_backend.demoim_backend.model.Exhibition$ExhibitionBuilder
-com/demoim_backend/demoim_backend/config/auth/PrincipalDetails.java
- com.demoim_backend.demoim_backend.config.auth.PrincipalDetails
-com/demoim_backend/demoim_backend/config/auth/PrincipalDetailsService.java
- com.demoim_backend.demoim_backend.config.auth.PrincipalDetailsService
-com/demoim_backend/demoim_backend/controller/CommentController.java
- com.demoim_backend.demoim_backend.controller.CommentController
 com/demoim_backend/demoim_backend/service/CommentService.java
  com.demoim_backend.demoim_backend.service.CommentService
+com/demoim_backend/demoim_backend/controller/MyPageController.java
+ com.demoim_backend.demoim_backend.controller.MyPageController
+com/demoim_backend/demoim_backend/controller/SmallTalkController.java
+ com.demoim_backend.demoim_backend.controller.SmallTalkController
+com/demoim_backend/demoim_backend/controller/ExhibitionController.java
+ com.demoim_backend.demoim_backend.controller.ExhibitionController
+com/demoim_backend/demoim_backend/service/ExhibitionService.java
+ com.demoim_backend.demoim_backend.service.ExhibitionService

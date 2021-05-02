@@ -57,7 +57,7 @@ public class SmallTalkController {
         HashMap<String, String> message;
 
         //삭제 성공 시
-        if(result.equals("Seccuess")){
+        if(result.equals("Success")){
             message = new HashMap<>();
             message.put("msg",result);
             return new ResponseEntity<>(message, HttpStatus.OK);

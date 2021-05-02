@@ -26,6 +26,7 @@ public class ResponseUser {
         return  ResponseUser.builder()
                 .userid(user.getId())
                 .username(user.getUsername())
+                .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
                 .build();
     }

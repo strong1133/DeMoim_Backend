@@ -33,9 +33,9 @@ public class ExhibitionService {
 
 
     // exhibition 존재여부 조회
-    public Exhibition findExhibition(Long exhibitionId){
+    public Exhibition findExhibition(Long exhibitionId) {
         return exhibitionRepository.findById(exhibitionId).orElseThrow(
-                ()-> new IllegalArgumentException("해당 게시물이 없습니다.")
+                () -> new IllegalArgumentException("해당 게시물이 없습니다.")
         );
     }
 
@@ -57,7 +57,7 @@ public class ExhibitionService {
 
 
     // 이미지 저장.
-    public String createExhibitionImg(Authentication authentication ,MultipartFile file){
+    public String createExhibitionImg(Authentication authentication, MultipartFile file) {
         //user 조회
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
@@ -88,7 +88,7 @@ public class ExhibitionService {
 
 
     // exhibition 단일 조회
-    public ExhibitionResponseDto getExhibition(Long exhibitionId){
+    public ExhibitionResponseDto getExhibition(Long exhibitionId) {
 
         //exhibition 조회
         Exhibition exhibition = this.findExhibition(exhibitionId);
@@ -102,7 +102,7 @@ public class ExhibitionService {
     @Transactional
     public ExhibitionResponseDto updateExhibition(Authentication authentication,
                                                   ExhibitionDto exhibitionDto,
-                                                  Long exhibitionId){
+                                                  Long exhibitionId) {
 
         ExhibitionResponseDto exhibitionResponseDto;
         String thumbnail = "";
@@ -117,10 +117,11 @@ public class ExhibitionService {
 
 
         // 작성자와 로그인한 같다면
-        if(user.getId() == exhibition.getExhibitionUser().getId()){
+        if (user.getId() == exhibition.getExhibitionUser().getId()) {
 
-            //update
-            exhibitionDto.setThumbnail(thumbnail);
+            if (exhibitionDto.getThumbnail() == null) {
+                exhibitionDto.setThumbnail(exhibition.getThumbnail());
+            }
             exhibition.update(exhibitionDto);
             exhibition.setUser(user);
 
@@ -129,14 +130,15 @@ public class ExhibitionService {
 
             return exhibitionResponseDto.entityToDto(exhibitionReponse);
 
-        }else{
+        } else {
             exhibitionResponseDto = null;
             return exhibitionResponseDto;
         }
     }
 
     @Transactional
-    public ExhibitionResponseDto updateExhibitionImg(Authentication authentication,Long exhibitionId,MultipartFile file){
+    public ExhibitionResponseDto updateExhibitionImg(Authentication authentication, Long exhibitionId, MultipartFile file) {
+        ExhibitionResponseDto exhibitionResponseDto;
         //user 조회
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
@@ -145,20 +147,26 @@ public class ExhibitionService {
         //Exhibition 존재 여부 확인
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
-        String thumbnail = fileUploadService.uploadImage(file);
-        exhibition.updateImg(thumbnail);
+        // 작성자와 로그인한 같다면
+        if (user.getId() == exhibition.getExhibitionUser().getId()) {
 
-        ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
-        exhibitionResponseDto.entityToDto(exhibition);
+            String thumbnail = fileUploadService.uploadImage(file);
+            exhibition.updateImg(thumbnail);
+            exhibition.setUser(user);
 
-        return exhibitionResponseDto;
+            exhibitionResponseDto = new ExhibitionResponseDto();
+
+            return exhibitionResponseDto.entityToDto(exhibition);
+
+        } else {
+            throw new IllegalArgumentException("게시글 작성자가 아닙니다.");
+        }
+
     }
 
 
-
-
     // exhibition 삭제
-    public String deleteExhibition(Authentication authentication,Long exhibitionId){
+    public String deleteExhibition(Authentication authentication, Long exhibitionId) {
 
         //user 조회
         User user = userService.findCurUser(authentication).orElseThrow(
@@ -169,12 +177,12 @@ public class ExhibitionService {
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
         //user와 Exhibition 작성자가 일치한다면
-        if(user.getId() == exhibition.getExhibitionUser().getId()){
+        if (user.getId() == exhibition.getExhibitionUser().getId()) {
             user.getExhibitions().remove(exhibition);
             exhibitionRepository.deleteById(exhibitionId);
 
-            return "Seccuess";
-        }else{
+            return "Success";
+        } else {
             return "fail";
         }
     }
