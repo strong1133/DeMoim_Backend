@@ -10,8 +10,8 @@ com/demoim_backend/demoim_backend/repository/TeamRepository.java
  com.demoim_backend.demoim_backend.repository.TeamRepository
 com/demoim_backend/demoim_backend/repository/ExhibitionRepository.java
  com.demoim_backend.demoim_backend.repository.ExhibitionRepository
-com/demoim_backend/demoim_backend/config/CorsConfig.java
- com.demoim_backend.demoim_backend.config.CorsConfig
+com/demoim_backend/demoim_backend/controller/SmallTalkController.java
+ com.demoim_backend.demoim_backend.controller.SmallTalkController
 com/demoim_backend/demoim_backend/config/jwt/JwtProperties.java
  com.demoim_backend.demoim_backend.config.jwt.JwtProperties
 com/demoim_backend/demoim_backend/util/DuplicateChecker.java
@@ -57,18 +57,17 @@ com/demoim_backend/demoim_backend/dto/ExhibitionDto.java
  com.demoim_backend.demoim_backend.dto.ExhibitionDto
 com/demoim_backend/demoim_backend/service/SignupService.java
  com.demoim_backend.demoim_backend.service.SignupService
-com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java
- com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter
- com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter$1
-com/demoim_backend/demoim_backend/controller/UserController.java
- com.demoim_backend.demoim_backend.controller.UserController
+com/demoim_backend/demoim_backend/service/CommentService.java
+ com.demoim_backend.demoim_backend.service.CommentService
+com/demoim_backend/demoim_backend/controller/CommentController.java
+ com.demoim_backend.demoim_backend.controller.CommentController
 com/demoim_backend/demoim_backend/model/Comment.java
  com.demoim_backend.demoim_backend.model.Comment
  com.demoim_backend.demoim_backend.model.Comment$CommentBuilder
 com/demoim_backend/demoim_backend/dto/SmallTalkDto.java
  com.demoim_backend.demoim_backend.dto.SmallTalkDto
-com/demoim_backend/demoim_backend/config/SecurityConfig.java
- com.demoim_backend.demoim_backend.config.SecurityConfig
+com/demoim_backend/demoim_backend/controller/MyPageController.java
+ com.demoim_backend.demoim_backend.controller.MyPageController
 com/demoim_backend/demoim_backend/model/User.java
  com.demoim_backend.demoim_backend.model.User
 com/demoim_backend/demoim_backend/controller/TeamController.java
@@ -108,11 +107,12 @@ com/demoim_backend/demoim_backend/dto/ResponseUser.java
  com.demoim_backend.demoim_backend.dto.ResponseUser$ResponseUserBuilder
 com/demoim_backend/demoim_backend/controller/ExhibitionController.java
  com.demoim_backend.demoim_backend.controller.ExhibitionController
-com/demoim_backend/demoim_backend/controller/MyPageController.java
- com.demoim_backend.demoim_backend.controller.MyPageController
-com/demoim_backend/demoim_backend/controller/SmallTalkController.java
- com.demoim_backend.demoim_backend.controller.SmallTalkController
-com/demoim_backend/demoim_backend/controller/CommentController.java
- com.demoim_backend.demoim_backend.controller.CommentController
-com/demoim_backend/demoim_backend/service/CommentService.java
- com.demoim_backend.demoim_backend.service.CommentService
+com/demoim_backend/demoim_backend/config/CorsConfig.java
+ com.demoim_backend.demoim_backend.config.CorsConfig
+com/demoim_backend/demoim_backend/controller/UserController.java
+ com.demoim_backend.demoim_backend.controller.UserController
+com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java
+ com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter
+ com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter$1
+com/demoim_backend/demoim_backend/config/SecurityConfig.java
+ com.demoim_backend.demoim_backend.config.SecurityConfig
