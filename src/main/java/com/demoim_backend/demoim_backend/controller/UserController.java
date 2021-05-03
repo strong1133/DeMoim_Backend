@@ -18,6 +18,10 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
+//    @GetMapping("/api/login")
+//    private Optional<User>  loginUser(Authentication authentication){
+//        return findCurUser(authentication);
+//    }
     // 현재 로그인 유저 정보 반환
     @GetMapping("/api/mypage/profile")
     private Optional<User> findCurUser(Authentication authentication){

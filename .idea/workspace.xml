@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="caa4e67c-4a64-4bb0-ab43-0a2aa65447f2" name="Default Changelist" comment="merge jy">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/dto/TeamResponseDto.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/TeamUserInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.8.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.8.3/executionHistory/executionHistory.bin" afterDir="false" />
@@ -29,6 +30,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/TeamRequestDto.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/model/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/TeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/service/TeamService.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+>>>>>>> main
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,6 +132,7 @@
       <recent name="com.demoim_backend.demoim_backend.controller" />
     </key>
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Spring Boot.DemoimBackendApplication">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
@@ -140,6 +145,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+=======
+  <component name="RunManager" selected="Gradle.DeMoim_Backend [build]">
+>>>>>>> main
     <configuration name="DeMoim_Backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -234,7 +242,9 @@
       <workItem from="1619883228572" duration="1470000" />
       <workItem from="1619941224171" duration="3604000" />
       <workItem from="1619952545930" duration="889000" />
-      <workItem from="1619954700487" duration="7412000" />
+      <workItem from="1619954700487" duration="7415000" />
+      <workItem from="1620017735952" duration="28000" />
+      <workItem from="1620018568318" duration="6076000" />
     </task>
     <task id="LOCAL-00001" summary="git iggnore">
       <created>1619714475398</created>

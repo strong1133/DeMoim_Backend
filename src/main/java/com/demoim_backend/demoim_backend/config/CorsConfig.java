@@ -28,7 +28,7 @@ public class CorsConfig {
         config.addAllowedMethod("DELETE");
         config.addAllowedMethod("FETCH");
 
-        config.setExposedHeaders(Arrays.asList("Authorization","Content-Type"));
+        config.setExposedHeaders(Arrays.asList("Authorization","Content-Type","userInfo"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", config);
         return source;
