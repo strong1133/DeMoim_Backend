@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="caa4e67c-4a64-4bb0-ab43-0a2aa65447f2" name="Default Changelist" comment="merge jy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/config/CorsConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/demoim_backend/demoim_backend/config/CorsConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/config/CorsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/config/jwt/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demoim_backend/demoim_backend/controller/UserController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +128,7 @@
       <recent name="com.demoim_backend.demoim_backend.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.DemoimBackendApplication">
+  <component name="RunManager" selected="Gradle.DeMoim_Backend [build]">
     <configuration name="DeMoim_Backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -229,7 +225,7 @@
       <workItem from="1619952545930" duration="889000" />
       <workItem from="1619954700487" duration="7415000" />
       <workItem from="1620017735952" duration="28000" />
-      <workItem from="1620018568318" duration="5521000" />
+      <workItem from="1620018568318" duration="6076000" />
     </task>
     <task id="LOCAL-00001" summary="git iggnore">
       <created>1619714475398</created>
