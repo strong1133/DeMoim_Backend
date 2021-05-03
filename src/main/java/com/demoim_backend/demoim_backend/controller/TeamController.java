@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +25,16 @@ public class TeamController {
 
     //팀 게시물 작성 _ Post _ /api/team _ auth 필요
     @PostMapping("/api/team")
-    public TeamResponseDto writeTeam(Authentication authentication, @RequestBody @Validated TeamRequestDto teamRequestDto) {
+    public TeamResponseDto createTeam(Authentication authentication, @RequestBody @Validated TeamRequestDto teamRequestDto) {
 
         System.out.println("TeamService 진입 전");
         return teamService.createTeam(authentication, teamRequestDto);
+    }
+
+    //팀 게시물의 첨부이미지
+    @PostMapping("/api/TeamImg")
+    public String createTeamImg(Authentication authentication, @RequestPart MultipartFile file) {
+        return teamService.createTeamImg(authentication, file);
     }
 
     //팀 게시물 읽기 _ Get _ /api/team?page={page_num}&size={size_num} _ auth 불필요
@@ -35,18 +42,7 @@ public class TeamController {
     public List<TeamResponseDto> getTeamList(@RequestParam("page") int page, @RequestParam("size") int size) {
         return teamService.getTeamList(page, size);
     }
-//    public Page<Team> getAllTeams(@RequestParam("page") int page, @RequestParam("size") int size) {
-//        return teamService.getAllTeams(page, size);
-//    }
 
-
-//            @RequestParam("page_num") int page_num,
-//            @RequestParam("size_num") int size_num
-//            /*,@RequestParam("sortBy") String sortBy,
-//            @RequestParam("isAsc") boolean isAsc*/) {
-//
-//        return teamService.getAllTeams(page_num, size_num); //, sortBy, isAsc
-//    }
 
     //특정 팀 게시물 상세보기 _ Get _ /api/team/detail?team_id={team_id} _ auth 불필요
     @GetMapping("/api/team/detail")
@@ -54,11 +50,6 @@ public class TeamController {
 
         return teamService.getTeam(teamId);
     }
-//    @GetMapping("/api/team/detail")
-//    public Team readTeam(@RequestParam("team_id") Long teamId) {
-//
-//        return teamService.getTeam(teamId);
-//    }
 
     //특정 팀 게시물 수정 _ Put _ /api/team/detail?team_id={team_id} _ auth 필요
     @PutMapping("/api/team/detail")
@@ -75,7 +66,7 @@ public class TeamController {
     //특정 팀 게시물 삭제 _ Delete _ /api/team/detail?team_id={team_id} _ auth 필요
     @DeleteMapping("/api/team/detail")
     public ResponseEntity deleteTeam(Authentication authentication, @RequestParam("team_id") Long teamId) {
-        //해당 게시물에 관련된 댓글도 나중에 지워주는 코드 삽입해야!
+        //해당 게시물에 관련된 댓글도 나중에 지워주는 코드 삽입해야하지 않을까??
         String result = teamService.deleteTeam(authentication, teamId);
         HashMap<String, String> message;
 
