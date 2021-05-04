@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class TeamResponseDto {
-    Long teamId;
+    private Long teamId;
     private String title;
     //    private Date recruit;
 //    private Date begin;
