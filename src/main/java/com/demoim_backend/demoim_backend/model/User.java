@@ -35,7 +35,7 @@ public class User extends Timestamped {
     @Column(nullable = true)
     private String desc; // 자기소개
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 400)
     private String profileImage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
     //fetch 속성은 @ManyToOne에서 주로 쓰인다.

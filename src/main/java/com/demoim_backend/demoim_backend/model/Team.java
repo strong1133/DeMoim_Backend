@@ -26,7 +26,7 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 400)
     private String thumbnail;
 
     //    @Column(nullable = false)
