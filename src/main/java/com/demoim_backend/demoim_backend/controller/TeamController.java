@@ -31,7 +31,7 @@ public class TeamController {
         return teamService.createTeam(authentication, teamRequestDto);
     }
 
-    //팀 게시물의 첨부이미지
+    //팀 게시물의 첨부이미지 -> url 반환되니 upload api로 대체 가능
     @PostMapping("/api/TeamImg")
     public String createTeamImg(Authentication authentication, @RequestPart MultipartFile file) {
         return teamService.createTeamImg(authentication, file);
@@ -60,6 +60,7 @@ public class TeamController {
         if (team == null) {
             throw new IllegalArgumentException("게시글의 작성자가 아닙니다.");
         } else {
+            team.setTeamId(teamId);
             return team;
         }
     }

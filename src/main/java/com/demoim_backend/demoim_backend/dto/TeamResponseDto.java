@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class TeamResponseDto {
-
+    Long teamId;
     private String title;
     //    private Date recruit;
 //    private Date begin;
@@ -50,6 +50,7 @@ public class TeamResponseDto {
 
     @Builder
     public TeamResponseDto(Team team, UserUpdateProfileSaveRequestDto leaderProfile) {
+        this.teamId = team.getId();
         this.title = team.getTitle();
         this.recruit = team.getRecruit();
         this.begin = team.getBegin();
