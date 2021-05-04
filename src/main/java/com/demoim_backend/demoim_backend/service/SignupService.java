@@ -1,5 +1,6 @@
 package com.demoim_backend.demoim_backend.service;
 
+import com.demoim_backend.demoim_backend.dto.AlarmRequestDto;
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.SignupRepository;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class SignupService {
     private final PasswordEncoder passwordEncoder;
     private final SignupRepository signupRepository;
+    private final AlarmService alarmService;
     private final DuplicateChecker duplicateChecker;
     private static final String SCERET_KEY = "AWDSDV+/asdwzwr3434@#$vvadflf00ood/[das";
 
@@ -73,9 +75,19 @@ public class SignupService {
         String encodedPassword = passwordEncoder.encode(lawPassword + SCERET_KEY);
         signupRequestDto.setPassword(encodedPassword);
 
+
+
         // 저장
         User user = new User(signupRequestDto);
         signupRepository.save(user);
+        //회원가입 알림
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        String signupAlarm = "😃 안녕하세요."+user.getNickname() +"님! 가입을 환영합니다";
+        alarmRequestDto.setUserId(user.getId());
+        alarmRequestDto.setContents(signupAlarm);
+        alarmService.createAlarm(alarmRequestDto);
+
+
         return user;
     }
 }
