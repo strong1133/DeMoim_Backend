@@ -19,11 +19,11 @@ public class Exhibition extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String contents;
 
     //    @Column(nullable = false)
-    @Column(nullable = true)
+    @Column(nullable = true, length = 400)
     private String thumbnail;
 
 
