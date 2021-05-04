@@ -1,6 +1,7 @@
 package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
+import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,16 @@ public class Team extends Timestamped {
     @OneToMany(mappedBy ="team", cascade = CascadeType.ALL)
     private List<TeamUserInfo> teamUserInfoList = new ArrayList<TeamUserInfo>();
 
+    @Column(nullable = false)
+    private StateNow recruitState = StateNow.ACTIVATED;
+
+    @Column(nullable = false)
+    private StateNow projectState = StateNow.YET;
+
+    public enum StateNow {
+        YET, ACTIVATED, FINISHED
+    }
+
     //연관관계 메소드 Team <-> TeamUserInfo
     public void addTeamUserInfo(TeamUserInfo teamUserInfo) {
         teamUserInfoList.add(teamUserInfo);
@@ -134,5 +145,10 @@ public class Team extends Timestamped {
         team.setContents(teamRequestDto.getContents());
         team.setLeader(user);
         return team;
+    }
+
+    public void updateByTeamStateUpdateResponseDto(TeamStateUpdateResponseDto teamStateUpdateResponseDto) {
+        this.recruitState = teamStateUpdateResponseDto.getRecruitState();
+        this.projectState = teamStateUpdateResponseDto.getProjectState();
     }
 }

@@ -3,6 +3,7 @@ package com.demoim_backend.demoim_backend.service;
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
 import com.demoim_backend.demoim_backend.dto.TeamResponseDto;
+import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
 import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto;
 import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,6 +136,42 @@ public class TeamService {
             teamResponseDto = null;
         }
         return teamResponseDto;
+    }
+
+    //팀메이킹 작성글 날짜별 recruitState & projectState 업데이트
+    @Transactional
+    public void updateState(Long teamId, Date now) {
+        //team 작성글 존재여부 검증(from TeamService.findTeam)
+        Team team = this.findTeam(teamId);
+
+        TeamStateUpdateResponseDto teamStateDto = new TeamStateUpdateResponseDto();
+
+
+//        Long teamId = team.getId();
+
+        Team.StateNow recruitState = team.getRecruitState();
+        Team.StateNow projectState = team.getProjectState();
+        //지금 시간 기준으로 recruitState 값 재설정
+        if (now.after(team.getRecruit()) || now.equals(team.getRecruit())) {
+            System.out.println("모집상태 변경 ACTIVATED -> FINISHED");
+            recruitState = Team.StateNow.FINISHED;
+        }
+        //지금 시간 기준으로 projectState 값 재설정
+        if (now.after(team.getBegin()) && now.before(team.getEnd())) {
+//                team.setProjectState(Team.StateNow.ACTIVATED);
+            System.out.println("프로젝트상태 변경 YET -> ACTIVATED");
+            projectState = Team.StateNow.ACTIVATED;
+        } else if (now.after(team.getEnd()) || now.equals(team.getEnd())) {
+//                team.setProjectState(Team.StateNow.FINISHED);
+            System.out.println("프로젝트상태 변경 ACTIVATED -> FINISHED");
+            projectState = Team.StateNow.FINISHED;
+        }
+        teamStateDto.setRecruitState(recruitState);
+        teamStateDto.setProjectState(projectState);
+
+        team.updateByTeamStateUpdateResponseDto(teamStateDto);
+
+
     }
 
     //팀메이킹 작성글 삭제 _ auth 필요
