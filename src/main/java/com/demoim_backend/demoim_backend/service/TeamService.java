@@ -52,7 +52,7 @@ public class TeamService {
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = Team.createTeam(teamRequestDto, user);
         teamRepository.save(team);
-
+        teamResponseDto.setTeamId(team.getId());
         return teamResponseDto;
     }
 
