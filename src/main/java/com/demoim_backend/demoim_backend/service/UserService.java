@@ -7,6 +7,7 @@ import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,7 @@ public class UserService {
 
     // 유저 정보 수정
     @Transactional
-    public User updateProfile(Authentication authentication, UserUpdateProfileRequestDto userUpdateProfileDto, MultipartFile file){
+    public User updateProfile(Authentication authentication, String userEditInfo, MultipartFile file){
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         Long userId = principalDetails.getUser().getId();
         User user = userRepository.findById(userId).orElseThrow(
@@ -52,10 +53,21 @@ public class UserService {
             profileImage =  fileUploadService.uploadImage(file);
         }
 
+
+        JSONObject jsonObject = new JSONObject(userEditInfo);
+        UserUpdateProfileRequestDto userUpdateProfileRequestDto =new UserUpdateProfileRequestDto();
+        String nickname = jsonObject.getString("nickname");
+        String position=jsonObject.getString("position");
+        String desc=jsonObject.getString("desc");
+
+        userUpdateProfileRequestDto.setNickname(nickname);
+        userUpdateProfileRequestDto.setDesc(desc);
+        userUpdateProfileRequestDto.setPosition(position);
+
         UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto = new UserUpdateProfileSaveRequestDto();
-        userUpdateProfileSaveDto.setNickname(userUpdateProfileDto.getNickname());
-        userUpdateProfileSaveDto.setPosition(userUpdateProfileDto.getPosition());
-        userUpdateProfileSaveDto.setDesc(userUpdateProfileDto.getDesc());
+        userUpdateProfileSaveDto.setNickname(userUpdateProfileRequestDto.getNickname());
+        userUpdateProfileSaveDto.setPosition(userUpdateProfileRequestDto.getPosition());
+        userUpdateProfileSaveDto.setDesc(userUpdateProfileRequestDto.getDesc());
         userUpdateProfileSaveDto.setProfileImage(profileImage);
         user.update(userUpdateProfileSaveDto);
         return user;

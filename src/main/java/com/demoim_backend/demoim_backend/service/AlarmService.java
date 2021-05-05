@@ -25,7 +25,7 @@ public class AlarmService {
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
         Long userId = user.getId();
-        return alarmRepository.findByUserId(userId);
+        return alarmRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     // 알람 생성
