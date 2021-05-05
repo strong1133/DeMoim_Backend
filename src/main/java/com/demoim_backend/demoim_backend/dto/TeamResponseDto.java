@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
@@ -15,12 +17,15 @@ import java.util.Date;
 public class TeamResponseDto {
     Long teamId;
     private String title;
-    //    private Date recruit;
+//    private Date recruit;
 //    private Date begin;
 //    private Date end;
-    private Date recruit;
-    private Date begin;
-    private Date end;
+//    private LocalDateTime recruit;
+//    private LocalDateTime begin;
+//    private LocalDateTime end;
+    private Long recruit;
+    private Long begin;
+    private Long end;
     private String location;
     private String thumbnail;
     private int front;
@@ -29,6 +34,8 @@ public class TeamResponseDto {
     private int planner;
     private String stack;
     private String contents;
+    private Team.StateNow recruitState;
+    private Team.StateNow projectState;
     private UserUpdateProfileSaveRequestDto leader;
 
     @Builder
@@ -45,6 +52,8 @@ public class TeamResponseDto {
         this.planner = teamRequestDto.getPlanner();
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
+        this.recruitState = Team.StateNow.ACTIVATED;
+        this.projectState = Team.StateNow.YET;
         this.leader = leaderProfile;
     }
 
@@ -52,9 +61,9 @@ public class TeamResponseDto {
     public TeamResponseDto(Team team, UserUpdateProfileSaveRequestDto leaderProfile) {
         this.teamId = team.getId();
         this.title = team.getTitle();
-        this.recruit = team.getRecruit();
-        this.begin = team.getBegin();
-        this.end = team.getEnd();
+        this.recruit = team.getRecruit().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        this.begin = team.getBegin().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        this.end = team.getEnd().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
         this.location = team.getLocation();
         this.thumbnail = team.getThumbnail();
         this.front = team.getFront();
@@ -63,6 +72,8 @@ public class TeamResponseDto {
         this.planner = team.getPlanner();
         this.stack = team.getStack();
         this.contents = team.getContents();
+        this.recruitState = team.getRecruitState();
+        this.projectState = team.getProjectState();
         this.leader = leaderProfile;
     }
 

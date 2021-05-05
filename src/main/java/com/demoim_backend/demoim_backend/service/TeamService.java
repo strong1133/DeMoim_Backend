@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,14 +45,18 @@ public class TeamService {
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
     public TeamResponseDto createTeam(Authentication authentication,TeamRequestDto teamRequestDto) {
-
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
+        LocalDateTime recruitLDT = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        LocalDateTime beginLDT = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        LocalDateTime endLDT = Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
 
+//        Date localRecruit = teamRequestDto.getRecruit().
         UserUpdateProfileSaveRequestDto userUpdateProfileSaveRequestDto = new UserUpdateProfileSaveRequestDto(user);
         TeamResponseDto teamResponseDto = new TeamResponseDto(teamRequestDto, userUpdateProfileSaveRequestDto);
+
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = Team.createTeam(teamRequestDto, user);
@@ -140,7 +147,7 @@ public class TeamService {
 
     //팀메이킹 작성글 날짜별 recruitState & projectState 업데이트
     @Transactional
-    public void updateState(Long teamId, Date now) {
+    public void updateState(Long teamId, LocalDateTime now) {
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = this.findTeam(teamId);
 
@@ -152,16 +159,19 @@ public class TeamService {
         Team.StateNow recruitState = team.getRecruitState();
         Team.StateNow projectState = team.getProjectState();
         //지금 시간 기준으로 recruitState 값 재설정
-        if (now.after(team.getRecruit()) || now.equals(team.getRecruit())) {
+//        if (now.after(team.getRecruit()) || now.equals(team.getRecruit())) {
+        if (now.compareTo(team.getRecruit()) >= 0) {
             System.out.println("모집상태 변경 ACTIVATED -> FINISHED");
             recruitState = Team.StateNow.FINISHED;
         }
         //지금 시간 기준으로 projectState 값 재설정
-        if (now.after(team.getBegin()) && now.before(team.getEnd())) {
+//        if (now.after(team.getBegin()) && now.before(team.getEnd())) {
+        if (now.compareTo(team.getBegin()) >= 0 && now.compareTo(team.getEnd()) < 0) {
 //                team.setProjectState(Team.StateNow.ACTIVATED);
             System.out.println("프로젝트상태 변경 YET -> ACTIVATED");
             projectState = Team.StateNow.ACTIVATED;
-        } else if (now.after(team.getEnd()) || now.equals(team.getEnd())) {
+//        } else if (now.after(team.getEnd()) || now.equals(team.getEnd())) {
+        } else if (now.compareTo(team.getEnd()) >= 0) {
 //                team.setProjectState(Team.StateNow.FINISHED);
             System.out.println("프로젝트상태 변경 ACTIVATED -> FINISHED");
             projectState = Team.StateNow.FINISHED;
