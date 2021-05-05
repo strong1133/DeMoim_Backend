@@ -2,13 +2,16 @@ package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
 import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,18 +34,24 @@ public class Team extends Timestamped {
 
     //    @Column(nullable = false)
 //    @Temporal(TemporalType.DATE)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date recruit;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date recruit;
+    private LocalDateTime recruit;
 
     //    @Column(nullable = false)
 //    @Temporal(TemporalType.DATE)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date begin;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date begin;
+    private LocalDateTime begin;
 
     //    @Column(nullable = false)
 //    @Temporal(TemporalType.DATE)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date end;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date end;
+    private LocalDateTime end;
 
     @Column(nullable = false)
     private String location;
@@ -80,11 +89,11 @@ public class Team extends Timestamped {
     @OneToMany(mappedBy ="team", cascade = CascadeType.ALL)
     private List<TeamUserInfo> teamUserInfoList = new ArrayList<TeamUserInfo>();
 
-    @Column(nullable = false)
-    private StateNow recruitState = StateNow.ACTIVATED;
+    @Enumerated(EnumType.STRING)
+    private StateNow recruitState; // 여기서 초기화를 하면 업데이트 불가능
 
-    @Column(nullable = false)
-    private StateNow projectState = StateNow.YET;
+    @Enumerated(EnumType.STRING)
+    private StateNow projectState;
 
     public enum StateNow {
         YET, ACTIVATED, FINISHED
@@ -100,9 +109,9 @@ public class Team extends Timestamped {
     public Team(TeamRequestDto teamRequestDto, User user) {
         this.title = teamRequestDto.getTitle();
         this.thumbnail = teamRequestDto.getThumbnail();
-        this.recruit = teamRequestDto.getRecruit();
-        this.begin = teamRequestDto.getBegin();
-        this.end = teamRequestDto.getEnd();
+        this.recruit = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.begin = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.end = Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         this.location = teamRequestDto.getLocation();
         this.front = teamRequestDto.getFront();
         this.back = teamRequestDto.getBack();
@@ -110,15 +119,17 @@ public class Team extends Timestamped {
         this.planner = teamRequestDto.getPlanner();
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
+        this.recruitState = StateNow.ACTIVATED;
+        this.projectState = StateNow.YET;
         this.leader = user;
     }
 
     public void update(TeamRequestDto teamRequestDto) {
         this.title = teamRequestDto.getTitle();
         this.thumbnail = teamRequestDto.getThumbnail();
-        this.recruit = teamRequestDto.getRecruit();
-        this.begin = teamRequestDto.getBegin();
-        this.end = teamRequestDto.getEnd();
+        this.recruit = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.begin = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.end = Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         this.location = teamRequestDto.getLocation();
         this.front = teamRequestDto.getFront();
         this.back = teamRequestDto.getBack();
@@ -133,9 +144,9 @@ public class Team extends Timestamped {
         Team team = new Team();
         team.setTitle(teamRequestDto.getTitle());
         team.setThumbnail(teamRequestDto.getThumbnail());
-        team.setRecruit(teamRequestDto.getRecruit());
-        team.setBegin(teamRequestDto.getBegin());
-        team.setEnd(teamRequestDto.getEnd());
+        team.setRecruit(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
+        team.setBegin(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
+        team.setEnd(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
         team.setLocation(teamRequestDto.getLocation());
         team.setFront(teamRequestDto.getFront());
         team.setBack(teamRequestDto.getBack());
@@ -143,6 +154,8 @@ public class Team extends Timestamped {
         team.setPlanner(teamRequestDto.getPlanner());
         team.setStack(teamRequestDto.getStack());
         team.setContents(teamRequestDto.getContents());
+        team.setRecruitState(StateNow.ACTIVATED);
+        team.setProjectState(StateNow.YET);
         team.setLeader(user);
         return team;
     }
