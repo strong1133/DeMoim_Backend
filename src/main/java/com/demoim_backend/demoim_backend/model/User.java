@@ -40,7 +40,7 @@ public class User extends Timestamped {
 
     //fetch 속성은 @ManyToOne에서 주로 쓰인다.
     //영속성 전이를 위해 cascade = CascadeType.ALL을 추가해준다.
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TeamUserInfo> teamUserInfos = new ArrayList<TeamUserInfo>();
 //    //    @JoinColumn
