@@ -9,6 +9,7 @@ import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.TeamUserInfoRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
+import com.demoim_backend.demoim_backend.util.RandomImg;
 import com.demoim_backend.demoim_backend.util.TeamJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -39,6 +37,7 @@ public class TeamService {
     private final FileUploadService fileUploadService;
     private final TeamJsonMapper teamJsonMapper;
     private final TeamUserInfoRepository teamUserInfoRepository;
+    private final RandomImg randomImg;
 
 
     //게시글 존재유무 검증
@@ -50,11 +49,15 @@ public class TeamService {
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
     public TeamResponseDto createTeam(Authentication authentication, String requestBody, MultipartFile file) {
-
+        Random random = new Random();
         TeamRequestDto teamRequestDto;
         teamRequestDto = teamJsonMapper.jsonTeamDtoMaker(requestBody);
         if (file != null) {
             teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
+        }
+        if (file == null){
+            int rNum = random.nextInt(10);
+            teamRequestDto.setThumbnail(randomImg.rndImg(rNum));
         }
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
