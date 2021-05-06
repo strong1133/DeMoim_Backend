@@ -60,15 +60,9 @@ public class TeamController {
                                     @RequestPart(value ="requestBody" ) String requestBody,
                                     @RequestPart(required = false) MultipartFile file) {
 
-        TeamResponseDto team =  teamService.update(authentication, teamId, requestBody,file);
-
-        if (team == null) {
-            throw new IllegalArgumentException("게시글의 작성자가 아닙니다.");
-        } else {
-            team.setTeamId(teamId);
-            return team;
-        }
+        return teamService.update(authentication, teamId, requestBody,file);
     }
+
     //특정 팀 게시물 삭제 _ Delete _ /api/team/detail?team_id={team_id} _ auth 필요
     @DeleteMapping("/api/team/detail")
     public ResponseEntity deleteTeam(Authentication authentication, @RequestParam("team_id") Long teamId) {

@@ -177,12 +177,13 @@ public class TeamService {
         //authentication 통해 뽑은 User와 Team메이킹 글의 leader가 같은지 여부 체크
         if (user.getId() == team.getLeader().getId()) {
             team.update(teamRequestDto);
-            teamResponseDto = new TeamResponseDto(teamRequestDto, leaderProfileDto);
+            teamResponseDto = new TeamResponseDto(team, leaderProfileDto);
         } else {
             teamResponseDto = null;
         }
         return teamResponseDto;
     }
+
 
     //팀메이킹 작성글 날짜별 recruitState & projectState 업데이트
     @Transactional
