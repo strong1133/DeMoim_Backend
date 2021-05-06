@@ -3,6 +3,7 @@ package com.demoim_backend.demoim_backend.model;
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
 import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +87,7 @@ public class Team extends Timestamped {
      */
 //    @Column(nullable = false)
 //    private Long leaderId; // 리더 유저Id 값이 담김
+    @JsonIgnore
     @OneToMany(mappedBy ="team", cascade = CascadeType.ALL)
     private List<TeamUserInfo> teamUserInfoList = new ArrayList<TeamUserInfo>();
 
@@ -145,8 +147,8 @@ public class Team extends Timestamped {
         team.setTitle(teamRequestDto.getTitle());
         team.setThumbnail(teamRequestDto.getThumbnail());
         team.setRecruit(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
-        team.setBegin(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
-        team.setEnd(Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
+        team.setBegin(Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
+        team.setEnd(Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
         team.setLocation(teamRequestDto.getLocation());
         team.setFront(teamRequestDto.getFront());
         team.setBack(teamRequestDto.getBack());

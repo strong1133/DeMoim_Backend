@@ -1,12 +1,16 @@
 package com.demoim_backend.demoim_backend.model;
 
+import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 
 @Setter
+@Getter
 @Entity
 @NoArgsConstructor
 public class TeamUserInfo {
@@ -32,13 +36,29 @@ public class TeamUserInfo {
     private Membership membership;
 
     @Column
-    private boolean isAccepted;
+    private Boolean isAccepted;
+
+    @Column
+    private String message;
+
+    @Column
+    private String portfolio;
 
 
     public enum Membership {
-        Leader, Member //Member라는 element 피하는게 좋을수도..
+        LEADER, MEMBER //Member라는 element 피하는게 좋을수도.. -> 대문자 처리
     }
 
+    public static TeamUserInfo createTeamUserInfo(ApplyResponseDto applyResponseDto, User user) {
+        TeamUserInfo teamUserInfo = new TeamUserInfo();
+        teamUserInfo.setTeam(applyResponseDto.getTeam());
+        teamUserInfo.setUser(user);
+        teamUserInfo.setMembership(applyResponseDto.getMembership());
+        teamUserInfo.setIsAccepted(applyResponseDto.getIsAccepted());
+        teamUserInfo.setMessage(applyResponseDto.getMessage());
+        teamUserInfo.setPortfolio(applyResponseDto.getPortfolio());
+        return teamUserInfo;
+    }
 
 
 }
