@@ -1,6 +1,7 @@
 package com.demoim_backend.demoim_backend.dto;
 
 import com.demoim_backend.demoim_backend.model.Exhibition;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,12 @@ public class ExhibitionDto {
 
     private String thumbnail;
 
+    @Builder
+    public ExhibitionDto(String title, String contents, String thumbnail) {
+        this.title = title;
+        this.contents = contents;
+        this.thumbnail = thumbnail;
+    }
 
     public Exhibition toEntity(){
         return Exhibition.builder()

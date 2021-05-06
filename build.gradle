@@ -24,6 +24,7 @@ dependencies {
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     compileOnly 'org.projectlombok:lombok'
+    implementation 'junit:junit:4.13.1'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
@@ -41,6 +42,9 @@ dependencies {
     //valid
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    //test
+    testCompile('org.springframework.security:spring-security-test')
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 }
 
 test {
