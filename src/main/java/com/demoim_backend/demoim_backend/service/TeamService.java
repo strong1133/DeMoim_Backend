@@ -22,7 +22,10 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+<<<<<<< HEAD
 import java.time.ZoneOffset;
+=======
+>>>>>>> de14986945c5f0cafddaf6699ea9607d67b16057
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +62,10 @@ public class TeamService {
         TeamResponseDto teamResponseDto = new TeamResponseDto(teamRequestDto, userUpdateProfileSaveRequestDto);
 
 
+<<<<<<< HEAD
+=======
+        //team 작성글 존재여부 검증(from TeamService.findTeam)
+>>>>>>> de14986945c5f0cafddaf6699ea9607d67b16057
         Team team = Team.createTeam(teamRequestDto, user);
         teamRepository.save(team);
         teamResponseDto.setTeamId(team.getId());

@@ -28,7 +28,7 @@ public class Scheduler {
 //    private final LocalDateTime localDateTime;
 
     //초, 분, 시, 일, 월, 주 순서
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 * 0 * * *")
     private void updateStates() throws InterruptedIOException {
         System.out.println("팀메이킹 객체 별 모집상황, 프로젝트상황 업데이트");
         List<Team> teamList = teamRepository.findAll();

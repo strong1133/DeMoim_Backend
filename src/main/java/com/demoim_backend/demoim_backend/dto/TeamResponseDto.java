@@ -23,7 +23,10 @@ public class TeamResponseDto {
 //    private LocalDateTime recruit;
 //    private LocalDateTime begin;
 //    private LocalDateTime end;
+<<<<<<< HEAD
     private Long createdAt;
+=======
+>>>>>>> de14986945c5f0cafddaf6699ea9607d67b16057
     private Long recruit;
     private Long begin;
     private Long end;
@@ -62,7 +65,10 @@ public class TeamResponseDto {
     public TeamResponseDto(Team team, UserUpdateProfileSaveRequestDto leaderProfile) {
         this.teamId = team.getId();
         this.title = team.getTitle();
+<<<<<<< HEAD
         this.createdAt = team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+=======
+>>>>>>> de14986945c5f0cafddaf6699ea9607d67b16057
         this.recruit = team.getRecruit().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
         this.begin = team.getBegin().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
         this.end = team.getEnd().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
