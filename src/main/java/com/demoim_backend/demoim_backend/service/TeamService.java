@@ -1,13 +1,12 @@
 package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
-import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
-import com.demoim_backend.demoim_backend.dto.TeamResponseDto;
-import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto;
+import com.demoim_backend.demoim_backend.dto.*;
 import com.demoim_backend.demoim_backend.model.Team;
+import com.demoim_backend.demoim_backend.model.TeamUserInfo;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
+import com.demoim_backend.demoim_backend.repository.TeamUserInfoRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,8 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,7 @@ public class TeamService {
     private final UserService userService;
     private final TeamRepository teamRepository;
     private final FileUploadService fileUploadService;
+    private final TeamUserInfoRepository teamUserInfoRepository;
 
     //게시글 존재유무 검증
     public Team findTeam(Long teamId) {
@@ -58,10 +60,34 @@ public class TeamService {
         TeamResponseDto teamResponseDto = new TeamResponseDto(teamRequestDto, userUpdateProfileSaveRequestDto);
 
 
+
         //team 작성글 존재여부 검증(from TeamService.findTeam)
+
         Team team = Team.createTeam(teamRequestDto, user);
         teamRepository.save(team);
         teamResponseDto.setTeamId(team.getId());
+        teamResponseDto.setCreatedAt(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
+
+
+        System.out.println("createdAt의 LocalDateTime : "+ team.getCreatedAt());
+        System.out.println("밀리초 변환 1안(아마 초변환인듯) : "+ team.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
+        System.out.println("밀리초 변환 1안(아마 초변환인듯) : "+ Long.toString(team.getCreatedAt().toEpochSecond(ZoneOffset.UTC)).length());
+
+//        Long nowtime = team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+//        String len = Long.toString(nowtime);
+
+        System.out.println("밀리초 변환 2안 : "+ team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
+        System.out.println("밀리초 변환 2안 길이 : "+ Long.toString(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()).length() );
+
+
+        System.out.println("now : " + System.currentTimeMillis());
+        System.out.println("now 길이 : " + Long.toString(System.currentTimeMillis()).length());
+
+        //TeamUserInfo에 리더 정보 저장
+        ApplyResponseDto applyResponseDto = new ApplyResponseDto(team);
+        TeamUserInfo leaderInfo = TeamUserInfo.createTeamUserInfo(applyResponseDto, user);
+        teamUserInfoRepository.save(leaderInfo);
+
         return teamResponseDto;
     }
 
