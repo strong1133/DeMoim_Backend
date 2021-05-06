@@ -2,6 +2,7 @@ package com.demoim_backend.demoim_backend.controller;
 
 import com.demoim_backend.demoim_backend.dto.SmallTalkDto;
 import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
+import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.service.SmallTalkService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
