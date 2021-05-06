@@ -10,6 +10,7 @@ import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
+import com.demoim_backend.demoim_backend.util.TeamJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,7 @@ public class TeamService {
     private final UserService userService;
     private final TeamRepository teamRepository;
     private final FileUploadService fileUploadService;
+    private final TeamJsonMapper teamJsonMapper;
 
     //게시글 존재유무 검증
     public Team findTeam(Long teamId) {
@@ -44,7 +46,13 @@ public class TeamService {
     }
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
-    public TeamResponseDto createTeam(Authentication authentication,TeamRequestDto teamRequestDto) {
+    public TeamResponseDto createTeam(Authentication authentication,String requestBody, MultipartFile file) {
+
+        TeamRequestDto teamRequestDto;
+        teamRequestDto = teamJsonMapper.jsonTeamDtoMaker(requestBody);
+        if (file != null){
+            teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
+        }
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
@@ -56,6 +64,7 @@ public class TeamService {
 //        Date localRecruit = teamRequestDto.getRecruit().
         UserUpdateProfileSaveRequestDto userUpdateProfileSaveRequestDto = new UserUpdateProfileSaveRequestDto(user);
         TeamResponseDto teamResponseDto = new TeamResponseDto(teamRequestDto, userUpdateProfileSaveRequestDto);
+
 
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)

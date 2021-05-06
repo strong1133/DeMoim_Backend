@@ -51,7 +51,7 @@ public class TeamRequestDto {
 //    }
     @Builder
     //    public TeamRequestDto(String title, Date recruit, Date begin, Date end, String location, String thumbnail, int front, int back, int designer, int planner, String stack, String contents) {
-    public TeamRequestDto(String title, Long recruit, Long begin, Long end, String location, String thumbnail, int front, int back, int designer, int planner, String stack, String contents) {
+    public TeamRequestDto(String title, Long recruit, Long begin, Long end, String location, String  thumbnail , int front, int back, int designer, int planner, String stack, String contents) {
         this.title = title;
         this.recruit = recruit;
         this.begin = begin;
