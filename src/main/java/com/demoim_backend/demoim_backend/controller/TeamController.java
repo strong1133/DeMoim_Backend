@@ -27,10 +27,11 @@ public class TeamController {
 
     //팀 게시물 작성 _ Post _ /api/team _ auth 필요
     @PostMapping("/api/team")
-    public TeamResponseDto createTeam(Authentication authentication, @RequestBody @Validated TeamRequestDto teamRequestDto) {
+    public TeamResponseDto createTeam(Authentication authentication,@RequestPart(value ="requestBody" ) String requestBody,
+                                      @RequestPart(required = false) MultipartFile file) {
 
         System.out.println("TeamService 진입 전");
-        return teamService.createTeam(authentication, teamRequestDto);
+        return teamService.createTeam(authentication, requestBody,file);
     }
 
     //팀 게시물의 첨부이미지 -> url 반환되니 upload api로 대체 가능

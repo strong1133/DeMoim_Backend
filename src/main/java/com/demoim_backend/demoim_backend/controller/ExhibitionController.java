@@ -25,40 +25,40 @@ public class ExhibitionController {
 
     // exhibition 작성
     @PostMapping("/api/exhibition")
-    public ExhibitionResponseDto createExhibition(@RequestBody @Valid ExhibitionDto exhibitionDto, Authentication authentication){
-        return exhibitionService.createExhibition(authentication,exhibitionDto);
+    public ExhibitionResponseDto createExhibition(Authentication authentication, @RequestPart(value = "requestBody") String requestBody, @RequestPart(required = false) MultipartFile file) {
+        return exhibitionService.createExhibition(authentication, requestBody, file);
     }
 
     // exhibtion 이미지 작성
     @PostMapping("/api/exhibitionImg")
-    public String createExhibitionImg(Authentication authentication,@RequestPart MultipartFile file){
-        return exhibitionService.createExhibitionImg(authentication,file);
+    public String createExhibitionImg(Authentication authentication, @RequestPart MultipartFile file) {
+        return exhibitionService.createExhibitionImg(authentication, file);
     }
 
     // exhibition 조회
     @GetMapping("/api/exhibition")
-    public List<ExhibitionResponseDto> getExhibitionList(@RequestParam int page, int size){
-        return exhibitionService.getExhibitionList(page,size);
+    public List<ExhibitionResponseDto> getExhibitionList(@RequestParam int page, int size) {
+        return exhibitionService.getExhibitionList(page, size);
     }
 
     // exhibition 단건 조회
     @GetMapping("/api/exhibition/detail")
-    public ExhibitionResponseDto getExhibition(@RequestParam(name = "exhibition_id") Long exhibitionId){
+    public ExhibitionResponseDto getExhibition(@RequestParam(name = "exhibition_id") Long exhibitionId) {
         return exhibitionService.getExhibition(exhibitionId);
     }
 
     // exhibition 수정
     @PutMapping("/api/exhibition/detail")
     public ExhibitionResponseDto getExhibitionDto(Authentication authentication,
-                                                  @RequestBody @Valid ExhibitionDto exhibitionDto,
-                                                  @RequestParam(name = "exhibition_id") Long exhibitionId){
+                                                  @RequestPart(value = "requestBody") String requestBody, @RequestPart(required = false) MultipartFile file,
+                                                  @RequestParam(name = "exhibition_id") Long exhibitionId) {
 
-        ExhibitionResponseDto exhibition = exhibitionService.updateExhibition(authentication,exhibitionDto,exhibitionId);
+        ExhibitionResponseDto exhibition = exhibitionService.updateExhibition(authentication, requestBody, file, exhibitionId);
 
-        if(exhibition == null){
+        if (exhibition == null) {
             throw new IllegalArgumentException("게시글 작성자가 아닙니다.");
 
-        }else{
+        } else {
             return exhibition;
         }
     }
@@ -67,25 +67,25 @@ public class ExhibitionController {
     @PutMapping("/api/exhibition/detailImg")
     public ExhibitionResponseDto updateExhibitionImg(Authentication authentication,
                                                      @RequestParam(name = "exhibition_id") Long exhibitionId,
-                                                     @RequestPart MultipartFile file){
-        return exhibitionService.updateExhibitionImg(authentication,exhibitionId,file);
+                                                     @RequestPart MultipartFile file) {
+        return exhibitionService.updateExhibitionImg(authentication, exhibitionId, file);
     }
 
     // exhibition 삭제
     @DeleteMapping("/api/exhibition/detail")
-    public ResponseEntity deleteExhibition(Authentication authentication, @RequestParam(name = "exhibition_id") Long exhibitionId){
+    public ResponseEntity deleteExhibition(Authentication authentication, @RequestParam(name = "exhibition_id") Long exhibitionId) {
 
-        String result = exhibitionService.deleteExhibition(authentication,exhibitionId);
+        String result = exhibitionService.deleteExhibition(authentication, exhibitionId);
         HashMap<String, String> message;
 
         //삭제 성공 시
-        if(result.equals("Success")){
+        if (result.equals("Success")) {
             message = new HashMap<>();
-            message.put("msg",result);
+            message.put("msg", result);
             return new ResponseEntity<>(message, HttpStatus.OK);
 
             //삭제 실패 시
-        }else{
+        } else {
             message = new HashMap<>();
             message.put("msg", result);
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);

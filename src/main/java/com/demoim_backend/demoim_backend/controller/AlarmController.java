@@ -23,7 +23,7 @@ public class AlarmController {
     //확인용
     @GetMapping("/api/alarm/chk")
     public List<Alarm> getAlarmChk(@RequestParam Long userId){
-        return alarmRepository.findByUserId(userId);
+        return alarmRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     // 알람 조회
