@@ -6,6 +6,7 @@ import com.demoim_backend.demoim_backend.model.Exhibition;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ExhibitionRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,7 +41,17 @@ public class ExhibitionService {
     }
 
     // exhibition 생성
-    public ExhibitionResponseDto createExhibition(Authentication authentication, ExhibitionDto exhibitionDto) {
+    public ExhibitionResponseDto createExhibition(Authentication authentication, String requestBody, MultipartFile file) {
+        ExhibitionDto exhibitionDto = new ExhibitionDto();
+        JSONObject jsonObject = new JSONObject(requestBody);
+        exhibitionDto.setTitle(jsonObject.getString("title"));
+        exhibitionDto.setContents(jsonObject.getString("contents"));
+        if (file == null) {
+            exhibitionDto.setThumbnail(null);
+        } else {
+            exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));
+        }
+
 
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
@@ -101,8 +112,13 @@ public class ExhibitionService {
     // exhibition 수정
     @Transactional
     public ExhibitionResponseDto updateExhibition(Authentication authentication,
-                                                  ExhibitionDto exhibitionDto,
+                                                  String requestBody, MultipartFile file,
                                                   Long exhibitionId) {
+
+        ExhibitionDto exhibitionDto = new ExhibitionDto();
+        JSONObject jsonObject = new JSONObject(requestBody);
+        exhibitionDto.setTitle(jsonObject.getString("title"));
+        exhibitionDto.setContents(jsonObject.getString("contents"));
 
         ExhibitionResponseDto exhibitionResponseDto;
         String thumbnail = "";
@@ -119,8 +135,10 @@ public class ExhibitionService {
         // 작성자와 로그인한 같다면
         if (user.getId() == exhibition.getExhibitionUser().getId()) {
 
-            if (exhibitionDto.getThumbnail() == null) {
+            if (file == null) {
                 exhibitionDto.setThumbnail(exhibition.getThumbnail());
+            }else {
+                exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));
             }
             exhibition.update(exhibitionDto);
             exhibition.setUser(user);
