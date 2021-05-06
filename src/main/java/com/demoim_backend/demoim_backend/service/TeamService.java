@@ -49,16 +49,16 @@ public class TeamService {
     }
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
-    public TeamResponseDto createTeam(Authentication authentication,String requestBody, MultipartFile file) {
+    public TeamResponseDto createTeam(Authentication authentication, String requestBody, MultipartFile file) {
 
         TeamRequestDto teamRequestDto;
         teamRequestDto = teamJsonMapper.jsonTeamDtoMaker(requestBody);
-        if (file != null){
+        if (file != null) {
             teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
         }
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
-                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
         LocalDateTime recruitLDT = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         LocalDateTime beginLDT = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
@@ -69,7 +69,6 @@ public class TeamService {
         TeamResponseDto teamResponseDto = new TeamResponseDto(teamRequestDto, userUpdateProfileSaveRequestDto);
 
 
-
         //team 작성글 존재여부 검증(from TeamService.findTeam)
 
         Team team = Team.createTeam(teamRequestDto, user);
@@ -78,15 +77,15 @@ public class TeamService {
         teamResponseDto.setCreatedAt(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
 
 
-        System.out.println("createdAt의 LocalDateTime : "+ team.getCreatedAt());
-        System.out.println("밀리초 변환 1안(아마 초변환인듯) : "+ team.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
-        System.out.println("밀리초 변환 1안(아마 초변환인듯) : "+ Long.toString(team.getCreatedAt().toEpochSecond(ZoneOffset.UTC)).length());
+        System.out.println("createdAt의 LocalDateTime : " + team.getCreatedAt());
+        System.out.println("밀리초 변환 1안(아마 초변환인듯) : " + team.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
+        System.out.println("밀리초 변환 1안(아마 초변환인듯) : " + Long.toString(team.getCreatedAt().toEpochSecond(ZoneOffset.UTC)).length());
 
 //        Long nowtime = team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
 //        String len = Long.toString(nowtime);
 
-        System.out.println("밀리초 변환 2안 : "+ team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
-        System.out.println("밀리초 변환 2안 길이 : "+ Long.toString(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()).length() );
+        System.out.println("밀리초 변환 2안 : " + team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
+        System.out.println("밀리초 변환 2안 길이 : " + Long.toString(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()).length());
 
 
         System.out.println("now : " + System.currentTimeMillis());
@@ -114,7 +113,6 @@ public class TeamService {
     }
 
 
-
 //    public Page<Team> getAllTeams(Pageable pageable) {
 //        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1); // page 는 index 처럼 0 부터 시작
 //        pageable = PageRequest.of(page, 10);
@@ -124,7 +122,7 @@ public class TeamService {
     //팀메이킹 작성글 전체조회 with 페이지네이션 _ auth 불필요
     public List<TeamResponseDto> getTeamList(int page, int size) { //(int page, int size, String sortBy, boolean isAsc)
 
-        Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page-1, size,Sort.Direction.DESC,"modifiedAt"));
+        Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
 
         //페이징한 Page<Team>를 List<TeamResponseDto>에 담기
         List<Team> listTeam = pageTeam.getContent(); // toList 메소드와 getContent 차이는?
@@ -156,19 +154,25 @@ public class TeamService {
 
     //팀메이킹 작성글 수정 _ auth 필요
     @Transactional
-    public TeamResponseDto update(Authentication authentication, Long teamId, TeamRequestDto teamRequestDto) {
-
+    public TeamResponseDto update(Authentication authentication, Long teamId, String requestBody, MultipartFile file) {
+        TeamRequestDto teamRequestDto;
+        teamRequestDto = teamJsonMapper.jsonTeamDtoMaker(requestBody);
         TeamResponseDto teamResponseDto;
 
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
-
         UserUpdateProfileSaveRequestDto leaderProfileDto = new UserUpdateProfileSaveRequestDto(user);
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = this.findTeam(teamId);
+
+        if (file == null) {
+            teamRequestDto.setThumbnail(team.getThumbnail());
+        } else {
+            teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
+        }
 
         //authentication 통해 뽑은 User와 Team메이킹 글의 leader가 같은지 여부 체크
         if (user.getId() == team.getLeader().getId()) {
@@ -224,7 +228,7 @@ public class TeamService {
 
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
-                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)

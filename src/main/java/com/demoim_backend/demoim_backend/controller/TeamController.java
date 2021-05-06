@@ -56,9 +56,11 @@ public class TeamController {
 
     //특정 팀 게시물 수정 _ Put _ /api/team/detail?team_id={team_id} _ auth 필요
     @PutMapping("/api/team/detail")
-    public TeamResponseDto editTeam(Authentication authentication, @RequestParam("team_id") Long teamId, @RequestBody TeamRequestDto teamRequestDto) {
+    public TeamResponseDto editTeam(Authentication authentication, @RequestParam("team_id") Long teamId,
+                                    @RequestPart(value ="requestBody" ) String requestBody,
+                                    @RequestPart(required = false) MultipartFile file) {
 
-        TeamResponseDto team =  teamService.update(authentication, teamId, teamRequestDto);
+        TeamResponseDto team =  teamService.update(authentication, teamId, requestBody,file);
 
         if (team == null) {
             throw new IllegalArgumentException("게시글의 작성자가 아닙니다.");
