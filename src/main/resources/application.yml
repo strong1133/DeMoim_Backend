@@ -20,6 +20,8 @@ cloud:
     stack:
       auto: false
     credentials:
+      accessKey: AKIAUNEFJA535UTRPLRJ
+      secretKey: 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
       instanceProfile: true
 
 spring:
