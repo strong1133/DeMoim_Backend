@@ -52,7 +52,7 @@ public class ExhibitionService {
         exhibitionDto.setContents(jsonObject.getString("contents"));
         if (file == null) {
             Random random = new Random();
-            int rNum = random.nextInt(10);
+            int rNum = random.nextInt(15);
             exhibitionDto.setThumbnail(randomImg.rndImg(rNum));
         } else {
             exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));

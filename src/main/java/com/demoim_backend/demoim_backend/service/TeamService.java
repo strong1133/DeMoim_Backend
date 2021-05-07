@@ -56,7 +56,7 @@ public class TeamService {
             teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
         }
         if (file == null){
-            int rNum = random.nextInt(10);
+            int rNum = random.nextInt(15);
             teamRequestDto.setThumbnail(randomImg.rndImg(rNum));
         }
         //User 정보 검증(from UserService.findCurUser)
