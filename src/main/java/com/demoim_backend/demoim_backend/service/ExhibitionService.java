@@ -6,6 +6,7 @@ import com.demoim_backend.demoim_backend.model.Exhibition;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ExhibitionRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
+import com.demoim_backend.demoim_backend.util.RandomImg;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
@@ -25,11 +27,13 @@ public class ExhibitionService {
     private final ExhibitionRepository exhibitionRepository;
     private final UserService userService;
     private final FileUploadService fileUploadService;
+    private final RandomImg randomImg;
 
-    public ExhibitionService(ExhibitionRepository exhibitionRepository, UserService userService, FileUploadService fileUploadService) {
+    public ExhibitionService(ExhibitionRepository exhibitionRepository, UserService userService, FileUploadService fileUploadService, RandomImg randomImg) {
         this.exhibitionRepository = exhibitionRepository;
         this.userService = userService;
         this.fileUploadService = fileUploadService;
+        this.randomImg = randomImg;
     }
 
 
@@ -47,7 +51,9 @@ public class ExhibitionService {
         exhibitionDto.setTitle(jsonObject.getString("title"));
         exhibitionDto.setContents(jsonObject.getString("contents"));
         if (file == null) {
-            exhibitionDto.setThumbnail(null);
+            Random random = new Random();
+            int rNum = random.nextInt(10);
+            exhibitionDto.setThumbnail(randomImg.rndImg(rNum));
         } else {
             exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));
         }
@@ -137,7 +143,7 @@ public class ExhibitionService {
 
             if (file == null) {
                 exhibitionDto.setThumbnail(exhibition.getThumbnail());
-            }else {
+            } else {
                 exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));
             }
             exhibition.update(exhibitionDto);
