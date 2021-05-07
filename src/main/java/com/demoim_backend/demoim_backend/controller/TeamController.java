@@ -4,6 +4,7 @@ import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
 import com.demoim_backend.demoim_backend.dto.TeamResponseDto;
 import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.service.TeamService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -79,6 +80,27 @@ public class TeamController {
             message.put("msg", result);
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    //Front 필터링
+    @GetMapping("/api/team/front")
+    public List<TeamResponseDto> findTeamWhereFront(@RequestParam int page, int size ){
+        return teamService.findTeamWhereFront(page,size);
+    }
+
+    @GetMapping("/api/team/back")
+    public List<TeamResponseDto> findTeamWhereBack(@RequestParam int page, int size ){
+        return teamService.findTeamWhereBack(page,size);
+    }
+
+    @GetMapping("/api/team/designer")
+    public List<TeamResponseDto> findTeamWhereDesigner(@RequestParam int page, int size ){
+        return teamService.findTeamWhereDesigner(page,size);
+    }
+
+    @GetMapping("/api/team/planner")
+    public List<TeamResponseDto> findTeamWherePlanner(@RequestParam int page, int size ){
+        return teamService.findTeamWherePlanner(page,size);
     }
 
 

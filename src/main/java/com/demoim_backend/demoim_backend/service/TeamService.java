@@ -47,6 +47,11 @@ public class TeamService {
         );
     }
 
+    public List<Team> getContentTeam(Page<Team> teamPage) {
+        List<Team> teamList = teamPage.getContent();
+        return teamList;
+    }
+
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
     public TeamResponseDto createTeam(Authentication authentication, String requestBody, MultipartFile file) {
         Random random = new Random();
@@ -55,7 +60,7 @@ public class TeamService {
         if (file != null) {
             teamRequestDto.setThumbnail(fileUploadService.uploadImage(file));
         }
-        if (file == null){
+        if (file == null) {
             int rNum = random.nextInt(15);
             teamRequestDto.setThumbnail(randomImg.rndImg(rNum));
         }
@@ -128,10 +133,11 @@ public class TeamService {
         Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
 
         //페이징한 Page<Team>를 List<TeamResponseDto>에 담기
-        List<Team> listTeam = pageTeam.getContent(); // toList 메소드와 getContent 차이는?
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<TeamResponseDto>();
+//        List<Team> listTeam = pageTeam.getContent(); // toList 메소드와 getContent 차이는?
 
-        for (Team team : listTeam) {
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+
+        for (Team team : getContentTeam(pageTeam)) {
             User leader = team.getLeader();
             UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
             TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
@@ -245,4 +251,61 @@ public class TeamService {
             return "게시글 작성자가 아닙니다.";
         }
     }
+
+    // Front 필터링
+    public List<TeamResponseDto> findTeamWhereFront(int page, int size) {
+        Page<Team> teamPage = teamRepository.findAllByFrontGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+
+        for (Team team : getContentTeam(teamPage)) {
+            User leader = team.getLeader();
+            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
+            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
+            teamResponseDtoList.add(responseDto);
+        }
+        return teamResponseDtoList;
+    }
+
+    // Back 필터링
+    public List<TeamResponseDto> findTeamWhereBack(int page, int size) {
+        Page<Team> teamPage = teamRepository.findAllByBackGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+
+        for (Team team : getContentTeam(teamPage)) {
+            User leader = team.getLeader();
+            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
+            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
+            teamResponseDtoList.add(responseDto);
+        }
+        return teamResponseDtoList;
+    }
+
+    // Designer 필터링
+    public List<TeamResponseDto> findTeamWhereDesigner(int page, int size) {
+        Page<Team> teamPage = teamRepository.findAllByDesignerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+
+        for (Team team : getContentTeam(teamPage)) {
+            User leader = team.getLeader();
+            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
+            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
+            teamResponseDtoList.add(responseDto);
+        }
+        return teamResponseDtoList;
+    }
+
+    // Planner 필터링
+    public List<TeamResponseDto> findTeamWherePlanner(int page, int size) {
+        Page<Team> teamPage = teamRepository.findAllByPlannerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+
+        for (Team team : getContentTeam(teamPage)) {
+            User leader = team.getLeader();
+            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
+            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
+            teamResponseDtoList.add(responseDto);
+        }
+        return teamResponseDtoList;
+    }
 }
+
