@@ -73,27 +73,21 @@ public class ApplyService {
             }
         }
         //팀메이킹 모집글의 해당 포지션 공고인원보다 확정된사람이 같거나 더 많은 경우
-        int numPosition;
-        System.out.println("userPosition = 프론트엔드? : "+userPosition.equals("프론트엔드"));
-        System.out.println("프론트엔드");
-        System.out.println("userPosition = 백엔드? : "+userPosition.equals("백엔드"));
-        System.out.println("userPosition = 디자이너? : "+userPosition.equals("디자이너"));
-        System.out.println("userPosition = 기획자? : "+userPosition.equals("기획자"));
-        switch(userPosition) {
-            case "프론트엔드":
-                numPosition = team.getFront();
-                break;
-            case "백엔드":
-                numPosition = team.getBack();
-                break;
-            case "디자이너":
-                numPosition = team.getDesigner();
-                break;
-            case "기획자":
-                numPosition = team.getPlanner();
-                break;
-            default:
-                throw new IllegalArgumentException("프론트엔드 / 백엔드 / 디자이너 / 기획자 중에 올바르게 프로필을 수정해주세요.");
+        int numPosition = 0;
+        System.out.println("userPosition : " + userPosition);
+        System.out.println("userPosition = 프론트엔드? : "+userPosition.contentEquals("프론트엔드"));
+        System.out.println("userPosition = 백엔드? : "+userPosition.contentEquals("백앤드"));
+        System.out.println("userPosition = 디자이너? : "+userPosition.contentEquals("디자이너"));
+        System.out.println("userPosition = 기획자? : "+userPosition.contentEquals("기획자"));
+        
+        if (userPosition.contentEquals("프론트앤드")){
+            numPosition = team.getFront();
+        }else if(userPosition.contentEquals("백앤드")){
+            numPosition = team.getBack();
+        }else if(userPosition.contentEquals("디자이너")){
+            numPosition = team.getDesigner();
+        }else if(userPosition.contentEquals("기획자")){
+            numPosition = team.getPlanner();
         }
 
         if (samePositionMemberList.size() >= numPosition) {
