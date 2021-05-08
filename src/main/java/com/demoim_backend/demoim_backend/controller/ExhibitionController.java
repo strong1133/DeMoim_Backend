@@ -25,8 +25,8 @@ public class ExhibitionController {
 
     // exhibition 작성
     @PostMapping("/api/exhibition")
-    public ExhibitionResponseDto createExhibition(Authentication authentication, @RequestPart(value = "requestBody") String requestBody, @RequestPart(required = false) MultipartFile file) {
-        return exhibitionService.createExhibition(authentication, requestBody, file);
+    public ExhibitionResponseDto createExhibition(Authentication authentication, @RequestPart(value = "requestBody") String requestBody, @RequestPart MultipartFile file) {
+        return exhibitionService.createExhibition(authentication,requestBody,file);
     }
 
     // exhibtion 이미지 작성
@@ -49,8 +49,9 @@ public class ExhibitionController {
 
     // exhibition 수정
     @PutMapping("/api/exhibition/detail")
-    public ExhibitionResponseDto getExhibitionDto(Authentication authentication,
-                                                  @RequestPart(value = "requestBody") String requestBody, @RequestPart(required = false) MultipartFile file,
+    public ExhibitionResponseDto updateExhibition(Authentication authentication,
+                                                  @RequestPart(value = "requestBody") String requestBody,
+                                                  @RequestPart(required = false) MultipartFile file,
                                                   @RequestParam(name = "exhibition_id") Long exhibitionId) {
 
         ExhibitionResponseDto exhibition = exhibitionService.updateExhibition(authentication, requestBody, file, exhibitionId);
