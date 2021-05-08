@@ -13,10 +13,13 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findById(Long id);
+    Optional<Team> findById(Long TeamId);
+
+    boolean existsByIdAndProjectState(Long teamId, Team.StateNow StateNow);
 
 //    List<Team> findAll(Pageable pageable);
 //    Page<Team> findAll(Pageable pageable);
+
 
     List<Team> findAllById(Long id);
     List<Team> findByLeader(User user);
@@ -25,5 +28,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     Page<Team> findAllByBackGreaterThan(int num,Pageable PageRequest);
     Page<Team> findAllByDesignerGreaterThan(int num,Pageable PageRequest);
     Page<Team> findAllByPlannerGreaterThan(int num,Pageable PageRequest);
+
 
 }
