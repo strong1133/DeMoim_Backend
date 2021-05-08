@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
    User findByUsername(String username);
+
+   String findPositionById(Long userId);
 }
