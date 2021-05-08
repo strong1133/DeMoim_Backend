@@ -1,9 +1,11 @@
 package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileRequestDto;
-import com.demoim_backend.demoim_backend.dto.UserUpdateProfileSaveRequestDto;
+import com.demoim_backend.demoim_backend.dto.*;
+import com.demoim_backend.demoim_backend.model.Comment;
+import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
+import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +25,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
+    private final TeamRepository teamRepository;
+
+    // response 객체로 만들어주는 매서드
+    public MypageResponseDto entityToDto(User user, List<Team> team) {
+        MypageResponseDto mypageResponseDto = new MypageResponseDto(user, team);
+        return mypageResponseDto;
+    }
 
     // 현재 로그인 한 유저 정보 반환
     public Optional<User> findCurUser(Authentication authentication){
@@ -28,6 +39,24 @@ public class UserService {
         Long userId = principalDetails.getUser().getId();
         System.out.println(userId);
         return userRepository.findById(userId);
+    }
+
+    public User findMyUserInfo(Authentication authentication){
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        Long userId = principalDetails.getUser().getId();
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new IllegalArgumentException("해당 유저가 없습니다.")
+        );
+        return user;
+    }
+
+    // 현재 로그인 한 유저 정보 반환22
+    public List<MypageResponseDto> mypageUserInfo (Authentication authentication){
+        User user = findMyUserInfo(authentication);
+        List<MypageResponseDto> mypageResponseDtoList = new ArrayList<>();
+        List<Team> team = teamRepository.findByLeader(user);
+        mypageResponseDtoList.add(entityToDto(user, team));
+        return mypageResponseDtoList;
     }
 
     // 특정 유저 정보 반환

@@ -1,5 +1,6 @@
 package com.demoim_backend.demoim_backend.controller;
 
+import com.demoim_backend.demoim_backend.dto.MypageResponseDto;
 import com.demoim_backend.demoim_backend.dto.UserUpdateProfileRequestDto;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,9 +28,15 @@ public class UserController {
 //        return findCurUser(authentication);
 //    }
     // 현재 로그인 유저 정보 반환
+//    @GetMapping("/api/mypage/profile")
+//    private Optional<User> findCurUser(Authentication authentication){
+//        return userService.findCurUser(authentication);
+//    }
+
+    //마이페이지 유저정보 반환
     @GetMapping("/api/mypage/profile")
-    private Optional<User> findCurUser(Authentication authentication){
-        return userService.findCurUser(authentication);
+    private List<MypageResponseDto> mypageUserInfo(Authentication authentication){
+        return userService.mypageUserInfo(authentication);
     }
 
     // 특정 유저 정보 반환
