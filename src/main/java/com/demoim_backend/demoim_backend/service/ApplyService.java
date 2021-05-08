@@ -1,5 +1,6 @@
 package com.demoim_backend.demoim_backend.service;
 
+import com.demoim_backend.demoim_backend.dto.AlarmRequestDto;
 import com.demoim_backend.demoim_backend.dto.ApplyRequestDto;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
 import com.demoim_backend.demoim_backend.model.ApplyInfo;
@@ -23,6 +24,17 @@ public class ApplyService {
     private final TeamUserInfoRepository teamUserInfoRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final AlarmService alarmService;
+
+    //알람 메이커
+    public void alarmMaker(String commentsAlarm, User user, Team team) {
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setUserId(team.getLeader().getId());
+        alarmRequestDto.setContents(commentsAlarm);
+        if (!user.getId().equals(team.getLeader().getId())) {
+            alarmService.createAlarm(alarmRequestDto);
+        }
+    }
 
     //팀메이킹 모집글 지원 _ 리더인가? 이미 신청한 사람인가? 참여중인프로젝트가 2개 이하인가? 자기 파트에 모집이 덜됐을 때
     public ApplyResponseDto applyTeam(Authentication authentication, Long teamId, ApplyRequestDto applyRequestDto) {
@@ -99,6 +111,11 @@ public class ApplyService {
         ApplyResponseDto applyResponseDto = new ApplyResponseDto(user, team, applyRequestDto);
         ApplyInfo applyInfo = ApplyInfo.createTeamUserInfo(applyResponseDto, user);
         teamUserInfoRepository.save(applyInfo);
+
+        //알람 생성
+        String commentsAlarm = user.getNickname() + "님 께서 " + team.getTitle() + " 공고에 지원하셨습니다.";
+        alarmMaker(commentsAlarm, user, team);
+
         return applyResponseDto; // teamuserInfo의 id 누락
 
 //            List<ApplyInfo> teamsInfoOfUser= teamUserInfoRepository.findAllByUserId(user.getId());
