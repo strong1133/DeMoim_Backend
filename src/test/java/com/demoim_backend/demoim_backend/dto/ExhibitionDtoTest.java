@@ -1,5 +1,6 @@
 package com.demoim_backend.demoim_backend.dto;
 
+import com.demoim_backend.demoim_backend.model.Exhibition;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,10 +38,11 @@ public class ExhibitionDtoTest {
         String thumbnail = "test.jpg";
 
         //when
-        ExhibitionDto exhibitionDto = new ExhibitionDto();
-        exhibitionDto.setTitle(title);
-        exhibitionDto.setContents(contents);
-        exhibitionDto.setThumbnail(thumbnail);
+        ExhibitionDto exhibitionDto = ExhibitionDto.builder()
+                .title(title)
+                .contents(contents)
+                .thumbnail(thumbnail)
+                .build();
 
         Set<ConstraintViolation<ExhibitionDto>> violations = validator.validate(exhibitionDto);
         Iterator<ConstraintViolation<ExhibitionDto>> iterator = violations.iterator();

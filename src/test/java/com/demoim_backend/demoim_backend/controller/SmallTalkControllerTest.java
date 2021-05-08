@@ -1,5 +1,4 @@
 package com.demoim_backend.demoim_backend.controller;
-
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
 import com.demoim_backend.demoim_backend.dto.SmallTalkDto;
@@ -79,8 +78,6 @@ public class SmallTalkControllerTest {
         //given
         // 유저생성.
         SignupRequestDto requestDto = new SignupRequestDto("test@naver.com","test123*","test","backend");
-
-
         User user = new User(requestDto);
         userRepository.save(user);
 
@@ -100,7 +97,7 @@ public class SmallTalkControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/api/smalltalk")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(smallTalkDto)
-                .concat(new ObjectMapper().writeValueAsString(authentication))))
+                        .concat(new ObjectMapper().writeValueAsString(authentication))))
                 .andExpect(status().isOk());
 
         //then
@@ -181,8 +178,8 @@ public class SmallTalkControllerTest {
 
 
         SmallTalk smallTalk = SmallTalk.builder()
-                                        .contents(content)
-                                        .build();
+                .contents(content)
+                .build();
         smallTalk.setUser(user);
 
         smallTalkRepository.save(smallTalk);
@@ -197,7 +194,7 @@ public class SmallTalkControllerTest {
         mvc.perform(MockMvcRequestBuilders.put("/api/smalltalk/detail")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(smallTalkDtoUpdate)
-                 .concat(new ObjectMapper().writeValueAsString(authentication)))
+                        .concat(new ObjectMapper().writeValueAsString(authentication)))
                 .param("smalltalk_id",id))
                 .andExpect(status().isOk());
 
@@ -221,10 +218,8 @@ public class SmallTalkControllerTest {
         //authentication 생성
         SignupRequestDto requestDto = new SignupRequestDto("test@naver.com","test123*","test","backend");
 
-
         User user = new User(requestDto);
         userRepository.save(user);
-
 
         PrincipalDetails userDetails = new PrincipalDetails(user);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
@@ -259,6 +254,4 @@ public class SmallTalkControllerTest {
         List<SmallTalk> deleteResult = smallTalkRepository.findAll();
         assertThat(deleteResult.size()).isEqualTo(0);
     }
-
-
 }

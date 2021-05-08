@@ -46,10 +46,13 @@ public class ExhibitionService {
 
     // exhibition 생성
     public ExhibitionResponseDto createExhibition(Authentication authentication, String requestBody, MultipartFile file) {
-        ExhibitionDto exhibitionDto = new ExhibitionDto();
+
         JSONObject jsonObject = new JSONObject(requestBody);
-        exhibitionDto.setTitle(jsonObject.getString("title"));
-        exhibitionDto.setContents(jsonObject.getString("contents"));
+        ExhibitionDto exhibitionDto = ExhibitionDto.builder()
+                .title(jsonObject.getString("title"))
+                .contents(jsonObject.getString("contents"))
+                .build();
+
         if (file == null) {
             Random random = new Random();
             int rNum = random.nextInt(15);
@@ -90,7 +93,7 @@ public class ExhibitionService {
 
         Page<Exhibition> pageExhibition = exhibitionRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt")));
 
-        // 들고온 Entity를 Dto에 넣어서 반환하는 코드 70-78
+        // 들고온 Entity를 Dto에 넣어서 반환하는 코드 90-98
         List<ExhibitionResponseDto> exhibitionResponseDtoList = new ArrayList<>();
         ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
 
@@ -121,10 +124,12 @@ public class ExhibitionService {
                                                   String requestBody, MultipartFile file,
                                                   Long exhibitionId) {
 
-        ExhibitionDto exhibitionDto = new ExhibitionDto();
         JSONObject jsonObject = new JSONObject(requestBody);
-        exhibitionDto.setTitle(jsonObject.getString("title"));
-        exhibitionDto.setContents(jsonObject.getString("contents"));
+
+        ExhibitionDto exhibitionDto = ExhibitionDto.builder()
+                .title(jsonObject.getString("title"))
+                .contents(jsonObject.getString("contents"))
+                .build();
 
         ExhibitionResponseDto exhibitionResponseDto;
         String thumbnail = "";
