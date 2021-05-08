@@ -2,8 +2,8 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.ApplyRequestDto;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
+import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import com.demoim_backend.demoim_backend.model.Team;
-import com.demoim_backend.demoim_backend.model.TeamUserInfo;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.TeamUserInfoRepository;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,14 +30,14 @@ public class ApplyService {
         User user = userService.findCurUser(authentication).orElseThrow(
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
-        TeamUserInfo leaderInfo =  teamUserInfoRepository.findByTeamIdAndMembership(teamId, TeamUserInfo.Membership.LEADER);
+        ApplyInfo leaderInfo =  teamUserInfoRepository.findByTeamIdAndMembership(teamId, ApplyInfo.Membership.LEADER);
         Team team = teamService.findTeam(teamId);
-        List<TeamUserInfo> teamUserInfoList = teamUserInfoRepository.findAllByTeamId(teamId);
+        List<ApplyInfo> applyInfoList = teamUserInfoRepository.findAllByTeamId(teamId);
 
         //해당 모집글의 구성원 목록 생성
         List<User> teamUsers = new ArrayList<User>();
-        for (TeamUserInfo teamUserInfo : teamUserInfoList) {
-            teamUsers.add(teamUserInfo.getUser());
+        for (ApplyInfo applyInfo : applyInfoList) {
+            teamUsers.add(applyInfo.getUser());
         }
 
         //회원정보가 해당모집글의 참여자 목록에 있는지(리더 or 회원목록) 확인
@@ -53,18 +52,19 @@ public class ApplyService {
         //2개가 넘는지 여부 검사
         List<Long> teamIdListOfUser = teamUserInfoRepository.findTeamIdByUserId(user.getId());
         for (Long teamIdOfUser : teamIdListOfUser) {
+            System.out.println("teamIdOfUser : " + teamIdOfUser);
             if (!teamRepository.existsByIdAndProjectState(teamIdOfUser, Team.StateNow.ACTIVATED)) {
                 teamIdListOfUser.remove(teamIdOfUser);
             };
         }
-        if (teamIdListOfUser.size() > 2L) {
+        if (teamIdListOfUser.size() > 2) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 최대 2개 입니다.");
         }
 
         //지원하려는 team의 신청자 포지션이 다 찼을때 지원 막기
         String userPosition = user.getPosition();
         System.out.println("userPosition : "+userPosition);
-        List<Long> acceptedTeamMemberIdList = teamUserInfoRepository.findUserIdByTeamIdAndMembershipAndIsAccepted(teamId, TeamUserInfo.Membership.MEMBER, true);
+        List<Long> acceptedTeamMemberIdList = teamUserInfoRepository.findUserIdByTeamIdAndMembershipAndIsAccepted(teamId, ApplyInfo.Membership.MEMBER, true);
 //        int numPositionApplied = 0;
         List<Long> samePositionMemberList = new ArrayList<Long>();
         for (Long acceptedTeamMemberId : acceptedTeamMemberIdList) {
@@ -97,11 +97,11 @@ public class ApplyService {
 
 
         ApplyResponseDto applyResponseDto = new ApplyResponseDto(user, team, applyRequestDto);
-        TeamUserInfo teamUserInfo = TeamUserInfo.createTeamUserInfo(applyResponseDto, user);
-        teamUserInfoRepository.save(teamUserInfo);
+        ApplyInfo applyInfo = ApplyInfo.createTeamUserInfo(applyResponseDto, user);
+        teamUserInfoRepository.save(applyInfo);
         return applyResponseDto; // teamuserInfo의 id 누락
 
-//            List<TeamUserInfo> teamsInfoOfUser= teamUserInfoRepository.findAllByUserId(user.getId());
+//            List<ApplyInfo> teamsInfoOfUser= teamUserInfoRepository.findAllByUserId(user.getId());
 //            Long numTeamsofUser = teamRepository.count(teamRepository.findByUser)
 
 
@@ -115,17 +115,17 @@ public class ApplyService {
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
 
-        TeamUserInfo leaderInfo =  teamUserInfoRepository.findByTeamIdAndMembership(teamId, TeamUserInfo.Membership.LEADER);
+        ApplyInfo leaderInfo =  teamUserInfoRepository.findByTeamIdAndMembership(teamId, ApplyInfo.Membership.LEADER);
 
         System.out.println("leaderInfo의 userId"+leaderInfo.getUser().getId());
         System.out.println("user의 userId"+user.getId());
 
         if (user.equals(leaderInfo.getUser())) {
-            List<TeamUserInfo> teamUserInfoList = teamUserInfoRepository.findAllByTeamId(teamId);
+            List<ApplyInfo> applyInfoList = teamUserInfoRepository.findAllByTeamId(teamId);
 
             List<ApplyResponseDto> applyResponseDtoList = new ArrayList<ApplyResponseDto>();
-            for (TeamUserInfo teamUserInfo : teamUserInfoList) {
-                ApplyResponseDto applyResponseDto = new ApplyResponseDto(teamUserInfo);
+            for (ApplyInfo applyInfo : applyInfoList) {
+                ApplyResponseDto applyResponseDto = new ApplyResponseDto(applyInfo);
                 applyResponseDtoList.add(applyResponseDto);
             }
 
@@ -143,18 +143,18 @@ public class ApplyService {
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
         //Membership이 LEADER가 아닌, MEMBER에 대한 목록만 조회
-        List<TeamUserInfo> memberInfoList = teamUserInfoRepository.findAllByTeamIdAndMembership(teamId, TeamUserInfo.Membership.MEMBER);
+        List<ApplyInfo> memberInfoList = teamUserInfoRepository.findAllByTeamIdAndMembership(teamId, ApplyInfo.Membership.MEMBER);
 //        Team team = teamService.findTeam(teamId);
 
         //해당 모집글에 대해 신청한사람들의 목록에 해당 유저의 정보가 있는지를 할기 위해 신청멤버 정보목록 생성
         List<User> members = new ArrayList<User>();
-        for (TeamUserInfo memberInfo : memberInfoList) {
+        for (ApplyInfo memberInfo : memberInfoList) {
             members.add(memberInfo.getUser());
         }
 
         if (members.contains(user)) {
-            TeamUserInfo teamUserInfo = teamUserInfoRepository.findByTeamIdAndUserId(teamId, user.getId());
-            teamUserInfoRepository.delete(teamUserInfo);
+            ApplyInfo applyInfo = teamUserInfoRepository.findByTeamIdAndUserId(teamId, user.getId());
+            teamUserInfoRepository.delete(applyInfo);
 //            String success = "해당 게시물에 대한 지원취소가 완료되었습니다."
             return "success";
         } else {

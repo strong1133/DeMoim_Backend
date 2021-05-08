@@ -1,29 +1,27 @@
 package com.demoim_backend.demoim_backend.repository;
 
-import com.demoim_backend.demoim_backend.model.Team;
-import com.demoim_backend.demoim_backend.model.TeamUserInfo;
+import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface TeamUserInfoRepository extends JpaRepository<TeamUserInfo, Long> {
-//    List<TeamUserInfo> findByTeamId(Long teamId);
-    TeamUserInfo findByTeamIdAndMembership(Long teamId, TeamUserInfo.Membership membership);
+public interface TeamUserInfoRepository extends JpaRepository<ApplyInfo, Long> {
+//    List<ApplyInfo> findByTeamId(Long teamId);
+    ApplyInfo findByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
 
-    List<TeamUserInfo> findAllByTeamIdAndMembership(Long teamId, TeamUserInfo.Membership membership);
+    List<ApplyInfo> findAllByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
 
-    List<TeamUserInfo> findAllByUserId(Long userId);
+    List<ApplyInfo> findAllByUserId(Long userId);
 
     List<Long> findTeamIdByUserId(Long userId);
 
-    List <Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, TeamUserInfo.Membership membership, Boolean IsAccepted);
+    List<Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, ApplyInfo.Membership membership, Boolean IsAccepted);
 
-    TeamUserInfo findByTeamIdAndUserId(Long teamId, Long userId);
+    ApplyInfo findByTeamIdAndUserId(Long teamId, Long userId);
 
-    List<TeamUserInfo> findAllByTeamId(Long teamId);
+    List<ApplyInfo> findAllByTeamId(Long teamId);
 
     int findByTeamId(Long teamId);
 }

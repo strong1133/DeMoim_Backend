@@ -1,20 +1,17 @@
 package com.demoim_backend.demoim_backend.service;
 
-import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.*;
+import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import com.demoim_backend.demoim_backend.model.Team;
-import com.demoim_backend.demoim_backend.model.TeamUserInfo;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.TeamUserInfoRepository;
-import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
 import com.demoim_backend.demoim_backend.util.RandomImg;
 import com.demoim_backend.demoim_backend.util.TeamJsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -101,7 +98,7 @@ public class TeamService {
 
         //TeamUserInfo에 리더 정보 저장
         ApplyResponseDto applyResponseDto = new ApplyResponseDto(team);
-        TeamUserInfo leaderInfo = TeamUserInfo.createTeamUserInfo(applyResponseDto, user);
+        ApplyInfo leaderInfo = ApplyInfo.createTeamUserInfo(applyResponseDto, user);
         teamUserInfoRepository.save(leaderInfo);
 
         return teamResponseDto;

@@ -2,13 +2,11 @@ package com.demoim_backend.demoim_backend.model;
 
 import com.demoim_backend.demoim_backend.dto.TeamRequestDto;
 import com.demoim_backend.demoim_backend.dto.TeamStateUpdateResponseDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -16,7 +14,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -103,7 +100,7 @@ public class Team extends Timestamped {
 //    private Long leaderId; // 리더 유저Id 값이 담김
     @JsonIgnore
     @OneToMany(mappedBy ="team", cascade = CascadeType.ALL)
-    private List<TeamUserInfo> teamUserInfoList = new ArrayList<TeamUserInfo>();
+    private List<ApplyInfo> applyInfoList = new ArrayList<ApplyInfo>();
 
     @Enumerated(EnumType.STRING)
     private StateNow recruitState; // 여기서 초기화를 하면 업데이트 불가능
@@ -115,10 +112,10 @@ public class Team extends Timestamped {
         YET, ACTIVATED, FINISHED
     }
 
-    //연관관계 메소드 Team <-> TeamUserInfo
-    public void addTeamUserInfo(TeamUserInfo teamUserInfo) {
-        teamUserInfoList.add(teamUserInfo);
-        teamUserInfo.setTeam(this);
+    //연관관계 메소드 Team <-> ApplyInfo
+    public void addTeamUserInfo(ApplyInfo applyInfo) {
+        applyInfoList.add(applyInfo);
+        applyInfo.setTeam(this);
     }
 
 
@@ -135,10 +132,10 @@ public class Team extends Timestamped {
         this.planner = teamRequestDto.getPlanner();
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
-        this.isFrontFull = teamRequestDto.getFront() == 0L;
-        this.isBackFull = teamRequestDto.getBack() == 0L;
-        this.isDesignerFull = teamRequestDto.getDesigner() == 0L;
-        this.isPlannerFull = teamRequestDto.getPlanner() == 0L;
+        this.isFrontFull = teamRequestDto.getFront() == 0;
+        this.isBackFull = teamRequestDto.getBack() == 0;
+        this.isDesignerFull = teamRequestDto.getDesigner() == 0;
+        this.isPlannerFull = teamRequestDto.getPlanner() == 0;
         this.recruitState = StateNow.ACTIVATED;
         this.projectState = StateNow.YET;
         this.leader = user;
@@ -159,10 +156,10 @@ public class Team extends Timestamped {
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
         //다음 네가지에 대해서는 position별 숫자가 줄어드는 경우에 추가적인 로직을 통한 보완이 필요하다. 아마 Service쪽에서 조건문 통해 구현하는 방법도 있을 듯
-        this.isFrontFull = teamRequestDto.getFront() == 0L;
-        this.isBackFull = teamRequestDto.getBack() == 0L;
-        this.isDesignerFull = teamRequestDto.getDesigner() == 0L;
-        this.isPlannerFull = teamRequestDto.getPlanner() == 0L;
+        this.isFrontFull = teamRequestDto.getFront() == 0;
+        this.isBackFull = teamRequestDto.getBack() == 0;
+        this.isDesignerFull = teamRequestDto.getDesigner() == 0;
+        this.isPlannerFull = teamRequestDto.getPlanner() == 0;
     }
 
     //생성메소드 User 정보는 from Authentication, 나머지는 from TeamRequestDto
@@ -182,10 +179,10 @@ public class Team extends Timestamped {
         team.setPlanner(teamRequestDto.getPlanner());
         team.setStack(teamRequestDto.getStack());
         team.setContents(teamRequestDto.getContents());
-        team.setIsFrontFull(teamRequestDto.getFront() == 0L);
-        team.setIsBackFull(teamRequestDto.getBack() == 0L);
-        team.setIsDesignerFull(teamRequestDto.getDesigner() == 0L);
-        team.setIsPlannerFull(teamRequestDto.getPlanner() == 0L);
+        team.setIsFrontFull(teamRequestDto.getFront() == 0);
+        team.setIsBackFull(teamRequestDto.getBack() == 0);
+        team.setIsDesignerFull(teamRequestDto.getDesigner() == 0);
+        team.setIsPlannerFull(teamRequestDto.getPlanner() == 0);
         team.setRecruitState(StateNow.ACTIVATED);
         team.setProjectState(StateNow.YET);
         team.setLeader(user);
