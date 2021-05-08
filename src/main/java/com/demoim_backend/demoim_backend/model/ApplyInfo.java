@@ -3,9 +3,7 @@ package com.demoim_backend.demoim_backend.model;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class TeamUserInfo {
+public class ApplyInfo {
 
     /*
     가지고 있어야할 element목록
@@ -21,7 +19,7 @@ public class TeamUserInfo {
      */
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "teamUserInfo")
+    @Column(name = "applyInfo")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,15 +47,15 @@ public class TeamUserInfo {
         LEADER, MEMBER //Member라는 element 피하는게 좋을수도.. -> 대문자 처리
     }
 
-    public static TeamUserInfo createTeamUserInfo(ApplyResponseDto applyResponseDto, User user) {
-        TeamUserInfo teamUserInfo = new TeamUserInfo();
-        teamUserInfo.setTeam(applyResponseDto.getTeam());
-        teamUserInfo.setUser(user);
-        teamUserInfo.setMembership(applyResponseDto.getMembership());
-        teamUserInfo.setIsAccepted(applyResponseDto.getIsAccepted());
-        teamUserInfo.setMessage(applyResponseDto.getMessage());
-        teamUserInfo.setPortfolio(applyResponseDto.getPortfolio());
-        return teamUserInfo;
+    public static ApplyInfo createTeamUserInfo(ApplyResponseDto applyResponseDto, User user) {
+        ApplyInfo applyInfo = new ApplyInfo();
+        applyInfo.setTeam(applyResponseDto.getTeam());
+        applyInfo.setUser(user);
+        applyInfo.setMembership(applyResponseDto.getMembership());
+        applyInfo.setIsAccepted(applyResponseDto.getIsAccepted());
+        applyInfo.setMessage(applyResponseDto.getMessage());
+        applyInfo.setPortfolio(applyResponseDto.getPortfolio());
+        return applyInfo;
     }
 
 

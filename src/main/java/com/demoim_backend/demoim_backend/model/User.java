@@ -42,7 +42,7 @@ public class User extends Timestamped {
     //영속성 전이를 위해 cascade = CascadeType.ALL을 추가해준다.
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<TeamUserInfo> teamUserInfos = new ArrayList<TeamUserInfo>();
+    private List<ApplyInfo> applyInfos = new ArrayList<ApplyInfo>();
 //    //    @JoinColumn
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 //    private List<Team> teams = new ArrayList<>();
@@ -59,10 +59,10 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "commentUser", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    //연관관계 메소드 User <-> TeamUserInfo
-    public void addTeamUserInfo(TeamUserInfo teamUserInfo) {
-        teamUserInfos.add(teamUserInfo);
-        teamUserInfo.setUser(this);
+    //연관관계 메소드 User <-> ApplyInfo
+    public void addTeamUserInfo(ApplyInfo applyInfo) {
+        applyInfos.add(applyInfo);
+        applyInfo.setUser(this);
     }
 
 
