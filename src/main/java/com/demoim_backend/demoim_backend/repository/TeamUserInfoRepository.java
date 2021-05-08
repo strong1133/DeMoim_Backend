@@ -15,7 +15,15 @@ public interface TeamUserInfoRepository extends JpaRepository<TeamUserInfo, Long
 
     List<TeamUserInfo> findAllByTeamIdAndMembership(Long teamId, TeamUserInfo.Membership membership);
 
+    List<TeamUserInfo> findAllByUserId(Long userId);
+
+    List<Long> findTeamIdByUserId(Long userId);
+
+    List <Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, TeamUserInfo.Membership membership, Boolean IsAccepted);
+
     TeamUserInfo findByTeamIdAndUserId(Long teamId, Long userId);
 
     List<TeamUserInfo> findAllByTeamId(Long teamId);
+
+    int findByTeamId(Long teamId);
 }

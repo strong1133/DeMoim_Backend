@@ -77,6 +77,18 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
+    @Column(nullable = false)
+    private Boolean isBackFull;
+
+    @Column(nullable = false)
+    private Boolean isFrontFull;
+
+    @Column(nullable = false)
+    private Boolean isDesignerFull;
+
+    @Column(nullable = false)
+    private Boolean isPlannerFull;
+
 //    @Column(nullable = false)
 //    @JoinColumn(name = "userId") // 이걸로 해결할 수 있는 방법이 없을까..
     @ManyToOne(fetch = FetchType.LAZY)
@@ -123,15 +135,20 @@ public class Team extends Timestamped {
         this.planner = teamRequestDto.getPlanner();
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
+        this.isFrontFull = teamRequestDto.getFront() == 0L;
+        this.isBackFull = teamRequestDto.getBack() == 0L;
+        this.isDesignerFull = teamRequestDto.getDesigner() == 0L;
+        this.isPlannerFull = teamRequestDto.getPlanner() == 0L;
         this.recruitState = StateNow.ACTIVATED;
         this.projectState = StateNow.YET;
         this.leader = user;
     }
 
+    //모집기간은 수정못하고 프로젝트기간만 수정할 수 있게끔!
     public void update(TeamRequestDto teamRequestDto) {
         this.title = teamRequestDto.getTitle();
         this.thumbnail = teamRequestDto.getThumbnail();
-        this.recruit = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        this.recruit = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime(); //그럼 얘를 수정못하게 해줘야할텐데..?
         this.begin = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         this.end = Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         this.location = teamRequestDto.getLocation();
@@ -141,6 +158,11 @@ public class Team extends Timestamped {
         this.planner = teamRequestDto.getPlanner();
         this.stack = teamRequestDto.getStack();
         this.contents = teamRequestDto.getContents();
+        //다음 네가지에 대해서는 position별 숫자가 줄어드는 경우에 추가적인 로직을 통한 보완이 필요하다. 아마 Service쪽에서 조건문 통해 구현하는 방법도 있을 듯
+        this.isFrontFull = teamRequestDto.getFront() == 0L;
+        this.isBackFull = teamRequestDto.getBack() == 0L;
+        this.isDesignerFull = teamRequestDto.getDesigner() == 0L;
+        this.isPlannerFull = teamRequestDto.getPlanner() == 0L;
     }
 
     //생성메소드 User 정보는 from Authentication, 나머지는 from TeamRequestDto
@@ -160,6 +182,10 @@ public class Team extends Timestamped {
         team.setPlanner(teamRequestDto.getPlanner());
         team.setStack(teamRequestDto.getStack());
         team.setContents(teamRequestDto.getContents());
+        team.setIsFrontFull(teamRequestDto.getFront() == 0L);
+        team.setIsBackFull(teamRequestDto.getBack() == 0L);
+        team.setIsDesignerFull(teamRequestDto.getDesigner() == 0L);
+        team.setIsPlannerFull(teamRequestDto.getPlanner() == 0L);
         team.setRecruitState(StateNow.ACTIVATED);
         team.setProjectState(StateNow.YET);
         team.setLeader(user);
