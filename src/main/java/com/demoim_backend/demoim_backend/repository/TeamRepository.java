@@ -12,10 +12,12 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findById(Long id);
+    Optional<Team> findById(Long TeamId);
+
+    boolean existsByIdAndProjectState(Long teamId, Team.StateNow StateNow);
 
 //    List<Team> findAll(Pageable pageable);
 //    Page<Team> findAll(Pageable pageable);
 
-    List<Team> findAllById(Long id);
+    List<Team> findAllById(Long TeamId);
 }

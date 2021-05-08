@@ -6,7 +6,9 @@ import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.service.ApplyService;
 import com.demoim_backend.demoim_backend.service.TeamService;
 import com.demoim_backend.demoim_backend.service.UserService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class ApplyController {
 //    private final Authentication authentication;
 //    private final UserService userService;
 //    private final TeamService teamService;
+    @Autowired
     private final ApplyService applyService;
 
     @PostMapping("/api/apply") // /api/apply?team_id={team_id}
@@ -32,22 +35,15 @@ public class ApplyController {
 
         ApplyResponseDto applyResponseDto = applyService.applyTeam(authentication, teamId, applyRequestDto);
 
-        if(applyResponseDto == null){
-            throw new IllegalArgumentException("게시글 작성자는 본인의 글에 지원할 수 없습니다.");
-        }else{
-            return applyResponseDto;
-        }
+        return applyResponseDto;
+
     }
 
     @GetMapping("/api/apply") // /api/apply?team_id={team_id}
     public List<ApplyResponseDto> getApplications(Authentication authentication, @RequestParam("team_id") Long teamId) {
         List<ApplyResponseDto> applyResponseDtoList = applyService.getApplications(authentication, teamId);
 
-        if(applyResponseDtoList == null){
-            throw new IllegalArgumentException("게시글 작성자가 아닙니다.");
-        }else{
-            return applyResponseDtoList;
-        }
+        return applyResponseDtoList;
     }
 
 
