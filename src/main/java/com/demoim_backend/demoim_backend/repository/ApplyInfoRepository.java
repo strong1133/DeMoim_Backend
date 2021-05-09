@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TeamUserInfoRepository extends JpaRepository<ApplyInfo, Long> {
+public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 //    List<ApplyInfo> findByTeamId(Long teamId);
     ApplyInfo findByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
 
@@ -15,7 +15,7 @@ public interface TeamUserInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
     List<ApplyInfo> findAllByUserId(Long userId);
 
-    List<Long> findTeamIdByUserId(Long userId);
+    List<ApplyInfo> findTeamIdByUserId(Long userId);
 
     List<Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, ApplyInfo.Membership membership, Boolean IsAccepted);
 
