@@ -84,7 +84,7 @@ public class ApplyService {
 //                teamIdListOfUser.remove(teamIdOfUser);
 //                System.out.println("5");
 //            };
-//        }
+//        } -> 이거 얘기 할것
         if (teamIdListOfUser.size() > 2) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 최대 2개 입니다.");
         }
