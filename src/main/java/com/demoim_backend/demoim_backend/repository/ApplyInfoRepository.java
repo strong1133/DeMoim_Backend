@@ -17,10 +17,14 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
     List<ApplyInfo> findTeamIdByUserId(Long userId);
 
-    int countByUserIdAndIsAccepted(Long userId, Boolean IsAccepted);
+    List<ApplyInfo> findAllByTeamIdAndMembershipAndApplyState(Long teamId, ApplyInfo.Membership membership, ApplyInfo.ApplyState applyState);
+
+    int countByUserIdAndApplyState(Long userId, ApplyInfo.ApplyState applyState);
 
 
-    List<Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, ApplyInfo.Membership membership, Boolean IsAccepted);
+
+
+    List<Long> findUserIdByTeamIdAndMembershipAndApplyState(Long teamId, ApplyInfo.Membership membership, ApplyInfo.ApplyState applyState);
 
     ApplyInfo findByTeamIdAndUserId(Long teamId, Long userId);
 

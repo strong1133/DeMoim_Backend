@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ApplyResponseDto {
     private Long id;
-    private Boolean isAccepted;
+    private ApplyInfo.ApplyState applyState;
     private ApplyInfo.Membership membership;
     private String message;
     private String portfolio;
@@ -21,7 +21,7 @@ public class ApplyResponseDto {
     @Builder
     public ApplyResponseDto(ApplyInfo applyInfo, ResponseUser responseUser) {
         this.id = applyInfo.getId();
-        this.isAccepted = applyInfo.getIsAccepted();
+        this.applyState = applyInfo.getApplyState();
         this.membership = applyInfo.getMembership();
         this.message = applyInfo.getMessage();
         this.portfolio = applyInfo.getPortfolio();
