@@ -17,6 +17,9 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
     List<ApplyInfo> findTeamIdByUserId(Long userId);
 
+    int countByUserIdAndIsAccepted(Long userId, Boolean IsAccepted);
+
+
     List<Long> findUserIdByTeamIdAndMembershipAndIsAccepted(Long teamId, ApplyInfo.Membership membership, Boolean IsAccepted);
 
     ApplyInfo findByTeamIdAndUserId(Long teamId, Long userId);

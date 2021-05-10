@@ -83,7 +83,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         users.put("Username", user.getUsername());
         users.put("Nickname", user.getNickname());
         users.put("ProfileImage", user.getProfileImage());
-        users.put("Desc", user.getDesc());
+        users.put("Description", user.getDescription());
         users.put("Position", user.getPosition());
 
         Map<String, Map<String, String>> map = new HashMap<>();

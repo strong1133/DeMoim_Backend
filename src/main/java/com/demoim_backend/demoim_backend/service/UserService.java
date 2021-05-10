@@ -87,16 +87,16 @@ public class UserService {
         UserUpdateProfileRequestDto userUpdateProfileRequestDto =new UserUpdateProfileRequestDto();
         String nickname = jsonObject.getString("nickname");
         String position=jsonObject.getString("position");
-        String desc=jsonObject.getString("desc");
+        String description=jsonObject.getString("description");
 
         userUpdateProfileRequestDto.setNickname(nickname);
-        userUpdateProfileRequestDto.setDesc(desc);
+        userUpdateProfileRequestDto.setDescription(description);
         userUpdateProfileRequestDto.setPosition(position);
 
         UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto = new UserUpdateProfileSaveRequestDto();
         userUpdateProfileSaveDto.setNickname(userUpdateProfileRequestDto.getNickname());
         userUpdateProfileSaveDto.setPosition(userUpdateProfileRequestDto.getPosition());
-        userUpdateProfileSaveDto.setDesc(userUpdateProfileRequestDto.getDesc());
+        userUpdateProfileSaveDto.setDescription(userUpdateProfileRequestDto.getDescription());
         userUpdateProfileSaveDto.setProfileImage(profileImage);
         user.update(userUpdateProfileSaveDto);
         return user;

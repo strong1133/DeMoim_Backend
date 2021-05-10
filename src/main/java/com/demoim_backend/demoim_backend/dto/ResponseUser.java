@@ -12,13 +12,17 @@ public class ResponseUser {
     private Long userid;
     private String username;
     private String nickname;
+    private String position;
+    private String description;
     private String profileImage;
 
     @Builder
-    public ResponseUser(Long userid, String username, String nickname, String profileImage ) {
+    public ResponseUser(Long userid, String username, String nickname, String position, String description, String profileImage ) {
         this.userid = userid;
         this.username = username;
         this.nickname = nickname;
+        this.position = position;
+        this.description= description;
         this.profileImage = profileImage;
     }
 
@@ -27,6 +31,8 @@ public class ResponseUser {
                 .userid(user.getId())
                 .username(user.getUsername())
                 .nickname(user.getNickname())
+                .position(user.getPosition())
+                .description(user.getDescription())
                 .profileImage(user.getProfileImage())
                 .build();
     }

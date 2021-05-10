@@ -20,10 +20,8 @@ cloud:
     stack:
       auto: false
     credentials:
-      accessKey: AKIAUNEFJA535UTRPLRJ
-      secretKey: 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
       instanceProfile: true
-
+---
 spring:
   profiles:
     include:
@@ -31,24 +29,15 @@ spring:
   h2:
     console:
       enabled: true
-
-  datasource:
-    # 테스트용 H2 DB
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-
-#    # 배포용 My SQL
-#    url: jdbc:mysql://strong1133.cfzrnnoktpkb.ap-northeast-2.rds.amazonaws.com/strong1133
-#    username: strong1133
-#    password: tjrwls455
-
+---
+spring:
   jpa:
     hibernate:
+      ddl-auto: update #create update none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        show_sql: false
+        show_sql: true
 
 

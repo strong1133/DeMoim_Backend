@@ -50,7 +50,7 @@ public class CommentService {
 
     // responseUser 코팅
     public ResponseUser responseUser(User user) {
-        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname(), user.getProfileImage());
+        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname(), user.getPosition(), user.getDescription(), user.getProfileImage());
         return responseUser;
     }
 

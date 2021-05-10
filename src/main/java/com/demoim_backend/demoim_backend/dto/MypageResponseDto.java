@@ -17,7 +17,7 @@ public class MypageResponseDto {
     private String username;
     private String nickname;
     private String position;
-    private String desc;
+    private String description;
     private String profileImage;
     private List<Team> leader;
 
@@ -27,7 +27,7 @@ public class MypageResponseDto {
         this.username = user.getUsername();
         this.nickname = user.getNickname();
         this.position = user.getPosition();
-        this.desc = user.getDesc();
+        this.description = user.getDescription();
         this.profileImage = user.getProfileImage();
         this.leader = leader;
     }

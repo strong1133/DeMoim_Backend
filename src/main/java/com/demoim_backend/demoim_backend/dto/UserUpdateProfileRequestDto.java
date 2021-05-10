@@ -8,6 +8,6 @@ import lombok.Setter;
 public class UserUpdateProfileRequestDto {
     private String nickname;
     private String position;
-    private String desc;
+    private String description;
 
 }

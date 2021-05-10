@@ -33,9 +33,9 @@ public class User extends Timestamped {
     private String position; //(여러개일경우 List<String>)
 
     @Column(nullable = true)
-    private String desc; // 자기소개
+    private String description; // 자기소개
 
-    @Column(nullable = true, length = 400)
+    @Column(nullable = true)
     private String profileImage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
     //fetch 속성은 @ManyToOne에서 주로 쓰인다.
@@ -59,11 +59,11 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "commentUser", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    //연관관계 메소드 User <-> ApplyInfo
-    public void addTeamUserInfo(ApplyInfo applyInfo) {
-        applyInfos.add(applyInfo);
-        applyInfo.setUser(this);
-    }
+//    //연관관계 메소드 User <-> ApplyInfo
+//    public void addTeamUserInfo(ApplyInfo applyInfo) {
+//        applyInfos.add(applyInfo);
+//        applyInfo.setUser(this);
+//    }
 
 
     // 회원가입 생성자
@@ -72,14 +72,14 @@ public class User extends Timestamped {
         this.password = signupRequestDto.getPassword();
         this.nickname = signupRequestDto.getNickname();
         this.position = signupRequestDto.getPosition();
-        this.desc = "안녕하세요 " + signupRequestDto.getNickname() +"님";
+        this.description = "안녕하세요 " + signupRequestDto.getNickname() +"님";
     }
 
     // 유저 정보 수정
     public void update(UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto){
         this.nickname = userUpdateProfileSaveDto.getNickname();
         this.position = userUpdateProfileSaveDto.getPosition();
-        this.desc = userUpdateProfileSaveDto.getDesc();
+        this.description = userUpdateProfileSaveDto.getDescription();
         this.profileImage = userUpdateProfileSaveDto.getProfileImage();
     }
     public void updateImg(String profileImage){

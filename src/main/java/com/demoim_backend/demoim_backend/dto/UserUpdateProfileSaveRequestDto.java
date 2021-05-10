@@ -12,14 +12,14 @@ public class UserUpdateProfileSaveRequestDto {
     private Long id;
     private String nickname;
     private String position;
-    private String desc;
+    private String description;
     private String profileImage;
 
     public UserUpdateProfileSaveRequestDto(User user) {
         this.id = user.getId();
         this.nickname = user.getNickname();
         this.position = user.getPosition();
-        this.desc = user.getDesc();
+        this.description = user.getDescription();
         this.profileImage = user.getProfileImage();
     }
 }

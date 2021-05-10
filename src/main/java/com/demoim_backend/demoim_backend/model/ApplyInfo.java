@@ -59,4 +59,7 @@ public class ApplyInfo {
     }
 
 
+    public void choiceMember(boolean choice){
+        this.isAccepted = choice;
+    }
 }

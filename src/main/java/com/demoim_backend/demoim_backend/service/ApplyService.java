@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,20 @@ public class ApplyService {
     public ApplyResponseDto entityToDto(ApplyInfo applyInfo, ResponseUser responseUser) {
         ApplyResponseDto applyResponseDto = new ApplyResponseDto(applyInfo, responseUser);
         return applyResponseDto;
+    }
+
+    public int checkPosition(String applyPosition, Team team) {
+        int numPosition = 0;
+        if (applyPosition.contentEquals("프론트엔드")) {
+            numPosition = team.getFront();
+        } else if (applyPosition.contentEquals("백엔드")) {
+            numPosition = team.getBack();
+        } else if (applyPosition.contentEquals("디자이너")) {
+            numPosition = team.getDesigner();
+        } else if (applyPosition.contentEquals("기획자")) {
+            numPosition = team.getPlanner();
+        }
+        return numPosition;
     }
 
     //팀메이킹 모집글 지원 _ 리더인가? 이미 신청한 사람인가? 참여중인프로젝트가 2개 이하인가? 자기 파트에 모집이 덜됐을 때
@@ -101,22 +116,7 @@ public class ApplyService {
             }
         }
         //팀메이킹 모집글의 해당 포지션 공고인원보다 확정된사람이 같거나 더 많은 경우
-        int numPosition = 0;
-        System.out.println("userPosition : " + userPosition);
-        System.out.println("userPosition = 프론트엔드? : "+userPosition.contentEquals("프론트엔드"));
-        System.out.println("userPosition = 백엔드? : "+userPosition.contentEquals("백앤드"));
-        System.out.println("userPosition = 디자이너? : "+userPosition.contentEquals("디자이너"));
-        System.out.println("userPosition = 기획자? : "+userPosition.contentEquals("기획자"));
-        
-        if (userPosition.contentEquals("프론트앤드")){
-            numPosition = team.getFront();
-        }else if(userPosition.contentEquals("백앤드")){
-            numPosition = team.getBack();
-        }else if(userPosition.contentEquals("디자이너")){
-            numPosition = team.getDesigner();
-        }else if(userPosition.contentEquals("기획자")){
-            numPosition = team.getPlanner();
-        }
+        int numPosition = checkPosition(userPosition, team);
 
         if (samePositionMemberList.size() >= numPosition) {
             throw new IllegalArgumentException("해당 글에 대한 회원님 포지션 모집이 마갑되었습니다.");
@@ -157,14 +157,10 @@ public class ApplyService {
 
         if (user.equals(leaderInfo.getUser())) {
             List<ApplyInfo> applyInfoList = applyInfoRepository.findAllByTeamId(teamId);
-//            UserUpdateProfileSaveRequestDto userUpdateProfileSaveRequestDto = new UserUpdateProfileSaveRequestDto(user);
-//            Team team = teamService.findTeam(leaderInfo.getTeam().getId());
-//            TeamResponseDto teamResponseDto = new TeamResponseDto(team,userUpdateProfileSaveRequestDto);
-            ResponseUser responseUser = ResponseUser.builder().build().entityToDto(user);
-
-
+//            ResponseUser responseUser = new ResponseUser();
             List<ApplyResponseDto> applyResponseDtoList = new ArrayList<>();
             for (ApplyInfo applyInfo : applyInfoList) {
+                ResponseUser responseUser = ResponseUser.builder().build().entityToDto(userService.findTargetUser(applyInfo.getUser().getId()));
                 ApplyResponseDto applyResponseDto = entityToDto(applyInfo,responseUser);
                 applyResponseDtoList.add(applyResponseDto);
             }
@@ -200,8 +196,55 @@ public class ApplyService {
 //            "모집글에 대한 취소는 신청자만 할 수 있습니다.";
             return "fail";
         }
-
-//
-
     }
+
+
+    // 리더의 선택
+    @Transactional
+    public Map<String, String> choiceMember(Authentication authentication, Long applyId) {
+        User user = userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+        ApplyInfo applyInfo = applyInfoRepository.findById(applyId).orElseThrow(
+                () -> new IllegalArgumentException("해당 지원정보가 없습니다.")
+        );
+        Team team = teamService.findTeam(applyInfo.getTeam().getId());
+
+        Long teamLeader = team.getLeader().getId();
+        Long curUser = user.getId();
+        if (!curUser.equals(teamLeader)) {
+            throw new IllegalArgumentException("당신은 리더가 아닙니다.");
+        }
+
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        int memberJoinCnt = applyInfoRepository.countByUserIdAndIsAccepted(applyInfo.getUser().getId(), true);
+        System.out.println("user :" + user.getId());
+        System.out.println("MemberJoinCnt :" + memberJoinCnt);
+        if (memberJoinCnt > 2) {
+            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 최대 2개 입니다.");
+        }
+
+        String applyPosition = applyInfo.getUser().getPosition();
+        List<Long> acceptedTeamMemberIdList = applyInfoRepository.findUserIdByTeamIdAndMembershipAndIsAccepted(team.getId(), ApplyInfo.Membership.MEMBER, true);
+        List<Long> samePositionMemberList = new ArrayList<Long>();
+
+
+        int numPosition = checkPosition(applyPosition, team);
+
+        for (Long acceptedTeamMemberId : acceptedTeamMemberIdList) {
+            if (applyPosition.equals(userRepository.findPositionById(acceptedTeamMemberId))) {
+                samePositionMemberList.add(acceptedTeamMemberId);
+            }
+        }
+        if (samePositionMemberList.size() >= numPosition) {
+            throw new IllegalArgumentException("해당 포지션의 인원이 가득찼습니다.");
+        }
+
+        applyInfo.choiceMember(true);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", applyInfo.getUser().getUsername() + "님이 팀원이 되셨습니다.");
+        return map;
+    }
+
 }
