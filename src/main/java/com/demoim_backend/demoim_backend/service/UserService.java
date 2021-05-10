@@ -37,7 +37,7 @@ public class UserService {
     public Optional<User> findCurUser(Authentication authentication){
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         Long userId = principalDetails.getUser().getId();
-        System.out.println(userId);
+        System.out.println("UserService의 :" + userId);
         return userRepository.findById(userId);
     }
 

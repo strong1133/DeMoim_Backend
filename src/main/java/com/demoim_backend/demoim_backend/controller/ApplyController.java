@@ -1,12 +1,9 @@
 package com.demoim_backend.demoim_backend.controller;
 
 import com.demoim_backend.demoim_backend.dto.ApplyRequestDto;
+import com.demoim_backend.demoim_backend.dto.ApplyResponseSaveDto;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
-import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.service.ApplyService;
-import com.demoim_backend.demoim_backend.service.TeamService;
-import com.demoim_backend.demoim_backend.service.UserService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,18 +28,14 @@ public class ApplyController {
     private final ApplyService applyService;
 
     @PostMapping("/api/apply") // /api/apply?team_id={team_id}
-    public ApplyResponseDto applyTeam(Authentication authentication, @RequestParam("team_id") Long teamId, @RequestBody ApplyRequestDto applyRequestDto) {
-
-        ApplyResponseDto applyResponseDto = applyService.applyTeam(authentication, teamId, applyRequestDto);
-
-        return applyResponseDto;
+    public Map<String, String> applyTeam(Authentication authentication, @RequestParam("team_id") Long teamId, @RequestBody ApplyRequestDto applyRequestDto) {
+        return applyService.applyTeam(authentication, teamId, applyRequestDto);
 
     }
 
     @GetMapping("/api/apply") // /api/apply?team_id={team_id}
-    public List<ApplyResponseDto> getApplications(Authentication authentication, @RequestParam("team_id") Long teamId) {
-        List<ApplyResponseDto> applyResponseDtoList = applyService.getApplications(authentication, teamId);
-
+    public List<ApplyResponseDto>  getApplications(Authentication authentication, @RequestParam("team_id") Long teamId) {
+        List<ApplyResponseDto>  applyResponseDtoList = applyService.getApplications(authentication, teamId);
         return applyResponseDtoList;
     }
 

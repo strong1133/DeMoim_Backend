@@ -5,7 +5,7 @@ import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
-import com.demoim_backend.demoim_backend.repository.TeamUserInfoRepository;
+import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
 import com.demoim_backend.demoim_backend.util.RandomImg;
 import com.demoim_backend.demoim_backend.util.TeamJsonMapper;
@@ -33,7 +33,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final FileUploadService fileUploadService;
     private final TeamJsonMapper teamJsonMapper;
-    private final TeamUserInfoRepository teamUserInfoRepository;
+    private final ApplyInfoRepository applyInfoRepository;
     private final RandomImg randomImg;
 
 
@@ -97,9 +97,9 @@ public class TeamService {
         System.out.println("now 길이 : " + Long.toString(System.currentTimeMillis()).length());
 
         //TeamUserInfo에 리더 정보 저장
-        ApplyResponseDto applyResponseDto = new ApplyResponseDto(team);
-        ApplyInfo leaderInfo = ApplyInfo.createTeamUserInfo(applyResponseDto, user);
-        teamUserInfoRepository.save(leaderInfo);
+        ApplyResponseSaveDto applyResponseSaveDto = new ApplyResponseSaveDto(team);
+        ApplyInfo leaderInfo = ApplyInfo.createTeamUserInfo(applyResponseSaveDto, user);
+        applyInfoRepository.save(leaderInfo);
 
         return teamResponseDto;
     }
@@ -127,7 +127,7 @@ public class TeamService {
     //팀메이킹 작성글 전체조회 with 페이지네이션 _ auth 불필요
     public List<TeamResponseDto> getTeamList(int page, int size) { //(int page, int size, String sortBy, boolean isAsc)
 
-        Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
 
         //페이징한 Page<Team>를 List<TeamResponseDto>에 담기
 //        List<Team> listTeam = pageTeam.getContent(); // toList 메소드와 getContent 차이는?
@@ -251,7 +251,7 @@ public class TeamService {
 
     // Front 필터링
     public List<TeamResponseDto> findTeamWhereFront(int page, int size) {
-        Page<Team> teamPage = teamRepository.findAllByFrontGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        Page<Team> teamPage = teamRepository.findAllByFrontGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
         List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
 
         for (Team team : getContentTeam(teamPage)) {
@@ -265,7 +265,7 @@ public class TeamService {
 
     // Back 필터링
     public List<TeamResponseDto> findTeamWhereBack(int page, int size) {
-        Page<Team> teamPage = teamRepository.findAllByBackGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        Page<Team> teamPage = teamRepository.findAllByBackGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
         List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
 
         for (Team team : getContentTeam(teamPage)) {
@@ -279,7 +279,7 @@ public class TeamService {
 
     // Designer 필터링
     public List<TeamResponseDto> findTeamWhereDesigner(int page, int size) {
-        Page<Team> teamPage = teamRepository.findAllByDesignerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        Page<Team> teamPage = teamRepository.findAllByDesignerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
         List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
 
         for (Team team : getContentTeam(teamPage)) {
@@ -293,7 +293,7 @@ public class TeamService {
 
     // Planner 필터링
     public List<TeamResponseDto> findTeamWherePlanner(int page, int size) {
-        Page<Team> teamPage = teamRepository.findAllByPlannerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "modifiedAt"));
+        Page<Team> teamPage = teamRepository.findAllByPlannerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
         List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
 
         for (Team team : getContentTeam(teamPage)) {

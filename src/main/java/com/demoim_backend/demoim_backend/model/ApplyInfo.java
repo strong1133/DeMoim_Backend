@@ -1,6 +1,6 @@
 package com.demoim_backend.demoim_backend.model;
 
-import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
+import com.demoim_backend.demoim_backend.dto.ApplyResponseSaveDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,14 +47,14 @@ public class ApplyInfo {
         LEADER, MEMBER //Member라는 element 피하는게 좋을수도.. -> 대문자 처리
     }
 
-    public static ApplyInfo createTeamUserInfo(ApplyResponseDto applyResponseDto, User user) {
+    public static ApplyInfo createTeamUserInfo(ApplyResponseSaveDto applyResponseSaveDto, User user) {
         ApplyInfo applyInfo = new ApplyInfo();
-        applyInfo.setTeam(applyResponseDto.getTeam());
+        applyInfo.setTeam(applyResponseSaveDto.getTeam());
         applyInfo.setUser(user);
-        applyInfo.setMembership(applyResponseDto.getMembership());
-        applyInfo.setIsAccepted(applyResponseDto.getIsAccepted());
-        applyInfo.setMessage(applyResponseDto.getMessage());
-        applyInfo.setPortfolio(applyResponseDto.getPortfolio());
+        applyInfo.setMembership(applyResponseSaveDto.getMembership());
+        applyInfo.setIsAccepted(applyResponseSaveDto.getIsAccepted());
+        applyInfo.setMessage(applyResponseSaveDto.getMessage());
+        applyInfo.setPortfolio(applyResponseSaveDto.getPortfolio());
         return applyInfo;
     }
 
