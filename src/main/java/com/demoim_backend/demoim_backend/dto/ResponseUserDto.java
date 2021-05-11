@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class ResponseUser {
+public class ResponseUserDto {
 
     private Long userid;
     private String username;
@@ -17,7 +17,7 @@ public class ResponseUser {
     private String profileImage;
 
     @Builder
-    public ResponseUser(Long userid, String username, String nickname, String position, String description, String profileImage ) {
+    public ResponseUserDto(Long userid, String username, String nickname, String position, String description, String profileImage ) {
         this.userid = userid;
         this.username = username;
         this.nickname = nickname;
@@ -26,8 +26,8 @@ public class ResponseUser {
         this.profileImage = profileImage;
     }
 
-    public ResponseUser entityToDto(User user){
-        return  ResponseUser.builder()
+    public ResponseUserDto entityToDto(User user){
+        return  ResponseUserDto.builder()
                 .userid(user.getId())
                 .username(user.getUsername())
                 .nickname(user.getNickname())

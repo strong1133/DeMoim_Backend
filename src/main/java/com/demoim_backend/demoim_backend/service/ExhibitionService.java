@@ -44,15 +44,26 @@ public class ExhibitionService {
         );
     }
 
-    // exhibition 생성
-    public ExhibitionResponseDto createExhibition(Authentication authentication, String requestBody, MultipartFile file) {
-
+    //json을 ExhibitionDto로 변환
+    public ExhibitionDto jsonToExhibition(String requestBody){
         JSONObject jsonObject = new JSONObject(requestBody);
-        ExhibitionDto exhibitionDto = ExhibitionDto.builder()
+        return ExhibitionDto.builder()
                 .title(jsonObject.getString("title"))
                 .contents(jsonObject.getString("contents"))
                 .build();
+    }
 
+
+    // exhibition 생성
+    public ExhibitionResponseDto createExhibition(Authentication authentication, String requestBody, MultipartFile file) {
+
+        User user = userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+
+        ExhibitionDto exhibitionDto = jsonToExhibition(requestBody);
+
+        //파일 이름 처리
         if (file == null) {
             Random random = new Random();
             int rNum = random.nextInt(15);
@@ -61,10 +72,6 @@ public class ExhibitionService {
             exhibitionDto.setThumbnail(fileUploadService.uploadImage(file));
         }
 
-
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
 
         Exhibition exhibition = exhibitionDto.toEntity();
         exhibition.setUser(user);
@@ -93,7 +100,7 @@ public class ExhibitionService {
 
         Page<Exhibition> pageExhibition = exhibitionRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt")));
 
-        // 들고온 Entity를 Dto에 넣어서 반환하는 코드 90-98
+        // 들고온 Entity를 Dto에 넣어서 반환하는 코드
         List<ExhibitionResponseDto> exhibitionResponseDtoList = new ArrayList<>();
         ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
 
@@ -124,16 +131,6 @@ public class ExhibitionService {
                                                   String requestBody, MultipartFile file,
                                                   Long exhibitionId) {
 
-        JSONObject jsonObject = new JSONObject(requestBody);
-
-        ExhibitionDto exhibitionDto = ExhibitionDto.builder()
-                .title(jsonObject.getString("title"))
-                .contents(jsonObject.getString("contents"))
-                .build();
-
-        ExhibitionResponseDto exhibitionResponseDto;
-        String thumbnail = "";
-
         //user 조회
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
@@ -142,8 +139,12 @@ public class ExhibitionService {
         //Exhibition 존재 여부 확인
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
+        ExhibitionResponseDto exhibitionResponseDto;
+        String thumbnail = "";
 
-        // 작성자와 로그인한 같다면
+        ExhibitionDto exhibitionDto = jsonToExhibition(requestBody);
+
+        // 작성자와 로그인한 사용자가 같다면
         if (user.getId() == exhibition.getExhibitionUser().getId()) {
 
             if (file == null) {
@@ -159,12 +160,14 @@ public class ExhibitionService {
 
             return exhibitionResponseDto.entityToDto(exhibitionReponse);
 
+        // 작성자와 로그인한 사용자가 다르다면
         } else {
             exhibitionResponseDto = null;
             return exhibitionResponseDto;
         }
     }
 
+    // Exhibition 수정
     @Transactional
     public ExhibitionResponseDto updateExhibitionImg(Authentication authentication, Long exhibitionId, MultipartFile file) {
         ExhibitionResponseDto exhibitionResponseDto;

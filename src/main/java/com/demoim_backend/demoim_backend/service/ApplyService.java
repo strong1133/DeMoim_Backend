@@ -38,39 +38,50 @@ public class ApplyService {
         }
     }
 
-    public ApplyResponseDto entityToDto(ApplyInfo applyInfo, ResponseUser responseUser) {
-        ApplyResponseDto applyResponseDto = new ApplyResponseDto(applyInfo, responseUser);
+    public ApplyResponseDto entityToDto(ApplyInfo applyInfo, ResponseUserDto responseUserDto) {
+        ApplyResponseDto applyResponseDto = new ApplyResponseDto(applyInfo, responseUserDto);
         return applyResponseDto;
     }
 
     public int checkPosition(String applyPosition, Team team) {
         int numPosition = 0;
+
         if (applyPosition.contentEquals("프론트엔드")) {
             numPosition = team.getFront();
+
         } else if (applyPosition.contentEquals("백엔드")) {
             numPosition = team.getBack();
+
         } else if (applyPosition.contentEquals("디자이너")) {
             numPosition = team.getDesigner();
+
         } else if (applyPosition.contentEquals("기획자")) {
             numPosition = team.getPlanner();
         }
+
         return numPosition;
     }
 
     //팀메이킹 모집글 지원 _ 리더인가? 이미 신청한 사람인가? 참여중인프로젝트가 2개 이하인가? 자기 파트에 모집이 덜됐을 때
     public Map<String, String> applyTeam(Authentication authentication, Long teamId, ApplyRequestDto applyRequestDto) {
+
         System.out.println("================================================");
+
         Map<String, String> map = new HashMap<>();
         //User 정보 검증(from UserService.findCurUser)
+
         User user = userService.findCurUser(authentication).orElseThrow(
                 ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
+
         Team team = teamRepository.findById(teamId).orElseThrow(
                 ()->new IllegalArgumentException("유효한 팀모집글 정보가 없습니다.")
         );
+
         ApplyInfo leaderInfo =  applyInfoRepository.findByTeamIdAndMembership(teamId, ApplyInfo.Membership.LEADER);
         System.out.println("leaderInfo : "+  leaderInfo);
 //        Team team = teamService.findTeam(teamId);
+
         List<ApplyInfo> applyInfoList = applyInfoRepository.findAllByTeamId(teamId);
         System.out.println("applyInfoList : "+ applyInfoList);
 
@@ -168,11 +179,11 @@ public class ApplyService {
         if (user.equals(leaderInfo.getUser())) {
             //0510 영은님 요청(리더 제외한 팀원들 정보만!)
             List<ApplyInfo> applyInfoList = applyInfoRepository.findAllByTeamIdAndMembershipAndApplyState(teamId, ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.WAITING);
-//            ResponseUser responseUser = new ResponseUser();
+//            ResponseUserDto responseUserDto = new ResponseUserDto();
             List<ApplyResponseDto> applyResponseDtoList = new ArrayList<>();
             for (ApplyInfo applyInfo : applyInfoList) {
-                ResponseUser responseUser = ResponseUser.builder().build().entityToDto(userService.findTargetUser(applyInfo.getUser().getId()));
-                ApplyResponseDto applyResponseDto = entityToDto(applyInfo,responseUser);
+                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(userService.findTargetUser(applyInfo.getUser().getId()));
+                ApplyResponseDto applyResponseDto = entityToDto(applyInfo, responseUserDto);
                 applyResponseDtoList.add(applyResponseDto);
             }
             return applyResponseDtoList;
@@ -197,11 +208,16 @@ public class ApplyService {
         ApplyInfo userApplyInfo = applyInfoRepository.findByTeamIdAndUserId(teamId, user.getId());
         //지원부분(POST)은 equals 메소드로 동등성 비교를 함.
         if (userApplyInfo == null) {
+
             throw new IllegalArgumentException("팀 참여자 목록에서 회원님의 정보를 찾을 수 없습니다."); //얘 불필요한건지.. 어디서 걸러지나요?
+
         } else if (userApplyInfo.getMembership() != ApplyInfo.Membership.MEMBER) {
+
             throw new IllegalArgumentException("게시글 작성자는 본인의 글에 지원할 수 없습니다.");
+
         } else if (userApplyInfo.getApplyState() != ApplyInfo.ApplyState.ACCEPTED) {
             throw new IllegalArgumentException("해당 프로젝트의 참여확정된 사람에 한하여 취소가 가능합니다.");
+
         }
 
         LocalDateTime begin = team.getBegin();
@@ -209,9 +225,12 @@ public class ApplyService {
 
         //해당 멤버가 지원한 모든 ApplyInfo 조회, 지금 삭제하는 프로젝트와 기간이 겹치는 프로젝트들에 대해 status를 DENIED->WAITING으로 바꿔주기
         List<ApplyInfo> memberApplyInfosList = applyInfoRepository.findAllByUserId(user.getId());
+
         for (ApplyInfo memberApplyInfo : memberApplyInfosList) {
+
             //해당 멤버가 지원한 프로젝트 하나하나마다 지금 취소하는 프로젝트와 겹치는게 있는 경우 명령문 실행
             if (!(memberApplyInfo.getTeam().getEnd().isBefore(begin) || memberApplyInfo.getTeam().getBegin().isAfter(end))) {
+
                 memberApplyInfo.choiceMember(ApplyInfo.ApplyState.WAITING);
             }
         }

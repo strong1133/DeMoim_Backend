@@ -49,14 +49,14 @@ public class CommentService {
     }
 
     // responseUser 코팅
-    public ResponseUser responseUser(User user) {
-        ResponseUser responseUser = new ResponseUser(user.getId(), user.getUsername(), user.getNickname(), user.getPosition(), user.getDescription(), user.getProfileImage());
-        return responseUser;
+    public ResponseUserDto responseUser(User user) {
+        ResponseUserDto responseUserDto = new ResponseUserDto(user.getId(), user.getUsername(), user.getNickname(), user.getPosition(), user.getDescription(), user.getProfileImage());
+        return responseUserDto;
     }
 
     // response 객체로 만들어주는 매서드
-    public CommentResponseDto entityToDto(Comment comment, ResponseUser responseUser) {
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+    public CommentResponseDto entityToDto(Comment comment, ResponseUserDto responseUserDto) {
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUserDto);
         return commentResponseDto;
     }
 
@@ -65,11 +65,11 @@ public class CommentService {
     public CommentResponseDto createCommentForSmallTalk(Authentication authentication, CommentRequestDto commentRequestDto, Long smallTalkId) {
 
         User user = curUser(authentication);
-        ResponseUser responseUser = responseUser(user);
+        ResponseUserDto responseUserDto = responseUser(user);
         Comment comment = new Comment(commentRequestDto, user);
         comment.setSmallTalkId(smallTalkId);
         commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUserDto);
 
         //알람 생성
         AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
@@ -92,8 +92,8 @@ public class CommentService {
 
         for (Comment comment : commentList) {
             User user = comment.getCommentUser();
-            ResponseUser responseUser = responseUser(user);
-            commentResponseDto.add(this.entityToDto(comment, responseUser));
+            ResponseUserDto responseUserDto = responseUser(user);
+            commentResponseDto.add(this.entityToDto(comment, responseUserDto));
         }
         return commentResponseDto;
     }
@@ -102,11 +102,11 @@ public class CommentService {
     // Exhibition Comments 작성
     public CommentResponseDto createCommentForExhibition(Authentication authentication, CommentRequestDto commentRequestDto, Long exhibitionId) {
         User user = curUser(authentication);
-        ResponseUser responseUser = responseUser(user);
+        ResponseUserDto responseUserDto = responseUser(user);
         Comment comment = new Comment(commentRequestDto, user);
         comment.setExhibitionId(exhibitionId);
         commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUserDto);
 
         //알람 생성
         AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
@@ -127,8 +127,8 @@ public class CommentService {
 
         for (Comment comment : commentList) {
             User user = comment.getCommentUser();
-            ResponseUser responseUser = responseUser(user);
-            commentResponseDto.add(this.entityToDto(comment, responseUser));
+            ResponseUserDto responseUserDto = responseUser(user);
+            commentResponseDto.add(this.entityToDto(comment, responseUserDto));
         }
         return commentResponseDto;
     }
@@ -145,8 +145,8 @@ public class CommentService {
             throw new IllegalArgumentException("자신의 댓글만 수정할 수 있습니다.");
         }
         comment.update(commentRequestDto);
-        ResponseUser responseUser = responseUser(user);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUser);
+        ResponseUserDto responseUserDto = responseUser(user);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUserDto);
         return commentResponseDto;
     }
 
