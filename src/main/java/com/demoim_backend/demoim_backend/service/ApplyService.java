@@ -62,7 +62,7 @@ public class ApplyService {
         return numPosition;
     }
 
-    public int curPositionCnt(Team team, String position){
+    public int curPositionCnt(Team team, String position) {
         return applyInfoRepository.countByTeamIdAndApplyStateAndUserPositionAndMembership(team.getId(), ApplyInfo.ApplyState.ACCEPTED, position, ApplyInfo.Membership.MEMBER);
     }
 
@@ -111,7 +111,7 @@ public class ApplyService {
         int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
         int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
         int nowTeamCnt = memberCnt + leadCnt;
-        if ( nowTeamCnt >= 1) {
+        if (nowTeamCnt >= 1) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
         }
 
@@ -254,10 +254,10 @@ public class ApplyService {
         int curPositionCnt = curPositionCnt(team, applyPosition);
 
         int numPosition = checkPosition(applyPosition, team);
-        System.out.println("curPositionCnt :" +curPositionCnt);
-        System.out.println("numPosition :" +numPosition);
+        System.out.println("curPositionCnt :" + curPositionCnt);
+        System.out.println("numPosition :" + numPosition);
 
-        if (curPositionCnt >= numPosition){
+        if (curPositionCnt >= numPosition) {
             throw new IllegalArgumentException("해당 포지션은 모집이 완료됬습니다.");
         }
         //흐름 : 먼저 ACCEPTED 처리해주고나서 해당 지원자의 다른 지원정보를 싹 업데이트해주는 순서(서로겹칠만한 프로젝트는 여기서 찾아 DENIED로 바꿔주기
@@ -277,20 +277,20 @@ public class ApplyService {
         Map<String, Integer> map = new HashMap<>();
         int front = team.getFront() - curPositionCnt(team, "프론트엔드");
         int back = team.getBack() - curPositionCnt(team, "백엔드");
-        System.out.println("back :" + team.getBack() +"-"+ curPositionCnt(team, "백엔드"));
+        System.out.println("back :" + team.getBack() + "-" + curPositionCnt(team, "백엔드"));
         int designer = team.getDesigner() - curPositionCnt(team, "디자이너");
         int planner = team.getPlanner() - curPositionCnt(team, "기획자");
 
-        map.put("Front",front);
+        map.put("Front", front);
         map.put("Back", back);
         map.put("Designer", designer);
         map.put("Planner", planner);
         info.add(map);
-        String msg = applyInfo.getUser().getNickname()+"님 께서 " + team.getTitle() +" 팀 맴버로 추가되었습니다.";
+        String msg = applyInfo.getUser().getNickname() + "님 께서 " + team.getTitle() + " 팀 맴버로 추가되었습니다.";
         List<ApplyResponseDto> applyResponseDtoList = getApplications(authentication, team.getId());
 
         //알람 생성
-        String commentsAlarm = "🎉 축하합니다! "+team.getTitle()+ "팀의 맴버가 되셨습니다!";
+        String commentsAlarm = "🎉 축하합니다! " + team.getTitle() + "팀의 맴버가 되셨습니다!";
         AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
         alarmRequestDto.setUserId(applyInfo.getUser().getId());
         alarmRequestDto.setContents(commentsAlarm);
@@ -298,5 +298,7 @@ public class ApplyService {
 
         return new ChoiceResponseDto(msg, applyInfo.getUser(), info, applyResponseDtoList);
     }
+
+
 
 }
