@@ -35,8 +35,8 @@ public class UserController {
 
     //마이페이지 유저정보 반환
     @GetMapping("/api/mypage/profile")
-    private User mypageUserInfo(Authentication authentication){
-        return userService.findMyUserInfo(authentication);
+    private MypageResponseDto mypageUserInfo(Authentication authentication){
+        return userService.mypageUserInfo(authentication);
     }
 
     // 특정 유저 정보 반환

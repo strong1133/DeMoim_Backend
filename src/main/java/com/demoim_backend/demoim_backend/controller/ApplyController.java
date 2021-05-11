@@ -40,24 +40,9 @@ public class ApplyController {
         return applyResponseDtoList;
     }
 
-
     @DeleteMapping("/api/apply") // /api/apply?apply_id={apply_id}
-    public ResponseEntity cancelApplication(Authentication authentication, @RequestParam("team_id") Long teamId) {
-
-        String result = applyService.cancelApplication(authentication, teamId);
-        HashMap<String, String> message;
-
-        if (result.equals("success")) {
-            message = new HashMap<>();
-            message.put("msg", "해당 게시물에 대한 지원취소가 완료되었습니다.");
-            return new ResponseEntity<>(message, HttpStatus.OK);
-//            applyService.cancelApplication(authentication, teamId);
-        } else {
-            message = new HashMap<>();
-            message.put("msg", "모집글에 대한 취소는 신청자만 할 수 있습니다.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-
-        }
+    public Map<String, String> cancelApplication(Authentication authentication, @RequestParam("team_id") Long teamId) {
+        return applyService.cancelApplication(authentication, teamId);
     }
 
     @PutMapping("/api/apply/choice")

@@ -2,9 +2,11 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.*;
+import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import com.demoim_backend.demoim_backend.model.Comment;
 import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
+import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
@@ -26,10 +28,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
     private final TeamRepository teamRepository;
+    private final ApplyInfoRepository applyInfoRepository;
 
     // response 객체로 만들어주는 매서드
     public MypageResponseDto entityToDto(User user, List<Team> team) {
-        MypageResponseDto mypageResponseDto = new MypageResponseDto(user, team);
+        List<ApplyInfo> applyInfos = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.WAITING);
+        List<Long> applyInfoList = new ArrayList<>();
+        for(ApplyInfo applyInfo : applyInfos){
+            applyInfoList.add(applyInfo.getTeam().getId());
+        }
+
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int nowTeamCnt = memberCnt + leadCnt;
+        MypageResponseDto mypageResponseDto = new MypageResponseDto(user, nowTeamCnt, applyInfoList, team);
+
         return mypageResponseDto;
     }
 
@@ -51,12 +64,11 @@ public class UserService {
     }
 
     // 현재 로그인 한 유저 정보 반환22
-    public List<MypageResponseDto> mypageUserInfo (Authentication authentication){
+    public MypageResponseDto mypageUserInfo (Authentication authentication){
         User user = findMyUserInfo(authentication);
-        List<MypageResponseDto> mypageResponseDtoList = new ArrayList<>();
         List<Team> team = teamRepository.findByLeader(user);
-        mypageResponseDtoList.add(entityToDto(user, team));
-        return mypageResponseDtoList;
+
+        return entityToDto(user,team);
     }
 
     // 특정 유저 정보 반환

@@ -38,6 +38,7 @@ public class User extends Timestamped {
     @Column(nullable = true)
     private String profileImage; //일단 이거는 사항 바꾼거 프론트에 알려주기(0426 17:10)
 
+
     //fetch 속성은 @ManyToOne에서 주로 쓰인다.
     //영속성 전이를 위해 cascade = CascadeType.ALL을 추가해준다.
     @JsonIgnore
