@@ -51,6 +51,16 @@ public class TeamService {
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
     public TeamResponseDto createTeam(Authentication authentication, String requestBody, MultipartFile file) {
+        //User 정보 검증(from UserService.findCurUser)
+        User user = userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        if (memberCnt+leadCnt>=1){
+            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
+        }
+
         Random random = new Random();
         TeamRequestDto teamRequestDto;
         teamRequestDto = teamJsonMapper.jsonTeamDtoMaker(requestBody);
@@ -61,10 +71,8 @@ public class TeamService {
             int rNum = random.nextInt(15);
             teamRequestDto.setThumbnail(randomImg.rndImg(rNum));
         }
-        //User 정보 검증(from UserService.findCurUser)
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+
+
         LocalDateTime recruitLDT = Instant.ofEpochMilli(teamRequestDto.getRecruit()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         LocalDateTime beginLDT = Instant.ofEpochMilli(teamRequestDto.getBegin()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
         LocalDateTime endLDT = Instant.ofEpochMilli(teamRequestDto.getEnd()).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
@@ -169,10 +177,15 @@ public class TeamService {
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
+
         UserUpdateProfileSaveRequestDto leaderProfileDto = new UserUpdateProfileSaveRequestDto(user);
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = this.findTeam(teamId);
+
+        if (!team.getLeader().getId().equals(user.getId())){
+            throw new IllegalArgumentException("게시글 작성자가 아닙니다.");
+        }
 
         if (file == null) {
             teamRequestDto.setThumbnail(team.getThumbnail());
@@ -245,7 +258,7 @@ public class TeamService {
             teamRepository.deleteById(teamId);
             return "삭제 성공";
         } else {
-            return "게시글 작성자가 아닙니다.";
+            throw new IllegalArgumentException("게시글 작성자가 아닙니다.");
         }
     }
 

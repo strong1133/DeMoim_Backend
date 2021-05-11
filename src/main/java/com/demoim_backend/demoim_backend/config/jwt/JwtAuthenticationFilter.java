@@ -4,7 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.LoginRequestDto;
+import com.demoim_backend.demoim_backend.model.ApplyInfo;
 import com.demoim_backend.demoim_backend.model.User;
+import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
+import com.demoim_backend.demoim_backend.service.ApplyService;
 import com.demoim_backend.demoim_backend.service.SignupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //스프링 시큐리에서 UsernamePasswordAuthenticationFilter라는 것을 제공해줌
 //loginForm.disable 했기 때문에 /login 요청시 이걸 시큐리티 로그인으로 인터셉트 해줘야함.
@@ -29,19 +30,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final ApplyInfoRepository applyInfoRepository;
     private static final String SCERET_KEY = "AWDSDV+/asdwzwr3434@#$vvadflf00ood/[das";
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-    throws AuthenticationException{
+            throws AuthenticationException {
         System.out.println("JwtAuthenticationFilter : 진입");
 
         ObjectMapper om = new ObjectMapper();
         LoginRequestDto loginRequestDto = null;
-        try{
+        try {
             loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
             System.out.println("loginRequestDto :" + loginRequestDto);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException("로그인에 실패하였습니다") {
             };
         }
@@ -56,24 +58,28 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Authentication authentication = null;
 
-        authentication = authenticationManager.authenticate(authenticationToken);
-        PrincipalDetails principalDetails = (PrincipalDetails)  authentication.getPrincipal();
-
+        try {
+            authentication = authenticationManager.authenticate(authenticationToken);
+        } catch (AuthenticationException e) {
+           throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
+        }
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         return authentication;
 
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,  FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException{
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .withClaim("id", principalDetails.getUser().getId())
-                .withClaim("username",principalDetails.getUser().getUsername())
+                .withClaim("username", principalDetails.getUser().getUsername())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         System.out.println("jwtToken : " + jwtToken);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -86,12 +92,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         users.put("Description", user.getDescription());
         users.put("Position", user.getPosition());
 
+        Map<String, List<Long>> applyTeamId = new HashMap<>();
+
+        List<ApplyInfo> applyInfos = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.WAITING);
+        List<Long> applyInfoList = new ArrayList<>();
+        for(ApplyInfo applyInfo : applyInfos){
+            applyInfoList.add(applyInfo.getTeam().getId());
+        }
+        applyTeamId.put("applyTeamId", applyInfoList );
+        System.out.println("applyTeamId :" +applyTeamId );
         Map<String, Map<String, String>> map = new HashMap<>();
+        Map<String, Map<String, List<Long>>> map2 = new HashMap<>();
         map.put("userInfo", users);
+        map2.put("applyTeamId", applyTeamId);
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(map));
+        response.getWriter().write(objectMapper.writeValueAsString(map2));
 
     }
 

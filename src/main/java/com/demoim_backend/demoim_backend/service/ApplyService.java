@@ -106,10 +106,13 @@ public class ApplyService {
             }
         }
         //2개가 넘는지 여부 검사
-        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
-        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
-        if (teamIdListOfUser.size() > 2) {
-            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 최대 2개 입니다.");
+//        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
+//        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int nowTeamCnt = memberCnt + leadCnt;
+        if ( nowTeamCnt >= 1) {
+            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
         }
 
 
@@ -181,7 +184,8 @@ public class ApplyService {
     }
 
     //팀메이킹 모집글 지원취소
-    public String cancelApplication(Authentication authentication, Long teamId) {
+    public Map<String, String> cancelApplication(Authentication authentication, Long teamId) {
+        Map<String, String> message = new HashMap<>();
         //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
@@ -195,18 +199,10 @@ public class ApplyService {
         ApplyInfo userApplyInfo = applyInfoRepository.findByTeamIdAndUserId(teamId, user.getId());
         //지원부분(POST)은 equals 메소드로 동등성 비교를 함.
         if (userApplyInfo == null) {
-
             throw new IllegalArgumentException("팀 참여자 목록에서 회원님의 정보를 찾을 수 없습니다."); //얘 불필요한건지.. 어디서 걸러지나요?
-
         } else if (userApplyInfo.getMembership() != ApplyInfo.Membership.MEMBER) {
-
             throw new IllegalArgumentException("게시글 작성자는 본인의 글에 지원할 수 없습니다.");
-
-        } else if (userApplyInfo.getApplyState() != ApplyInfo.ApplyState.ACCEPTED) {
-            throw new IllegalArgumentException("해당 프로젝트의 참여확정된 사람에 한하여 취소가 가능합니다.");
-
         }
-
         LocalDateTime begin = team.getBegin();
         LocalDateTime end = team.getEnd();
 
@@ -214,16 +210,23 @@ public class ApplyService {
         List<ApplyInfo> memberApplyInfosList = applyInfoRepository.findAllByUserId(user.getId());
 
         for (ApplyInfo memberApplyInfo : memberApplyInfosList) {
-
             //해당 멤버가 지원한 프로젝트 하나하나마다 지금 취소하는 프로젝트와 겹치는게 있는 경우 명령문 실행
             if (!(memberApplyInfo.getTeam().getEnd().isBefore(begin) || memberApplyInfo.getTeam().getBegin().isAfter(end))) {
-
                 memberApplyInfo.choiceMember(ApplyInfo.ApplyState.WAITING);
             }
         }
         applyInfoRepository.delete(userApplyInfo);
 
-        return "해당 모집글에 대한 지원취소가 완료되었습니다.";
+        //알람 생성
+        String commentsAlarm = user.getNickname() + "님 께서 " + team.getTitle() + " 공고에 지원을 취소하셨습니다.";
+        User user1 = team.getLeader();
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setUserId(user1.getId());
+        alarmRequestDto.setContents(commentsAlarm);
+        alarmService.createAlarm(alarmRequestDto);
+
+        message.put("msg", "해당 게시물에 대한 지원취소가 완료되었습니다.");
+        return message;
     }
 
 
@@ -278,16 +281,6 @@ public class ApplyService {
         int designer = team.getDesigner() - curPositionCnt(team, "디자이너");
         int planner = team.getPlanner() - curPositionCnt(team, "기획자");
 
-//        if (applyPosition.contentEquals("프론트엔드")){
-//            front -= 1;
-//        }else if (applyPosition.contentEquals("백엔드")){
-//            back -= 1;
-//        }else if (applyPosition.contentEquals("디자이너")){
-//            designer -= 1;
-//        }else if (applyPosition.contentEquals("기획자")){
-//            planner -= 1;
-//        }
-
         map.put("Front",front);
         map.put("Back", back);
         map.put("Designer", designer);
@@ -298,7 +291,6 @@ public class ApplyService {
 
         //알람 생성
         String commentsAlarm = "🎉 축하합니다! "+team.getTitle()+ "팀의 맴버가 되셨습니다!";
-
         AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
         alarmRequestDto.setUserId(applyInfo.getUser().getId());
         alarmRequestDto.setContents(commentsAlarm);
