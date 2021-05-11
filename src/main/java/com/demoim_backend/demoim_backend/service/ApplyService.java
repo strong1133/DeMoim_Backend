@@ -97,7 +97,6 @@ public class ApplyService {
         for (ApplyInfo applyInfo : applyInfoList) {
             teamUsers.add(applyInfo.getUser());
         }
-        System.out.println("1");
         //회원정보가 해당모집글의 참여자 목록에 있는지(리더 or 회원목록) 확인
         if (teamUsers.contains(user)) {
             if (user.equals(team.getLeader())) {
@@ -106,15 +105,12 @@ public class ApplyService {
                 throw new IllegalArgumentException("이미 지원한 게시글입니다.");
             }
         }
-        System.out.println("2");
         //2개가 넘는지 여부 검사
         List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
         System.out.println("teamIdListOfUser : " + teamIdListOfUser);
-        System.out.println("3909");
         if (teamIdListOfUser.size() > 2) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 최대 2개 입니다.");
         }
-        System.out.println("6");
 
 
         //지원하려는 team의 신청자 포지션이 다 찼을때 지원 막기
@@ -126,7 +122,6 @@ public class ApplyService {
 
         //팀메이킹 모집글의 해당 포지션 공고인원보다 확정된사람이 같거나 더 많은 경우
         int numPosition = checkPosition(userPosition, team);
-        System.out.println("9");
         //0510 아침 영은님 요청사항 -> 자기포지션 모집인원0명일때는 별도의 메시지 내보내주기!
         if (numPosition == 0) {
             throw new IllegalArgumentException("해당 글은 회원님의 포지션을 모집하지 않습니다.");
@@ -139,7 +134,7 @@ public class ApplyService {
         ApplyInfo applyInfo = ApplyInfo.createTeamUserInfo(applyResponseSaveDto, user);
         System.out.println("applyInfo :" + applyInfo);
         applyInfoRepository.save(applyInfo);
-        System.out.println("10");
+
         //알람 생성
         String commentsAlarm = user.getNickname() + "님 께서 " + team.getTitle() + " 공고에 지원하셨습니다.";
         alarmMaker(commentsAlarm, user, team);
@@ -298,8 +293,17 @@ public class ApplyService {
         map.put("Designer", designer);
         map.put("Planner", planner);
         info.add(map);
-        String msg = applyInfo.getUser().getNickname()+" 님 께서 " + team.getTitle() +" 팀 맴버로 추가되었습니다.";
+        String msg = applyInfo.getUser().getNickname()+"님 께서 " + team.getTitle() +" 팀 맴버로 추가되었습니다.";
         List<ApplyResponseDto> applyResponseDtoList = getApplications(authentication, team.getId());
+
+        //알람 생성
+        String commentsAlarm = "🎉 축하합니다! "+team.getTitle()+ "팀의 맴버가 되셨습니다!";
+
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setUserId(applyInfo.getUser().getId());
+        alarmRequestDto.setContents(commentsAlarm);
+        alarmService.createAlarm(alarmRequestDto);
+
         return new ChoiceResponseDto(msg, applyInfo.getUser(), info, applyResponseDtoList);
     }
 

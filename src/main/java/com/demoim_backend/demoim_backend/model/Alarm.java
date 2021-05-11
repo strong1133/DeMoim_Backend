@@ -13,7 +13,8 @@ public class Alarm extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name="alarmId")
+    private Long alarmId;
 
     @Column(nullable = false)
     private Long userId;

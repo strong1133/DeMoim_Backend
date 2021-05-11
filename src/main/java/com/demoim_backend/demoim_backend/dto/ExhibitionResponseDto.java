@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Getter
 public class ExhibitionResponseDto {
-    private Long id;
+    private Long exhibitionId;
     private String title;
     private String contents;
     private String thumbnail;
@@ -20,7 +20,7 @@ public class ExhibitionResponseDto {
 
     @Builder
     public ExhibitionResponseDto(Long id, String title, String contents, String thumbnail, ResponseUserDto user, LocalDateTime createAt, LocalDateTime modifiedAt) {
-        this.id = id;
+        this.exhibitionId = id;
         this.title = title;
         this.contents = contents;
         this.thumbnail = thumbnail;

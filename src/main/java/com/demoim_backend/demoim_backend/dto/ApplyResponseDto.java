@@ -8,22 +8,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApplyResponseDto {
-    private Long id;
+    private Long applyId;
     private ApplyInfo.ApplyState applyState;
     private ApplyInfo.Membership membership;
     private String message;
     private String portfolio;
 //    private TeamResponseDto teamResponseDto;
-    private ResponseUserDto responseUserDto;
+    private ResponseUserDto responseUser;
 
     @Builder
     public ApplyResponseDto(ApplyInfo applyInfo, ResponseUserDto responseUserDto) {
-        this.id = applyInfo.getId();
+        this.applyId = applyInfo.getId();
         this.applyState = applyInfo.getApplyState();
         this.membership = applyInfo.getMembership();
         this.message = applyInfo.getMessage();
         this.portfolio = applyInfo.getPortfolio();
 //        this.teamResponseDto = teamResponseDto;
-        this.responseUserDto = responseUserDto;
+        this.responseUser = responseUserDto;
     }
 }
