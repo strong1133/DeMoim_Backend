@@ -6,7 +6,6 @@ import com.demoim_backend.demoim_backend.model.Exhibition;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
@@ -35,7 +34,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +91,7 @@ public class ExhibitionControllerTest {
 
         ExhibitionDto exhibitionDto = new ExhibitionDto();
 
-        ResponseUser responseUser = new ResponseUser();
+        ResponseUserDto responseUserDto = new ResponseUserDto();
 
         ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
 
@@ -122,7 +120,7 @@ public class ExhibitionControllerTest {
 
         // given
         // 형식을 위한 빈 객체 생성
-        ResponseUser responseUser = new ResponseUser();
+        ResponseUserDto responseUserDto = new ResponseUserDto();
         ExhibitionResponseDto exhibitionResponseDto = new ExhibitionResponseDto();
         List<ExhibitionResponseDto> exhibitionsGiven = new ArrayList<>();
         exhibitionsGiven.add(exhibitionResponseDto);
@@ -149,7 +147,7 @@ public class ExhibitionControllerTest {
         // 형식을 맞추주기위한 빈 객체 생성
         User user = new User();
 
-        ResponseUser responseUser = new ResponseUser();
+        ResponseUserDto responseUserDto = new ResponseUserDto();
 
         ExhibitionDto exhibitionDto = new ExhibitionDto();
 

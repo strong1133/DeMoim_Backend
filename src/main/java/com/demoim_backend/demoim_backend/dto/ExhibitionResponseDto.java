@@ -1,7 +1,6 @@
 package com.demoim_backend.demoim_backend.dto;
 
 import com.demoim_backend.demoim_backend.model.Exhibition;
-import com.demoim_backend.demoim_backend.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +14,12 @@ public class ExhibitionResponseDto {
     private String title;
     private String contents;
     private String thumbnail;
-    private ResponseUser user;
+    private ResponseUserDto user;
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
 
     @Builder
-    public ExhibitionResponseDto(Long id, String title, String contents, String thumbnail, ResponseUser user, LocalDateTime createAt, LocalDateTime modifiedAt) {
+    public ExhibitionResponseDto(Long id, String title, String contents, String thumbnail, ResponseUserDto user, LocalDateTime createAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
         this.contents = contents;
@@ -31,13 +30,13 @@ public class ExhibitionResponseDto {
     }
 
     public ExhibitionResponseDto entityToDto(Exhibition exhibition){
-        ResponseUser responseUser = new ResponseUser();
+        ResponseUserDto responseUserDto = new ResponseUserDto();
 
         return ExhibitionResponseDto.builder()
                 .id(exhibition.getId())
                 .title(exhibition.getTitle())
                 .contents(exhibition.getContents())
-                .user(responseUser.entityToDto(exhibition.getExhibitionUser()))
+                .user(responseUserDto.entityToDto(exhibition.getExhibitionUser()))
                 .thumbnail(exhibition.getThumbnail())
                 .createAt(exhibition.getCreatedAt())
                 .modifiedAt(exhibition.getModifiedAt())

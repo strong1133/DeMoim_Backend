@@ -1,8 +1,6 @@
 package com.demoim_backend.demoim_backend.dto;
 
 import com.demoim_backend.demoim_backend.model.ApplyInfo;
-import com.demoim_backend.demoim_backend.model.Team;
-import com.demoim_backend.demoim_backend.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,16 +14,16 @@ public class ApplyResponseDto {
     private String message;
     private String portfolio;
 //    private TeamResponseDto teamResponseDto;
-    private ResponseUser responseUser;
+    private ResponseUserDto responseUserDto;
 
     @Builder
-    public ApplyResponseDto(ApplyInfo applyInfo, ResponseUser responseUser) {
+    public ApplyResponseDto(ApplyInfo applyInfo, ResponseUserDto responseUserDto) {
         this.id = applyInfo.getId();
         this.applyState = applyInfo.getApplyState();
         this.membership = applyInfo.getMembership();
         this.message = applyInfo.getMessage();
         this.portfolio = applyInfo.getPortfolio();
 //        this.teamResponseDto = teamResponseDto;
-        this.responseUser = responseUser;
+        this.responseUserDto = responseUserDto;
     }
 }

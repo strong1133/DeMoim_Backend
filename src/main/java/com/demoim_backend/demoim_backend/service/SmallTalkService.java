@@ -1,13 +1,11 @@
 package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.CommentResponseDto;
-import com.demoim_backend.demoim_backend.dto.ResponseUser;
+import com.demoim_backend.demoim_backend.dto.ResponseUserDto;
 import com.demoim_backend.demoim_backend.dto.SmallTalkDto;
 import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
-import com.demoim_backend.demoim_backend.model.Comment;
 import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.model.User;
-import com.demoim_backend.demoim_backend.repository.CommentRepository;
 import com.demoim_backend.demoim_backend.repository.SmallTalkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,13 +33,13 @@ public class SmallTalkService {
     // SmallTalk 엔티티를 DTo로 담아주는 메소드
     public SmallTalkResponseDto entityToDto(SmallTalk smallTalk) {
 
-        ResponseUser responseUser = new ResponseUser();
+        ResponseUserDto responseUserDto = new ResponseUserDto();
         List<CommentResponseDto> commentList = commentService.getCommentForSmallTalk(smallTalk.getId());
         System.out.println("commentList :" + commentList);
         return SmallTalkResponseDto.builder()
                 .id(smallTalk.getId())
                 .contents(smallTalk.getContents())
-                .user(responseUser.entityToDto(smallTalk.getSmallTalkUser()))
+                .user(responseUserDto.entityToDto(smallTalk.getSmallTalkUser()))
                 .commentList(commentList)
                 .createdAt(smallTalk.getCreatedAt())
                 .modifiedAt(smallTalk.getModifiedAt())
