@@ -33,8 +33,8 @@ public class ApplyInfo {
     @Enumerated(EnumType.STRING)
     private Membership membership;
 
-    @Column
-    private Boolean isAccepted;
+    @Enumerated(EnumType.STRING)
+    private ApplyState applyState;
 
     @Column
     private String message;
@@ -47,19 +47,23 @@ public class ApplyInfo {
         LEADER, MEMBER //Member라는 element 피하는게 좋을수도.. -> 대문자 처리
     }
 
+    public enum ApplyState {
+        WAITING, ACCEPTED, DENIED, CANCELED
+    }
+
     public static ApplyInfo createTeamUserInfo(ApplyResponseSaveDto applyResponseSaveDto, User user) {
         ApplyInfo applyInfo = new ApplyInfo();
         applyInfo.setTeam(applyResponseSaveDto.getTeam());
         applyInfo.setUser(user);
         applyInfo.setMembership(applyResponseSaveDto.getMembership());
-        applyInfo.setIsAccepted(applyResponseSaveDto.getIsAccepted());
+        applyInfo.setApplyState(applyResponseSaveDto.getApplyState());
         applyInfo.setMessage(applyResponseSaveDto.getMessage());
         applyInfo.setPortfolio(applyResponseSaveDto.getPortfolio());
         return applyInfo;
     }
 
 
-    public void choiceMember(boolean choice){
-        this.isAccepted = choice;
+    public void choiceMember(ApplyState choice){
+        this.applyState = choice;
     }
 }

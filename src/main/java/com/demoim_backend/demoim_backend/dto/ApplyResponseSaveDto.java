@@ -16,7 +16,7 @@ public class ApplyResponseSaveDto {
     private String portfolio;
     private UserUpdateProfileSaveRequestDto applicant; //position은 이 user 안에 있음
     private ApplyInfo.Membership membership;
-    private Boolean isAccepted; // 초기화는 null, 거절은 false, 선택은 true 이렇게 가능하다면 bestcase.
+    private ApplyInfo.ApplyState applyState; // 초기화는 null, 거절은 false, 선택은 true 이렇게 가능하다면 bestcase.
 
 //    public ApplyResponseDto(ApplyInfo teamUserInfo, ApplyRequestDto applyRequestDto) {
     public ApplyResponseSaveDto(User user, Team team, ApplyRequestDto applyRequestDto) {
@@ -28,7 +28,7 @@ public class ApplyResponseSaveDto {
 //        this.user = new UserUpdateProfileSaveRequestDto(teamUserInfo.getUser());
         this.applicant = new UserUpdateProfileSaveRequestDto(user);
         this.membership = ApplyInfo.Membership.MEMBER;
-        this.isAccepted = false;
+        this.applyState = ApplyInfo.ApplyState.WAITING;
         //this.isAccepted
     }
     public ApplyResponseSaveDto(Team team) {
@@ -38,7 +38,7 @@ public class ApplyResponseSaveDto {
 //        this.user = new UserUpdateProfileSaveRequestDto(teamUserInfo.getUser());
         this.applicant = new UserUpdateProfileSaveRequestDto(team.getLeader());
         this.membership = ApplyInfo.Membership.LEADER;
-        this.isAccepted = true;
+        this.applyState = ApplyInfo.ApplyState.ACCEPTED;
     }
 
     public ApplyResponseSaveDto(ApplyInfo applyInfo) {
@@ -49,7 +49,7 @@ public class ApplyResponseSaveDto {
 //        this.user = new UserUpdateProfileSaveRequestDto(applyInfo.getUser());
         this.applicant = new UserUpdateProfileSaveRequestDto(applyInfo.getUser());
         this.membership = applyInfo.getMembership();
-        this.isAccepted = applyInfo.getIsAccepted();
+        this.applyState = applyInfo.getApplyState();
     }
 
 
