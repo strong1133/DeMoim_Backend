@@ -3,6 +3,7 @@ package com.demoim_backend.demoim_backend.controller;
 import com.demoim_backend.demoim_backend.dto.ApplyRequestDto;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseSaveDto;
 import com.demoim_backend.demoim_backend.dto.ApplyResponseDto;
+import com.demoim_backend.demoim_backend.dto.ChoiceResponseDto;
 import com.demoim_backend.demoim_backend.service.ApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class ApplyController {
     }
 
     @PutMapping("/api/apply/choice")
-    public Map<String, String> choiceMember(Authentication authentication, @RequestParam("apply_id") Long applyId) {
+    public ChoiceResponseDto choiceMember(Authentication authentication, @RequestParam("apply_id") Long applyId) {
         return applyService.choiceMember(authentication, applyId);
     }
 }

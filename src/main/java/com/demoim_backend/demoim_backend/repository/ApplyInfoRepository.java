@@ -11,6 +11,7 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 //    List<ApplyInfo> findByTeamId(Long teamId);
     ApplyInfo findByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
 
+
     List<ApplyInfo> findAllByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
 
     List<ApplyInfo> findAllByUserId(Long userId);
@@ -19,7 +20,7 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
     List<ApplyInfo> findAllByTeamIdAndMembershipAndApplyState(Long teamId, ApplyInfo.Membership membership, ApplyInfo.ApplyState applyState);
 
-    int countByUserIdAndApplyState(Long userId, ApplyInfo.ApplyState applyState);
+    int countByTeamIdAndApplyStateAndUserPositionAndMembership(Long teamId, ApplyInfo.ApplyState applyState, String position, ApplyInfo.Membership membership);
 
 
 
