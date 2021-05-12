@@ -17,15 +17,7 @@ import java.util.Date;
 public class TeamResponseDto {
     private Long teamId;
     private String title;
-//    private Date recruit;
-//    private Date begin;
-//    private Date end;
-//    private LocalDateTime recruit;
-//    private LocalDateTime begin;
-//    private LocalDateTime end;
-
     private Long createdAt;
-
     private Long recruit;
     private Long begin;
     private Long end;

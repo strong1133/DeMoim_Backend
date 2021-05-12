@@ -2,7 +2,9 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.ExhibitionDto;
 import com.demoim_backend.demoim_backend.dto.ExhibitionResponseDto;
+import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
 import com.demoim_backend.demoim_backend.model.Exhibition;
+import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ExhibitionRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
@@ -45,7 +47,7 @@ public class ExhibitionService {
     }
 
     //json을 ExhibitionDto로 변환
-    public ExhibitionDto jsonToExhibition(String requestBody){
+    public ExhibitionDto jsonToExhibition(String requestBody) {
         JSONObject jsonObject = new JSONObject(requestBody);
         return ExhibitionDto.builder()
                 .title(jsonObject.getString("title"))
@@ -160,7 +162,7 @@ public class ExhibitionService {
 
             return exhibitionResponseDto.entityToDto(exhibitionReponse);
 
-        // 작성자와 로그인한 사용자가 다르다면
+            // 작성자와 로그인한 사용자가 다르다면
         } else {
             exhibitionResponseDto = null;
             return exhibitionResponseDto;
@@ -218,6 +220,7 @@ public class ExhibitionService {
             return "fail";
         }
     }
+
 
 
 }

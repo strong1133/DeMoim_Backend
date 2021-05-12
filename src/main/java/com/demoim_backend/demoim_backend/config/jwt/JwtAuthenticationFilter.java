@@ -84,6 +84,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("jwtToken : " + jwtToken);
         ObjectMapper objectMapper = new ObjectMapper();
         User user = principalDetails.getUser();
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int nowTeamCnt = memberCnt + leadCnt;
+
         Map<String, String> users = new HashMap<>();
         users.put("Id", user.getId().toString());
         users.put("Username", user.getUsername());
@@ -91,7 +95,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         users.put("ProfileImage", user.getProfileImage());
         users.put("Description", user.getDescription());
         users.put("Position", user.getPosition());
-
+        users.put("NowTeamCnt", String.valueOf(nowTeamCnt));
         Map<String, List<Long>> applyTeamId = new HashMap<>();
 
         List<ApplyInfo> applyInfos = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.WAITING);

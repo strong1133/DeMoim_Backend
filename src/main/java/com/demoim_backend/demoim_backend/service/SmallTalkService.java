@@ -144,23 +144,5 @@ public class SmallTalkService {
         }
     }
 
-    // 로그인된 유저의 스몰토크 조회
-    public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication){
 
-        User user = userService.findCurUser(authentication).orElseThrow(
-                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
-        Long userId = user.getId();
-
-        List<SmallTalk> smallTalk = smallTalkRepository.findAllBySmallTalkUserId(userId);
-
-        List<SmallTalkResponseDto> smallTalkListResponseDtoList = new ArrayList<>();
-
-        for (SmallTalk smallTalk1 : smallTalk) {
-            smallTalkListResponseDtoList.add(this.entityToDto(smallTalk1));
-        }
-
-        return smallTalkListResponseDtoList;
-
-    }
 }
