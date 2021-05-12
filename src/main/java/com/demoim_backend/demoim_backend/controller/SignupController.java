@@ -39,7 +39,7 @@ public class SignupController {
             );
             System.out.println(user.getNickname());
             if (user.getNickname().equals(nickname)){
-                map.put("msg","ture");
+                map.put("msg","true");
                 return map;
             }
         }

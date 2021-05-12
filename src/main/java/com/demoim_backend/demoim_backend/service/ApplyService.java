@@ -111,8 +111,10 @@ public class ApplyService {
 //        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
 //        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
         int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED);
+                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.YET);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
+                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
         int nowTeamCnt = memberCnt + leadCnt;
         if (nowTeamCnt >= 1) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
@@ -252,6 +254,7 @@ public class ApplyService {
         int numPosition = checkPosition(applyPosition, team);
         System.out.println("curPositionCnt :" + curPositionCnt);
         System.out.println("numPosition :" + numPosition);
+
 
         if (curPositionCnt >= numPosition) {
             throw new IllegalArgumentException("해당 포지션은 모집이 완료됬습니다.");
