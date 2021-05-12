@@ -42,9 +42,19 @@ public class MyPageController {
     }
     //마이페이지 중 프로젝트 히스토리(내가 지원한 프로젝트 / 내가 진행중, 참여한 프로젝트 / 내가 리더인 프로젝트)
     @GetMapping("/api/mypage/team")
-    public MypageHistoryResponseDto findMyActiveTeam(Authentication authentication){
-       return mypageService.findMyHistoryTeam(authentication);
-//        return mypageService.findMyActiveTeam(authentication);
+
+    public Map<String, Object> findMyActiveTeam(Authentication authentication){
+        List<TeamResponseDto> myApply = mypageService.findMyApply(authentication);
+        Map<String, Object> myJoinedTeam = mypageService.findMyActivedTeam(authentication);
+        ActiveTeamResponseDto myTeamAsLeader = mypageService.findMyTeamAsLeader(authentication);
+
+        Map<String, Object> projectHistory = new HashMap<>();
+        projectHistory.put("myApply", myApply);
+        projectHistory.put("myJoinedTeam", myJoinedTeam);
+        projectHistory.put("myTeamAsLeader", myTeamAsLeader);
+
+        return projectHistory;
+
     }
 
 }

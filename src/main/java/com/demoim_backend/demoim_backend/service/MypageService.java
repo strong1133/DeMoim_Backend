@@ -9,7 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -83,39 +85,57 @@ public class MypageService {
     }
 
     //마이페이지의 히스토리 _ 참여 프로젝트 (진행중 1개 + 참여했던 프로젝트 다수) 조회
-    public MypageHistoryResponseDto findMyHistoryTeam(Authentication authentication) {
+
+    public Map<String, Object> findMyActivedTeam(Authentication authentication) {
+//    public List<ActiveTeamResponseDto> findMyActivedTeam(Authentication authentication) {
+        // - ActiveTeamResponseDto 타입의 현재 진행중 프로젝트 하나(projectState = ACTIVATED)
+        // - List<ActiveTeamResponseDto> 타입의 참여했던 프로젝트 여럿(projectState = FINISHED)
+
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 없습니다.")
         );
-        System.out.println("11");
-//        ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
-        System.out.println(user.getId());
-        List<ApplyInfo> applyInfoList = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
-
-        System.out.println("22");
+        ActiveTeamResponseDto activatedTeamResponseDto = new ActiveTeamResponseDto();
+        List<ActiveTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
+//        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
+//        List<ApplyInfo> applyInfoList= applyInfoRepository.findTeamIdByUserIdAndApplyStateOrMembership(user.getId() , ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.LEADER);
+        //본인이 리더건 멤버건 진행중과 참여했던 프로젝트에서 구분할 필요는 없으르면 Accepted 기준 전체 조회
+        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED);
+        System.out.println("applyInfoList :" + myApplyInfoList);
         List<ResponseUserDto> memberList = new ArrayList<>();
-        System.out.println("33");
-        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
-        for (ApplyInfo applyInfo : applyInfoList) {
-            System.out.println("applyInfoList:" + applyInfo.getTeam().getId());
-            Team team = teamRepository.findByIdAndProjectState(applyInfo.getTeam().getId(), Team.StateNow.ACTIVATED);
-            User leader = userRepository.findById(applyInfo.getTeam().getLeader().getId()).orElseThrow(
+//        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
+
+        for (ApplyInfo myApplyInfo : myApplyInfoList) {
+            Team team = teamRepository.findById(myApplyInfo.getTeam().getId()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 팀이 없습니다.")
+            );
+            User userInfo = userRepository.findById(myApplyInfo.getUser().getId()).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저가 없습니다.")
             );
+            //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
                 ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
                 memberList.add(responseUserDto);
             }
-            ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
-            memberList.add(responseUserDto);
-            activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
-        }
-        List<MypageHistoryResponseDto> mypageHistoryResponseDtoList = new ArrayList<>();
-        List<FinishedTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
+            System.out.println("memberList :" + memberList);
+            if (team.getProjectState() == Team.StateNow.ACTIVATED) {
+                activatedTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
+            }
+            finishedTeamResponseDtoList.add(new ActiveTeamResponseDto(team, memberList));
+//            activeTeamResponseDtoList = activeTeamResponseDtoList.????
 
-        return new MypageHistoryResponseDto(activeTeamResponseDto, finishedTeamResponseDtoList);
+            // 여기부터 작업.....
+//            ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
+//            List<ActiveTeamResponseDto> finishedTeamResponseDto = new ArrayList<>();
+//            finishedTeamResponseDto.add(activeTeamResponseDto);
+//            activeTeamResponseDtoList.add(activeTeamResponseDto);
+        }
+        Map<String, Object> joinedProjects = new HashMap<>();
+        joinedProjects.put("activatedProject",activatedTeamResponseDto);
+        joinedProjects.put("finishedProject", finishedTeamResponseDtoList);
+
+        return joinedProjects;
 
     }
 
