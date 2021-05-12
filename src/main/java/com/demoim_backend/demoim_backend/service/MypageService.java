@@ -96,13 +96,11 @@ public class MypageService {
         );
         ActiveTeamResponseDto activatedTeamResponseDto = new ActiveTeamResponseDto();
         List<ActiveTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
-//        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
-//        List<ApplyInfo> applyInfoList= applyInfoRepository.findTeamIdByUserIdAndApplyStateOrMembership(user.getId() , ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.LEADER);
-        //본인이 리더건 멤버건 진행중과 참여했던 프로젝트에서 구분할 필요는 없으르면 Accepted 기준 전체 조회
-        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED);
+
+        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateAndMembership(user.getId(), ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.MEMBER);
         System.out.println("applyInfoList :" + myApplyInfoList);
         List<ResponseUserDto> memberList = new ArrayList<>();
-//        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
+
 
         for (ApplyInfo myApplyInfo : myApplyInfoList) {
             Team team = teamRepository.findById(myApplyInfo.getTeam().getId()).orElseThrow(
@@ -111,30 +109,35 @@ public class MypageService {
             User userInfo = userRepository.findById(myApplyInfo.getUser().getId()).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저가 없습니다.")
             );
+
             //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
+
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
+                User leader = userRepository.findById(memberApplyInfo.getTeam().getLeader().getId()).orElseThrow(
+                        () -> new IllegalArgumentException("해당 유저가 없습니다.")
+                );
                 ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
+                memberList.add(responseUserDto);
+                responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
                 memberList.add(responseUserDto);
             }
             System.out.println("memberList :" + memberList);
-            if (team.getProjectState() == Team.StateNow.ACTIVATED) {
+            if (team.getProjectState() == Team.StateNow.ACTIVATED || team.getProjectState() == Team.StateNow.YET) {
                 activatedTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
+            } else {
+                finishedTeamResponseDtoList.add(new ActiveTeamResponseDto(team, memberList));
             }
-            finishedTeamResponseDtoList.add(new ActiveTeamResponseDto(team, memberList));
-//            activeTeamResponseDtoList = activeTeamResponseDtoList.????
-
-            // 여기부터 작업.....
-//            ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
-//            List<ActiveTeamResponseDto> finishedTeamResponseDto = new ArrayList<>();
-//            finishedTeamResponseDto.add(activeTeamResponseDto);
-//            activeTeamResponseDtoList.add(activeTeamResponseDto);
         }
-        Map<String, Object> joinedProjects = new HashMap<>();
-        joinedProjects.put("activatedProject",activatedTeamResponseDto);
-        joinedProjects.put("finishedProject", finishedTeamResponseDtoList);
 
+        Map<String, Object> joinedProjects = new HashMap<>();
+        if (activatedTeamResponseDto.getTeamId() == null) {
+            joinedProjects.put("activatedProject", null);
+        } else {
+            joinedProjects.put("activatedProject", activatedTeamResponseDto);
+        }
+        joinedProjects.put("finishedProject", finishedTeamResponseDtoList);
         return joinedProjects;
 
     }
@@ -148,11 +151,9 @@ public class MypageService {
         ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
         System.out.println("3");
         if (myTeamAsLeader == null) {
-            throw new NoSuchFieldException("asd");
+            throw new NoSuchFieldException("Null");
         }
 
-
-//        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
         Team team = teamRepository.findById(myTeamAsLeader.getTeam().getId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 팀이 없습니다.")
         );

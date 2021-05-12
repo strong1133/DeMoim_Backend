@@ -48,7 +48,7 @@ public class ApplyInfo {
     }
 
     public enum ApplyState {
-        WAITING, ACCEPTED, DENIED, CANCELED
+        WAITING, ACCEPTED, DENIED, LEADER
     }
 
     public static ApplyInfo createTeamUserInfo(ApplyResponseSaveDto applyResponseSaveDto, User user) {

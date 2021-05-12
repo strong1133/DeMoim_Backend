@@ -38,8 +38,9 @@ public class UserService {
             applyInfoList.add(applyInfo.getTeam().getId());
         }
 
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.ACTIVATED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED);
         int nowTeamCnt = memberCnt + leadCnt;
         MypageResponseDto mypageResponseDto = new MypageResponseDto(user, nowTeamCnt, applyInfoList, team);
 

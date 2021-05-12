@@ -17,7 +17,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> handleException (Exception e){
         Map<String, String> map = new HashMap<>();
-        map.put("msg", e.getMessage());
+        if (e.getMessage()==null){
+            map.put("msg", "뭔가 단단히 잘못됐어");
+        }else{
+            map.put("msg", e.getMessage());
+        }
         return map;
     }
 

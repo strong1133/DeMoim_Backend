@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.demoim_backend.demoim_backend.config.auth.PrincipalDetails;
 import com.demoim_backend.demoim_backend.dto.LoginRequestDto;
 import com.demoim_backend.demoim_backend.model.ApplyInfo;
+import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.service.ApplyService;
@@ -61,7 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (AuthenticationException e) {
-           throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
+           throw new IllegalArgumentException("로그인이 정보가 잘못 되었습니다.");
         }
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         return authentication;
@@ -84,8 +85,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("jwtToken : " + jwtToken);
         ObjectMapper objectMapper = new ObjectMapper();
         User user = principalDetails.getUser();
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.YET);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
+                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
+
         int nowTeamCnt = memberCnt + leadCnt;
 
         Map<String, String> users = new HashMap<>();
@@ -111,10 +116,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        Map<String, Map<String, List<Long>>> map2 = new HashMap<>();
         map.put("userInfo", users);
         map.put("applyTeamId", applyInfoList);
-//        map2.put("applyTeamId", applyTeamId);
-//        Map<String, String> body = new HashMap<>();
-//        body.put("userInfo", objectMapper.writeValueAsString(map));
-//        body.put("applyTeamId", objectMapper.writeValueAsString(map2));
+//
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.setContentType("application/json");

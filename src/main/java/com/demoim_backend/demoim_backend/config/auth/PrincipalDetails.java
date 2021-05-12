@@ -28,7 +28,7 @@ public class PrincipalDetails implements UserDetails {
         try {
             pw = user.getPassword();
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("이메일이 잘못 되었습니다.");
+            throw new IllegalArgumentException("로그인이 정보가 잘못 되었습니다.");
 
         }
         return user.getPassword();

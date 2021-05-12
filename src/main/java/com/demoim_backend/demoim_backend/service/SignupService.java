@@ -26,7 +26,7 @@ public class SignupService {
     //중복체크_이메일
     public Map<String, String> duplicateChkUsername(String username) {
         Map<String, String> map = new HashMap<>();
-        if (!SignupValidator.usernameValid(username)){
+        if (!SignupValidator.usernameValid(username)) {
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
         }
         if (!duplicateChecker.duplicateChkUsername(username)) {
@@ -39,6 +39,7 @@ public class SignupService {
 
     //중복체크_닉네임
     public Map<String, String> duplicateChkNickname(String nickname) {
+
         Map<String, String> map = new HashMap<>();
         if (!duplicateChecker.duplicateChkNickname(nickname)) {
             map.put("msg", "false");
@@ -50,12 +51,11 @@ public class SignupService {
 
     //회원가입
     public User signupUser(SignupRequestDto signupRequestDto) {
-
         // username 유효성 검사
         String username = signupRequestDto.getUsername();
         String nickname = signupRequestDto.getNickname();
 
-        if (!SignupValidator.usernameValid(username)){
+        if (!SignupValidator.usernameValid(username)) {
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
         }
         if (!duplicateChecker.duplicateChkUsername(username)) {
@@ -64,10 +64,13 @@ public class SignupService {
         if (!duplicateChecker.duplicateChkNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
         }
+        if (!SignupValidator.nicknameValid(nickname)) {
+            throw new IllegalArgumentException("닉네임 형식이 잘못되었습니다.");
+        }
 
         // password 유효성 검사
         String lawPassword = signupRequestDto.getPassword();
-        if (!SignupValidator.pwValid(lawPassword)){
+        if (!SignupValidator.pwValid(lawPassword)) {
             throw new IllegalArgumentException("비밀번호 형식이 잘못되었습니다.");
         }
 
@@ -75,14 +78,12 @@ public class SignupService {
         String encodedPassword = passwordEncoder.encode(lawPassword + SCERET_KEY);
         signupRequestDto.setPassword(encodedPassword);
 
-
-
         // 저장
         User user = new User(signupRequestDto);
         signupRepository.save(user);
         //회원가입 알림
         AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
-        String signupAlarm = "😃 안녕하세요."+user.getNickname() +"님! 가입을 환영합니다";
+        String signupAlarm = "😃 안녕하세요." + user.getNickname() + "님! 가입을 환영합니다";
         alarmRequestDto.setUserId(user.getId());
         alarmRequestDto.setContents(signupAlarm);
         alarmService.createAlarm(alarmRequestDto);

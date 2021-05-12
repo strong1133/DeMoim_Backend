@@ -72,8 +72,8 @@ public class ApplyService {
         System.out.println("================================================");
 
         Map<String, String> map = new HashMap<>();
-        //User 정보 검증(from UserService.findCurUser)
 
+        //User 정보 검증(from UserService.findCurUser)
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
@@ -97,6 +97,7 @@ public class ApplyService {
         for (ApplyInfo applyInfo : applyInfoList) {
             teamUsers.add(applyInfo.getUser());
         }
+
         //회원정보가 해당모집글의 참여자 목록에 있는지(리더 or 회원목록) 확인
         if (teamUsers.contains(user)) {
             if (user.equals(team.getLeader())) {
@@ -105,16 +106,17 @@ public class ApplyService {
                 throw new IllegalArgumentException("이미 지원한 게시글입니다.");
             }
         }
+
         //2개가 넘는지 여부 검사
 //        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
 //        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.ACTIVATED);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED);
         int nowTeamCnt = memberCnt + leadCnt;
         if (nowTeamCnt >= 1) {
             throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
         }
-
 
         //지원하려는 team의 신청자 포지션이 다 찼을때 지원 막기
         String userPosition = user.getPosition();
@@ -132,7 +134,6 @@ public class ApplyService {
             throw new IllegalArgumentException("해당 글에 대한 회원님 포지션 모집이 마갑되었습니다.");
         }
 
-
         ApplyResponseSaveDto applyResponseSaveDto = new ApplyResponseSaveDto(user, team, applyRequestDto);
         ApplyInfo applyInfo = ApplyInfo.createTeamUserInfo(applyResponseSaveDto, user);
         System.out.println("applyInfo :" + applyInfo);
@@ -144,11 +145,6 @@ public class ApplyService {
 
         map.put("msg", team.getTitle() + "공고에 지원이 완료되었습니다.");
         return map;
-
-//            List<ApplyInfo> teamsInfoOfUser= teamUserInfoRepository.findAllByUserId(user.getId());
-//            Long numTeamsofUser = teamRepository.count(teamRepository.findByUser)
-
-
     }
 
     //지원자 조회(리더에게만 보이는 권한 부여)

@@ -38,7 +38,7 @@ public class ApplyResponseSaveDto {
 //        this.user = new UserUpdateProfileSaveRequestDto(teamUserInfo.getUser());
         this.applicant = new UserUpdateProfileSaveRequestDto(team.getLeader());
         this.membership = ApplyInfo.Membership.LEADER;
-        this.applyState = ApplyInfo.ApplyState.ACCEPTED;
+        this.applyState = ApplyInfo.ApplyState.LEADER;
     }
 
     public ApplyResponseSaveDto(ApplyInfo applyInfo) {

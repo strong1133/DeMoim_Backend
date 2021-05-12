@@ -55,10 +55,13 @@ public class TeamService {
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.ACTIVATED) +  applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.YET);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)
+                + applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
         if (memberCnt+leadCnt>=1){
-            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
+            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
         }
 
         Random random = new Random();
