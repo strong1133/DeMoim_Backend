@@ -5,6 +5,7 @@ import com.demoim_backend.demoim_backend.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     Optional<Team> findById(Long TeamId);
 
-    boolean existsByIdAndProjectState(Long teamId, Team.StateNow StateNow);
+    Team  findByIdAndProjectState(Long teamId, Team.StateNow StateNow);
 
 //    List<Team> findAll(Pageable pageable);
 //    Page<Team> findAll(Pageable pageable);

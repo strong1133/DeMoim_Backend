@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 public class MypageHistoryResponseDto {
+
    ActiveTeamResponseDto activeTeamResponseDtoList;
    List<FinishedTeamResponseDto> finishedTeamResponseDtoList;
 

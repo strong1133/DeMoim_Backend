@@ -26,8 +26,9 @@ public class ResponseUserDto {
         this.profileImage = profileImage;
     }
 
+
     public ResponseUserDto entityToDto(User user){
-        return  ResponseUserDto.builder()
+        return ResponseUserDto.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .nickname(user.getNickname())
