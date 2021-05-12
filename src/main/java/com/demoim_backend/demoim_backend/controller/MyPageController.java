@@ -43,12 +43,12 @@ public class MyPageController {
     @GetMapping("/api/mypage/team")
     public Map<String, Object> findMyActiveTeam(Authentication authentication){
         List<TeamResponseDto> myApply = mypageService.findMyApply(authentication);
-        List<ActiveTeamResponseDto> myActivedTeam = mypageService.findMyActivedTeam(authentication);
+        Map<String, Object> myJoinedTeam = mypageService.findMyActivedTeam(authentication);
         ActiveTeamResponseDto myTeamAsLeader = mypageService.findMyTeamAsLeader(authentication);
 
         Map<String, Object> projectHistory = new HashMap<>();
         projectHistory.put("myApply", myApply);
-        projectHistory.put("myActivedTeam", myActivedTeam);
+        projectHistory.put("myJoinedTeam", myJoinedTeam);
         projectHistory.put("myTeamAsLeader", myTeamAsLeader);
 
         return projectHistory;
