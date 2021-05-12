@@ -14,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,17 +28,31 @@ public class MyPageController {
     public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication){
         return mypageService.findMySmallTalk(authentication);
     }
+
     @GetMapping("/api/mypage/exhibition")
     public List<ExhibitionResponseDto> findMyExhibition(Authentication authentication){
         return mypageService.findMyExhibition(authentication);
     }
+
     @GetMapping("/api/mypage/apply")
     public List<TeamResponseDto> findMyApply(Authentication authentication){
         return mypageService.findMyApply(authentication);
     }
-//    @GetMapping("/api/mypage/team")
-//    public List<ActiveTeamResponseDto> findMyActiveTeam(Authentication authentication){
+
+    //마이페이지 중 프로젝트 히스토리(내가 지원한 프로젝트 / 내가 진행중, 참여한 프로젝트 / 내가 리더인 프로젝트)
+    @GetMapping("/api/mypage/team")
+    public Map<String, Object> findMyActiveTeam(Authentication authentication){
+        List<TeamResponseDto> myApply = mypageService.findMyApply(authentication);
+        List<ActiveTeamResponseDto> myActivedTeam = mypageService.findMyActivedTeam(authentication);
+        ActiveTeamResponseDto myTeamAsLeader = mypageService.findMyTeamAsLeader(authentication);
+
+        Map<String, Object> projectHistory = new HashMap<>();
+        projectHistory.put("myApply", myApply);
+        projectHistory.put("myActivedTeam", myActivedTeam);
+        projectHistory.put("myTeamAsLeader", myTeamAsLeader);
+
+        return projectHistory;
 //        return mypageService.findMyActiveTeam(authentication);
-//    }
+    }
 
 }
