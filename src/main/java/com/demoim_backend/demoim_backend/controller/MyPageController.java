@@ -34,9 +34,9 @@ public class MyPageController {
     public List<TeamResponseDto> findMyApply(Authentication authentication){
         return mypageService.findMyApply(authentication);
     }
-    @GetMapping("/api/mypage/team")
-    public List<ActiveTeamResponseDto> findMyActiveTeam(Authentication authentication){
-        return mypageService.findMyActiveTeam(authentication);
-    }
+//    @GetMapping("/api/mypage/team")
+//    public List<ActiveTeamResponseDto> findMyActiveTeam(Authentication authentication){
+//        return mypageService.findMyActiveTeam(authentication);
+//    }
 
 }
