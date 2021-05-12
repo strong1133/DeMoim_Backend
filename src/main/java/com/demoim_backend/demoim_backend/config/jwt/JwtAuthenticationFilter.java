@@ -105,15 +105,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         applyTeamId.put("applyTeamId", applyInfoList );
         System.out.println("applyTeamId :" +applyTeamId );
-        Map<String, Map<String, String>> map = new HashMap<>();
-        Map<String, Map<String, List<Long>>> map2 = new HashMap<>();
+//        Map<String, Map<String, String>> map = new HashMap<>();
+//        Map<String, Map<String, String>> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+//        Map<String, Map<String, List<Long>>> map2 = new HashMap<>();
         map.put("userInfo", users);
-        map2.put("applyTeamId", applyTeamId);
+        map.put("applyTeamId", applyInfoList);
+//        map2.put("applyTeamId", applyTeamId);
+//        Map<String, String> body = new HashMap<>();
+//        body.put("userInfo", objectMapper.writeValueAsString(map));
+//        body.put("applyTeamId", objectMapper.writeValueAsString(map2));
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.setContentType("application/json");
+//        response.getWriter().write(objectMapper.writeValueAsString(map));
+//        response.getWriter().write(objectMapper.writeValueAsString(map2));
         response.getWriter().write(objectMapper.writeValueAsString(map));
-        response.getWriter().write(objectMapper.writeValueAsString(map2));
 
     }
 

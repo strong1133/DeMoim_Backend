@@ -30,10 +30,11 @@ public class ActiveTeamResponseDto {
     private Team.StateNow recruitState;
     private Team.StateNow projectState;
 
-    List<User> member;
+//    List<User> member; //User로 담아서 주면 많은 정보가 넘어가지 않을까..?
+    List<ResponseUserDto> member;
 
     @Builder
-    public ActiveTeamResponseDto(Team team, List<User> member) {
+    public ActiveTeamResponseDto(Team team, List<ResponseUserDto> member) {
         this.teamId = team.getId();
         this.title = team.getTitle();
         this.createdAt = team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
