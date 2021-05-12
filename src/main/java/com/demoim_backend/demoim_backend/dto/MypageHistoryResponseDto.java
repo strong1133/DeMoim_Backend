@@ -12,11 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 public class MypageHistoryResponseDto {
-   List<ActiveTeamResponseDto>  activeTeamResponseDtoList;
+   ActiveTeamResponseDto activeTeamResponseDtoList;
    List<FinishedTeamResponseDto> finishedTeamResponseDtoList;
 
    @Builder
-   public MypageHistoryResponseDto(List<ActiveTeamResponseDto>  activeTeamResponseDtoList, List<FinishedTeamResponseDto> finishedTeamResponseDtoList ){
+   public MypageHistoryResponseDto(ActiveTeamResponseDto activeTeamResponseDtoList, List<FinishedTeamResponseDto> finishedTeamResponseDtoList ){
       this.activeTeamResponseDtoList = activeTeamResponseDtoList;
       this.finishedTeamResponseDtoList = finishedTeamResponseDtoList;
    }
