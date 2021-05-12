@@ -1,9 +1,6 @@
 package com.demoim_backend.demoim_backend.controller;
 
-import com.demoim_backend.demoim_backend.dto.ActiveTeamResponseDto;
-import com.demoim_backend.demoim_backend.dto.ExhibitionResponseDto;
-import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
-import com.demoim_backend.demoim_backend.dto.TeamResponseDto;
+import com.demoim_backend.demoim_backend.dto.*;
 import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.service.ApplyService;
 import com.demoim_backend.demoim_backend.service.ExhibitionService;
@@ -39,19 +36,14 @@ public class MyPageController {
         return mypageService.findMyApply(authentication);
     }
 
+    @GetMapping("/api/mypage/leader")
+    public ActiveTeamResponseDto myTeamAsLeader (Authentication authentication) throws NoSuchFieldException {
+        return mypageService.findMyTeamAsLeader(authentication);
+    }
     //마이페이지 중 프로젝트 히스토리(내가 지원한 프로젝트 / 내가 진행중, 참여한 프로젝트 / 내가 리더인 프로젝트)
     @GetMapping("/api/mypage/team")
-    public Map<String, Object> findMyActiveTeam(Authentication authentication){
-        List<TeamResponseDto> myApply = mypageService.findMyApply(authentication);
-        List<ActiveTeamResponseDto> myActivedTeam = mypageService.findMyActivedTeam(authentication);
-        ActiveTeamResponseDto myTeamAsLeader = mypageService.findMyTeamAsLeader(authentication);
-
-        Map<String, Object> projectHistory = new HashMap<>();
-        projectHistory.put("myApply", myApply);
-        projectHistory.put("myActivedTeam", myActivedTeam);
-        projectHistory.put("myTeamAsLeader", myTeamAsLeader);
-
-        return projectHistory;
+    public MypageHistoryResponseDto findMyActiveTeam(Authentication authentication){
+       return mypageService.findMyHistoryTeam(authentication);
 //        return mypageService.findMyActiveTeam(authentication);
     }
 

@@ -1,5 +1,6 @@
 package com.demoim_backend.demoim_backend.service;
 
+import com.demoim_backend.demoim_backend.Exception.GlobalExceptionHandler;
 import com.demoim_backend.demoim_backend.dto.*;
 import com.demoim_backend.demoim_backend.model.*;
 import com.demoim_backend.demoim_backend.repository.*;
@@ -20,6 +21,7 @@ public class MypageService {
     private final ExhibitionRepository exhibitionRepository;
     private final SmallTalkRepository smallTalkRepository;
     private final SmallTalkService smallTalkService;
+
 
     // 로그인된 유저의 스몰토크 조회
     public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication) {
@@ -81,95 +83,79 @@ public class MypageService {
     }
 
     //마이페이지의 히스토리 _ 참여 프로젝트 (진행중 1개 + 참여했던 프로젝트 다수) 조회
-    public List<ActiveTeamResponseDto> findMyActivedTeam(Authentication authentication) {
+    public MypageHistoryResponseDto findMyHistoryTeam(Authentication authentication) {
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 없습니다.")
         );
+        System.out.println("11");
+//        ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        System.out.println(user.getId());
+        List<ApplyInfo> applyInfoList = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED);
 
-        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
-//        List<ApplyInfo> applyInfoList= applyInfoRepository.findTeamIdByUserIdAndApplyStateOrMembership(user.getId() , ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.LEADER);
-        //본인이 리더건 멤버건 진행중과 참여했던 프로젝트에서 구분할 필요는 없으르면 Accepted 기준 전체 조회
-        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED);
-        System.out.println("applyInfoList :" + myApplyInfoList);
+        System.out.println("22");
         List<ResponseUserDto> memberList = new ArrayList<>();
-//        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
-        for (ApplyInfo myApplyInfo : myApplyInfoList) {
-            Team team = teamRepository.findById(myApplyInfo.getTeam().getId()).orElseThrow(
-                    () -> new IllegalArgumentException("해당 팀이 없습니다.")
-            );
-            User userInfo = userRepository.findById(myApplyInfo.getUser().getId()).orElseThrow(
+        System.out.println("33");
+        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
+        for (ApplyInfo applyInfo : applyInfoList) {
+            System.out.println("applyInfoList:" + applyInfo.getTeam().getId());
+            Team team = teamRepository.findByIdAndProjectState(applyInfo.getTeam().getId(), Team.StateNow.ACTIVATED);
+            User leader = userRepository.findById(applyInfo.getTeam().getLeader().getId()).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저가 없습니다.")
             );
-            //member가 과연 잘 담길까? 본인밖에 안담길것같은데..
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
-                ResponseUserDto responseUserDto = new ResponseUserDto().entityToDto(member);
+                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
                 memberList.add(responseUserDto);
             }
-            System.out.println("memberList :" + memberList);
-//            activeTeamResponseDtoList = activeTeamResponseDtoList.????
-            ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
-            activeTeamResponseDtoList.add(activeTeamResponseDto);
+            ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
+            memberList.add(responseUserDto);
+            activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
         }
-        return activeTeamResponseDtoList;
-        //멤버를 넣어서 보내주지만 그 멤버에 대한 프로필이미지, nickname, position을 프론트엔드에서 가져올수 있는지 확인할것
+        List<MypageHistoryResponseDto> mypageHistoryResponseDtoList = new ArrayList<>();
+        List<FinishedTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
+
+        return new MypageHistoryResponseDto(activeTeamResponseDto, finishedTeamResponseDtoList);
+
     }
 
     //마이페이지 히스토리 _ 내가 리더인 프로젝트 조회하기
-    public ActiveTeamResponseDto findMyTeamAsLeader(Authentication authentication) {
+    public ActiveTeamResponseDto findMyTeamAsLeader(Authentication authentication) throws NoSuchFieldException {
         //유저정보 검증
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 없습니다.")
         );
         ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        System.out.println("3");
+        if (myTeamAsLeader == null) {
+            throw new NoSuchFieldException("asd");
+        }
 
 
 //        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
         Team team = teamRepository.findById(myTeamAsLeader.getTeam().getId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 팀이 없습니다.")
         );
+        System.out.println("4");
         User leader = userRepository.findById(myTeamAsLeader.getUser().getId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 없습니다.")
         );
         List<ResponseUserDto> memberList = new ArrayList<>();
-        //여기서도 리더를 포함시켜서 노출?(우선 위와 동일하게 리더도 포함됨)
+        System.out.println("1");
         List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
+        System.out.println("2");
         for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
             User member = memberApplyInfo.getUser();
-            ResponseUserDto responseUserDto = new ResponseUserDto().entityToDto(member);
+            ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
             memberList.add(responseUserDto);
         }
+        ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
+        memberList.add(responseUserDto);
+
+
         System.out.println("memberList :" + memberList);
 //            activeTeamResponseDtoList = activeTeamResponseDtoList.????
-        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
 
-        return activeTeamResponseDto;
+        return new ActiveTeamResponseDto(team, memberList);
     }
 }
-
-//    //현재 참여중인 프로젝트 보기
-//    public List<ActiveTeamResponseDto> findMyActiveTeam(Authentication authentication){
-//        User user = userService.findCurUser(authentication).orElseThrow(
-//                ()-> new IllegalArgumentException("해당 유저가 없습니다.")
-//        );
-//        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
-//        List<ApplyInfo> applyInfoList= applyInfoRepository.findTeamIdByUserIdAndApplyStateOrMembership(user.getId() , ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.LEADER);
-//        System.out.println("applyInfoList :" +applyInfoList);
-//        List<User> memberList   = new ArrayList<>();
-//        ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
-//        for (ApplyInfo applyInfo: applyInfoList){
-//            Team team = teamRepository.findById(applyInfo.getTeam().getId()).orElseThrow(
-//                    ()-> new IllegalArgumentException("해당 팀이 없습니다.")
-//            );
-//            User member = userRepository.findById(applyInfo.getUser().getId()).orElseThrow(
-//                    ()-> new IllegalArgumentException("해당 유저가 없습니다.")
-//            );
-//            memberList.add(member);
-//            System.out.println("maemberList :" + memberList);
-//            activeTeamResponseDtoList = activeTeamResponseDtoList.
-//            activeTeamResponseDtoList.add(activeTeamResponseDto(team, memberList));
-//        }
-//        return activeTeamResponseDtoList;
-//    }
-//}
