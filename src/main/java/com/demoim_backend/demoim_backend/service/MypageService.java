@@ -81,6 +81,7 @@ public class MypageService {
     }
 
     //마이페이지의 히스토리 _ 참여 프로젝트 (진행중 1개 + 참여했던 프로젝트 다수) 조회
+
     public Map<String, Object> findMyActivedTeam(Long id) {
 
         User user = userService.findTargetUser(id);
@@ -89,8 +90,11 @@ public class MypageService {
 
         List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
                 user.getId(), ApplyInfo.ApplyState.LEADER);
+
         System.out.println("applyInfoList :" + myApplyInfoList);
-        List<ResponseUserDto> memberList = new ArrayList<>();
+        //멤버리스트 생성
+        //memberList for문 안에 넣기 18:12
+//        List<ResponseUserDto> memberList = new ArrayList<>();
 
 
         for (ApplyInfo myApplyInfo : myApplyInfoList) {
@@ -100,21 +104,28 @@ public class MypageService {
             User userInfo = userRepository.findById(myApplyInfo.getUser().getId()).orElseThrow(
                     () -> new IllegalArgumentException("해당 유저가 없습니다.")
             );
+            //for문 안에 memberList 생성(18:19)
+            List<ResponseUserDto> memberList = new ArrayList<>();
 
             //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
 
+            //얘로 뭘 하려했을까.. member와 leader를 가지고 ResponseUserDto를 만드려던 것 아닐까?
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
                 User leader = userRepository.findById(memberApplyInfo.getTeam().getLeader().getId()).orElseThrow(
                         () -> new IllegalArgumentException("해당 유저가 없습니다.")
                 );
+                //위에서 멤버로서 조회했기때문에 리더와 같을 가능성은 없을듯
+
                 ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
                 memberList.add(responseUserDto);
-                responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
-                memberList.add(responseUserDto);
+//                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
+//                memberList.add(responseUserDto);
+
             }
             System.out.println("memberList :" + memberList);
+
             if (team.getProjectState() == Team.StateNow.ACTIVATED || team.getProjectState() == Team.StateNow.YET) {
                 activatedTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
             } else {
