@@ -89,6 +89,7 @@ public class MypageService {
 
         List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
                 user.getId(), ApplyInfo.ApplyState.LEADER);
+
         System.out.println("applyInfoList :" + myApplyInfoList);
         //멤버리스트 생성
         //memberList for문 안에 넣기 18:12
@@ -109,10 +110,11 @@ public class MypageService {
             ResponseUserDto leaderDto = ResponseUserDto.builder().build().entityToDto(team.getLeader());
             memberList.add(leaderDto);
 
+
             //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
 
-            //member를 조회하여 ResponseUserDto 생성, 이를 memberList에 추가
+
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
                 User leader = userRepository.findById(memberApplyInfo.getTeam().getLeader().getId()).orElseThrow(
@@ -122,6 +124,7 @@ public class MypageService {
 
                 ResponseUserDto memberDto = ResponseUserDto.builder().build().entityToDto(member);
                 memberList.add(memberDto);
+
 //                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
 //                memberList.add(responseUserDto);
 
