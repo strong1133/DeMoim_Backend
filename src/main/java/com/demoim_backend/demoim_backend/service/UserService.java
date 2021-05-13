@@ -39,8 +39,10 @@ public class UserService {
         }
 
         int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED);
+                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+                Team.StateNow.YET);
+        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
+                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
         int nowTeamCnt = memberCnt + leadCnt;
         MypageResponseDto mypageResponseDto = new MypageResponseDto(user, nowTeamCnt, applyInfoList, team);
 
@@ -72,11 +74,20 @@ public class UserService {
         return entityToDto(user,team);
     }
 
+
     // 특정 유저 정보 반환
     public User findTargetUser(Long userId){
         return userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("해당 유저 정보가 없습니다")
         );
+    }
+
+    public MypageResponseDto findTargetUserDto(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new IllegalArgumentException("해당 유저 정보가 없습니다.")
+        );
+        List<Team> team = teamRepository.findByLeader(user);
+        return entityToDto(user,team);
     }
 
     // 유저 정보 수정
