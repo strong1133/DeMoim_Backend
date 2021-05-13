@@ -117,7 +117,7 @@ public class ApplyService {
                 applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
         int nowTeamCnt = memberCnt + leadCnt;
         if (nowTeamCnt >= 1) {
-            throw new IllegalArgumentException("겹치는 프로젝트 기간 내에 참여할 수 있는 프로젝트는 1개 입니다.");
+            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
         }
 
         //지원하려는 team의 신청자 포지션이 다 찼을때 지원 막기
