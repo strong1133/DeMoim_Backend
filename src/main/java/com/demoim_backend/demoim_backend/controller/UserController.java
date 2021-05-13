@@ -41,8 +41,8 @@ public class UserController {
 
     // 특정 유저 정보 반환
     @GetMapping("/api/user/profile")
-    private User findTargetUser(@RequestParam(value = "user_id") Long userId){
-        return userService.findTargetUser(userId);
+    private MypageResponseDto findTargetUser(@RequestParam(value = "user_id") Long userId){
+        return userService.findTargetUserDto(userId);
     }
 
     // 유저 정보 수정
