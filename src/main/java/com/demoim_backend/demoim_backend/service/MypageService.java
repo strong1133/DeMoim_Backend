@@ -26,11 +26,9 @@ public class MypageService {
 
 
     // 로그인된 유저의 스몰토크 조회
-    public List<SmallTalkResponseDto> findMySmallTalk(Authentication authentication) {
+    public List<SmallTalkResponseDto> findMySmallTalk(Long id) {
 
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = userService.findTargetUser(id);
         Long userId = user.getId();
 
         List<SmallTalk> smallTalk = smallTalkRepository.findAllBySmallTalkUserId(userId);
@@ -47,9 +45,9 @@ public class MypageService {
 
 
     // 로그인된 유저의 자랑하기 조회
-    public List<ExhibitionResponseDto> findMyExhibition(Authentication authentication) {
+    public List<ExhibitionResponseDto> findMyExhibition(Long id) {
 
-        User user = userService.findMyUserInfo(authentication);
+        User user = userService.findTargetUser(id);
         Long userId = user.getId();
 
         List<Exhibition> exhibitions = exhibitionRepository.findAllByExhibitionUserId(userId);
@@ -65,11 +63,9 @@ public class MypageService {
     }
 
     // 마이페이지의 히스토리 _ 현재유저가 지원한 프로젝트 보기
-    public List<TeamResponseDto> findMyApply(Authentication authentication) {
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 없습니다.")
-        );
-        List<ApplyInfo> applyInfoList = applyInfoRepository.findTeamIdByUserIdAndMembershipAndApplyState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.WAITING);
+    public List<TeamResponseDto> findMyApply(Long id) {
+        User user = userService.findTargetUser(id);
+        List<ApplyInfo> applyInfoList = applyInfoRepository.findTeamIdByUserIdAndMembership(user.getId(), ApplyInfo.Membership.MEMBER);
         List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
         for (ApplyInfo applyInfo : applyInfoList) {
             Long teamId = applyInfo.getTeam().getId();
@@ -85,19 +81,16 @@ public class MypageService {
     }
 
     //마이페이지의 히스토리 _ 참여 프로젝트 (진행중 1개 + 참여했던 프로젝트 다수) 조회
-    public Map<String, Object> findMyActivedTeam(Authentication authentication) {
-//    public List<ActiveTeamResponseDto> findMyActivedTeam(Authentication authentication) {
-        // - ActiveTeamResponseDto 타입의 현재 진행중 프로젝트 하나(projectState = ACTIVATED)
-        // - List<ActiveTeamResponseDto> 타입의 참여했던 프로젝트 여럿(projectState = FINISHED)
 
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 없습니다.")
-        );
+    public Map<String, Object> findMyActivedTeam(Long id) {
+
+        User user = userService.findTargetUser(id);
         ActiveTeamResponseDto activatedTeamResponseDto = new ActiveTeamResponseDto();
         List<ActiveTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
 
-        //userId를 가지고 멤버로서 참여프로젝트 조회하여 리스트 담기
-        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateAndMembership(user.getId(), ApplyInfo.ApplyState.ACCEPTED, ApplyInfo.Membership.MEMBER);
+        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
+                user.getId(), ApplyInfo.ApplyState.LEADER);
+
         System.out.println("applyInfoList :" + myApplyInfoList);
         //멤버리스트 생성
         //memberList for문 안에 넣기 18:12
@@ -152,14 +145,12 @@ public class MypageService {
     }
 
     //마이페이지 히스토리 _ 내가 리더인 프로젝트 조회하기
-    public ActiveTeamResponseDto findMyTeamAsLeader(Authentication authentication) throws NoSuchFieldException {
+    public ActiveTeamResponseDto findMyTeamAsLeader(Long id) throws NoSuchFieldException {
         //유저정보 검증
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 없습니다.")
-        );
-        ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembership(user.getId(), ApplyInfo.Membership.LEADER);
+        User user = userService.findTargetUser(id);
+        ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembershipAndTeamProjectStateNot(user.getId(), ApplyInfo.Membership.LEADER,  Team.StateNow.FINISHED);
         System.out.println("3");
-        if (myTeamAsLeader == null) {
+        if (myTeamAsLeader == null  ) {
             throw new NoSuchFieldException("Null");
         }
 
