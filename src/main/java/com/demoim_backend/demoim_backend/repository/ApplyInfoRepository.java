@@ -14,7 +14,7 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
 
 //    List<ApplyInfo> findAllByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
-    List<ApplyInfo> findAllByUserIdAndApplyStateOrUserIdAndApplyState(Long userId, ApplyInfo.ApplyState applyState, Long userId2, ApplyInfo.ApplyState applyState2);
+    List<ApplyInfo> findAllByUserIdAndApplyStateOrUserIdAndMembership(Long userId, ApplyInfo.ApplyState applyState, Long userId2,  ApplyInfo.Membership membership);
 
     List<ApplyInfo> findAllByteamIdAndApplyState(Long teamId, ApplyInfo.ApplyState applyState);
     List<ApplyInfo> findAllByUserId(Long userId);

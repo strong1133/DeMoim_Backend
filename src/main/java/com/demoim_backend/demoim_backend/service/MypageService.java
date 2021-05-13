@@ -87,8 +87,8 @@ public class MypageService {
         ActiveTeamResponseDto activatedTeamResponseDto = new ActiveTeamResponseDto();
         List<ActiveTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
 
-        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
-                user.getId(), ApplyInfo.ApplyState.LEADER);
+        List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndMembership(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
+                user.getId(), ApplyInfo.Membership.LEADER);
 
         System.out.println("applyInfoList :" + myApplyInfoList);
         //멤버리스트 생성
