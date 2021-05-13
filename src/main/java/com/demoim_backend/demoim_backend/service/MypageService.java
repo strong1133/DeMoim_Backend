@@ -114,10 +114,14 @@ public class MypageService {
             //for문 안에 memberList 생성(18:19)
             List<ResponseUserDto> memberList = new ArrayList<>();
 
+            //memberList에 리더의 정보 먼저 입력
+            ResponseUserDto leaderDto = ResponseUserDto.builder().build().entityToDto(team.getLeader());
+            memberList.add(leaderDto);
+
             //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
 
-            //얘로 뭘 하려했을까.. member와 leader를 가지고 ResponseUserDto를 만드려던 것 아닐까?
+            //member를 조회하여 ResponseUserDto 생성, 이를 memberList에 추가
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
                 User leader = userRepository.findById(memberApplyInfo.getTeam().getLeader().getId()).orElseThrow(
@@ -125,8 +129,8 @@ public class MypageService {
                 );
                 //위에서 멤버로서 조회했기때문에 리더와 같을 가능성은 없을듯
 
-                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
-                memberList.add(responseUserDto);
+                ResponseUserDto memberDto = ResponseUserDto.builder().build().entityToDto(member);
+                memberList.add(memberDto);
 //                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
 //                memberList.add(responseUserDto);
 
