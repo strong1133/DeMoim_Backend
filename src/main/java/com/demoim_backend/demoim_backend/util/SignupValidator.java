@@ -13,7 +13,7 @@ public class SignupValidator {
 
     //Nickname
     public static boolean nicknameValid(String nickname) {
-        return Pattern.matches("^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,5}$", nickname);
+        return Pattern.matches("^[a-zA-Zㄱ-힣0-9]{2,6}$", nickname);
     }
 
     //PW

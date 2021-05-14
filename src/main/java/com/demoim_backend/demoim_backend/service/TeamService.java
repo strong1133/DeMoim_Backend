@@ -60,9 +60,9 @@ public class TeamService {
                 Team.StateNow.YET);
         int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)
                 + applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
-        if (memberCnt+leadCnt>=1){
-            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
-        }
+//        if (memberCnt+leadCnt>=1){
+//            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
+//        }
 
         Random random = new Random();
         TeamRequestDto teamRequestDto;

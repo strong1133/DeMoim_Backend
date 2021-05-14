@@ -50,7 +50,6 @@ public class UserController {
     private User updateProfile(Authentication authentication, @RequestPart("userEditInfo")String userEditInfo , @RequestPart(required = false) MultipartFile file){
         System.out.println("userEditInfo : " + userEditInfo);
         System.out.println("file : " + file);
-
         return userService.updateProfile(authentication,userEditInfo,file);
     }
 

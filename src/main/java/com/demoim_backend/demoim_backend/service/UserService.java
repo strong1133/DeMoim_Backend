@@ -98,6 +98,13 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("해당 유저 정보가 없습니다")
         );
+        System.out.println("=1=");
+        Optional<ApplyInfo> applyInfo = applyInfoRepository.findByUserId(user.getId());
+        System.out.println("applyInfo :" + applyInfo);
+        if (applyInfo.isPresent()){
+            throw new IllegalArgumentException("지원 내역이나 팀 활동 내역이 있어 포지션 변경이 불가합니다!");
+        }
+
         String profileImage;
         if (file == null){
             profileImage = user.getProfileImage();
@@ -105,8 +112,6 @@ public class UserService {
         else {
             profileImage =  fileUploadService.uploadImage(file);
         }
-
-
         JSONObject jsonObject = new JSONObject(userEditInfo);
         UserUpdateProfileRequestDto userUpdateProfileRequestDto =new UserUpdateProfileRequestDto();
         String nickname = jsonObject.getString("nickname");

@@ -53,7 +53,7 @@ public class MyPageController {
     }
 
     @GetMapping("/api/mypage/leader")
-    public ActiveTeamResponseDto myTeamAsLeader(@Valid Authentication authentication, @RequestParam(required = false, name = "user_id") Long userId) throws NoSuchFieldException {
+    public List<ActiveTeamResponseDto> myTeamAsLeader(@Valid Authentication authentication, @RequestParam(required = false, name = "user_id") Long userId) throws NoSuchFieldException {
         if (userId==null){
             User user = userService.findMyUserInfo(authentication);
             return mypageService.findMyTeamAsLeader(user.getId());

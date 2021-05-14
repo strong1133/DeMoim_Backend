@@ -24,6 +24,9 @@ public class MypageService {
     private final SmallTalkRepository smallTalkRepository;
     private final SmallTalkService smallTalkService;
 
+    private ActiveTeamResponseDto setActiveDto(Team team, List<ResponseUserDto> memberList) {
+        return new ActiveTeamResponseDto(team, memberList);
+    }
 
     // 로그인된 유저의 스몰토크 조회
     public List<SmallTalkResponseDto> findMySmallTalk(Long id) {
@@ -86,7 +89,7 @@ public class MypageService {
         User user = userService.findTargetUser(id);
         ActiveTeamResponseDto activatedTeamResponseDto = new ActiveTeamResponseDto();
         List<ActiveTeamResponseDto> finishedTeamResponseDtoList = new ArrayList<>();
-
+        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
         List<ApplyInfo> myApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyStateOrUserIdAndMembership(user.getId(), ApplyInfo.ApplyState.ACCEPTED,
                 user.getId(), ApplyInfo.Membership.LEADER);
 
@@ -133,6 +136,7 @@ public class MypageService {
 
             if (team.getProjectState() == Team.StateNow.ACTIVATED || team.getProjectState() == Team.StateNow.YET) {
                 activatedTeamResponseDto = new ActiveTeamResponseDto(team, memberList);
+                activeTeamResponseDtoList.add(activatedTeamResponseDto);
             } else {
                 finishedTeamResponseDtoList.add(new ActiveTeamResponseDto(team, memberList));
             }
@@ -142,7 +146,7 @@ public class MypageService {
         if (activatedTeamResponseDto.getTeamId() == null) {
             joinedProjects.put("activatedProject", null);
         } else {
-            joinedProjects.put("activatedProject", activatedTeamResponseDto);
+            joinedProjects.put("activatedProject", activeTeamResponseDtoList);
         }
         joinedProjects.put("finishedProject", finishedTeamResponseDtoList);
         return joinedProjects;
@@ -150,38 +154,41 @@ public class MypageService {
     }
 
     //마이페이지 히스토리 _ 내가 리더인 프로젝트 조회하기
-    public ActiveTeamResponseDto findMyTeamAsLeader(Long id) throws NoSuchFieldException {
+    public List<ActiveTeamResponseDto> findMyTeamAsLeader(Long id) throws NoSuchFieldException {
         //유저정보 검증
         User user = userService.findTargetUser(id);
-        ApplyInfo myTeamAsLeader = applyInfoRepository.findByUserIdAndMembershipAndTeamProjectStateNot(user.getId(), ApplyInfo.Membership.LEADER,  Team.StateNow.FINISHED);
-        System.out.println("3");
-        if (myTeamAsLeader == null  ) {
+        List<ApplyInfo> myTeamAsLeaderList = applyInfoRepository.findByUserIdAndMembershipAndTeamProjectStateNot(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.FINISHED);
+        List<ActiveTeamResponseDto> activeTeamResponseDtoList = new ArrayList<>();
+
+        if (myTeamAsLeaderList == null) {
             throw new NoSuchFieldException("Null");
         }
+        for (ApplyInfo myTeamAsLeader : myTeamAsLeaderList) {
+            Team team = teamRepository.findById(myTeamAsLeader.getTeam().getId()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 팀이 없습니다.")
+            );
+            User leader = userRepository.findById(myTeamAsLeader.getUser().getId()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 유저가 없습니다.")
+            );
+            List<ResponseUserDto> memberList = new ArrayList<>();
+            List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
 
-        Team team = teamRepository.findById(myTeamAsLeader.getTeam().getId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 팀이 없습니다.")
-        );
-        System.out.println("4");
-        User leader = userRepository.findById(myTeamAsLeader.getUser().getId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 없습니다.")
-        );
-        List<ResponseUserDto> memberList = new ArrayList<>();
-        System.out.println("1");
-        List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
-        System.out.println("2");
-        for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
-            User member = memberApplyInfo.getUser();
-            ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
+            ActiveTeamResponseDto activeTeamResponseDto = new ActiveTeamResponseDto();
+            for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
+
+                User member = memberApplyInfo.getUser();
+                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(member);
+                memberList.add(responseUserDto);
+            }
+            ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
             memberList.add(responseUserDto);
+            activeTeamResponseDto = setActiveDto(team, memberList);
+            activeTeamResponseDtoList.add(activeTeamResponseDto);
         }
-        ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
-        memberList.add(responseUserDto);
 
 
-        System.out.println("memberList :" + memberList);
-//            activeTeamResponseDtoList = activeTeamResponseDtoList.????
-
-        return new ActiveTeamResponseDto(team, memberList);
+        return activeTeamResponseDtoList;
     }
+
+
 }

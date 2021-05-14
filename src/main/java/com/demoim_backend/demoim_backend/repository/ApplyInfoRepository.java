@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 //    List<ApplyInfo> findByTeamId(Long teamId);
     ApplyInfo findByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
-
+    Optional<ApplyInfo> findByUserId(Long userId);
 
 //    List<ApplyInfo> findAllByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
     List<ApplyInfo> findAllByUserIdAndApplyStateOrUserIdAndMembership(Long userId, ApplyInfo.ApplyState applyState, Long userId2,  ApplyInfo.Membership membership);
@@ -35,7 +36,7 @@ public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 
     ApplyInfo findByTeamIdAndUserId(Long teamId, Long userId);
     ApplyInfo findByUserIdAndMembership(Long userId, ApplyInfo.Membership membership);
-    ApplyInfo findByUserIdAndMembershipAndTeamProjectStateNot(Long userId, ApplyInfo.Membership membership, Team.StateNow stateNow);
+    List<ApplyInfo>  findByUserIdAndMembershipAndTeamProjectStateNot(Long userId, ApplyInfo.Membership membership, Team.StateNow stateNow);
 
     List<ApplyInfo> findAllByTeamId(Long teamId);
 

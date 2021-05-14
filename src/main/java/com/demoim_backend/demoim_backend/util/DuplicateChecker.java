@@ -17,18 +17,12 @@ public class DuplicateChecker {
     // username
     public boolean duplicateChkUsername(String username) {
         Optional<User> findUsername = signupRepository.findByUsername(username);
-        if (findUsername.isPresent()) {
-            return false;
-        }
-        return true;
+        return !findUsername.isPresent();
     }
 
     // nickname
     public boolean duplicateChkNickname(String nickname) {
         Optional<User> findNickname = signupRepository.findByNickname(nickname);
-        if (findNickname.isPresent()) {
-            return false;
-        }
-        return true;
+        return !findNickname.isPresent();
     }
 }
