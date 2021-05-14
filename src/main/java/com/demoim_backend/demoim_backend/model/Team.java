@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.xml.soap.Text;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +30,7 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = true, length = 400)
+    @Column(nullable = true, length = 600)
     private String thumbnail;
 
     //    @Column(nullable = false)
@@ -71,8 +72,9 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private String stack; // 선호언어
 
-    @Column(nullable = false)
+    @Column(nullable = false,  length = 3000)
     private String contents;
+//    @Column(columnDefinition = "TEXT", nullable = false,  length = 1000)
 
     @Column(nullable = false)
     private Boolean isBackFull;
