@@ -24,7 +24,8 @@ import java.util.List;
 public class Team extends Timestamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Column(name = "teamId")
+    @Id
+    @Column(name = "teamId")
     private Long id;
 
     @Column(nullable = false)
@@ -72,9 +73,10 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private String stack; // 선호언어
 
-    @Column(nullable = false,  length = 3000)
+    //    @Column(nullable = false,  length = 3000)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
-//    @Column(columnDefinition = "TEXT", nullable = false,  length = 1000)
+//    @Column(columnDefinition = "TEXT", nullable = false)
 
     @Column(nullable = false)
     private Boolean isBackFull;
@@ -88,7 +90,7 @@ public class Team extends Timestamped {
     @Column(nullable = false)
     private Boolean isPlannerFull;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
 //    @JoinColumn(name = "userId") // 이걸로 해결할 수 있는 방법이 없을까..
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -101,7 +103,7 @@ public class Team extends Timestamped {
 //    @Column(nullable = false)
 //    private Long leaderId; // 리더 유저Id 값이 담김
     @JsonIgnore
-    @OneToMany(mappedBy ="team", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<ApplyInfo> applyInfoList = new ArrayList<ApplyInfo>();
 
     @Enumerated(EnumType.STRING)

@@ -19,7 +19,7 @@ public class Exhibition extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 10000)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
 
     //    @Column(nullable = false)
