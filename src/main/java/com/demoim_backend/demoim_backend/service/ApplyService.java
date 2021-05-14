@@ -107,18 +107,29 @@ public class ApplyService {
             }
         }
 
-        //2개가 넘는지 여부 검사
-//        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
-//        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.YET);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
-                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
-        int nowTeamCnt = memberCnt + leadCnt;
-        if (nowTeamCnt >= 1) {
-            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
-        }
+//        //2개가 넘는지 여부 검사
+////        List<ApplyInfo> teamIdListOfUser = applyInfoRepository.findTeamIdByUserId(user.getId());
+////        System.out.println("teamIdListOfUser : " + teamIdListOfUser);
+//        LocalDateTime begin = team.getBegin();
+//        LocalDateTime end = team.getEnd();
+//        List<ApplyInfo> joinedApplyInfoList = applyInfoRepository.findAllByUserIdAndApplyState(user.getId(), ApplyInfo.ApplyState.ACCEPTED);
+//        for (ApplyInfo joinedApplyInfo : joinedApplyInfoList) {
+//            //반복문 속에서 해당 index의 applyinfo의 team,getEnd()가 begin 이전일때 or team.getBegin()이 end 이후일때 문제될것없음 -> 그 반대의 경우 exception 처리
+//            if (!(joinedApplyInfo.getTeam().getEnd().isBefore(end) || joinedApplyInfo.getTeam().getBegin().isAfter(begin))) {
+//                throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
+//            }
+//        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+//                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
+//                Team.StateNow.YET);
+//        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
+//                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
+//        int nowTeamCnt = memberCnt + leadCnt;
+//        if (nowTeamCnt >= 1) {
+//            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
+//        }
 
         //지원하려는 team의 신청자 포지션이 다 찼을때 지원 막기
         String userPosition = user.getPosition();
@@ -137,6 +148,7 @@ public class ApplyService {
         }
 
         ApplyResponseSaveDto applyResponseSaveDto = new ApplyResponseSaveDto(user, team, applyRequestDto);
+        //여기서 state의 기본값은 WAITING으로 해주고, 이 값은 지원자의 경우 아래의 지원취소 API에서, 리더 본인의 경우 team
         ApplyInfo applyInfo = ApplyInfo.createTeamUserInfo(applyResponseSaveDto, user);
         System.out.println("applyInfo :" + applyInfo);
         applyInfoRepository.save(applyInfo);
@@ -199,21 +211,22 @@ public class ApplyService {
         if (userApplyInfo == null) {
             throw new IllegalArgumentException("팀 참여자 목록에서 회원님의 정보를 찾을 수 없습니다."); //얘 불필요한건지.. 어디서 걸러지나요?
         } else if (userApplyInfo.getMembership() != ApplyInfo.Membership.MEMBER) {
-            throw new IllegalArgumentException("게시글 작성자는 본인의 글에 지원할 수 없습니다.");
-        }
-        LocalDateTime begin = team.getBegin();
-        LocalDateTime end = team.getEnd();
-
-        //해당 멤버가 지원한 모든 ApplyInfo 조회, 지금 삭제하는 프로젝트와 기간이 겹치는 프로젝트들에 대해 status를 DENIED->WAITING으로 바꿔주기
-        List<ApplyInfo> memberApplyInfosList = applyInfoRepository.findAllByUserId(user.getId());
-
-        for (ApplyInfo memberApplyInfo : memberApplyInfosList) {
-            //해당 멤버가 지원한 프로젝트 하나하나마다 지금 취소하는 프로젝트와 겹치는게 있는 경우 명령문 실행
-            if (!(memberApplyInfo.getTeam().getEnd().isBefore(begin) || memberApplyInfo.getTeam().getBegin().isAfter(end))) {
-                memberApplyInfo.choiceMember(ApplyInfo.ApplyState.WAITING);
-            }
+            throw new IllegalArgumentException("게시글 작성자입니다.");
         }
         applyInfoRepository.delete(userApplyInfo);
+
+//        LocalDateTime begin = team.getBegin();
+//        LocalDateTime end = team.getEnd();
+//        //해당 멤버가 지원한 모든 ApplyInfo 조회, 지금 삭제하는 프로젝트와 기간이 겹치는 프로젝트들에 대해 status를 DENIED->WAITING으로 바꿔주기
+//        List<ApplyInfo> memberApplyInfosList = applyInfoRepository.findAllByUserId(user.getId());
+//
+//        for (ApplyInfo memberApplyInfo : memberApplyInfosList) {
+//            //해당 멤버가 지원한 프로젝트 하나하나마다 지금 취소하는 프로젝트와 겹치는게 있는 경우 명령문 실행
+//            if (!(memberApplyInfo.getTeam().getEnd().isBefore(begin) || memberApplyInfo.getTeam().getBegin().isAfter(end))) {
+//                memberApplyInfo.choiceMember(ApplyInfo.ApplyState.WAITING);
+//            }
+//        }
+
 
         //알람 생성
         String commentsAlarm = user.getNickname() + "님 께서 " + team.getTitle() + " 공고에 지원을 취소하셨습니다.";
@@ -262,16 +275,15 @@ public class ApplyService {
         //흐름 : 먼저 ACCEPTED 처리해주고나서 해당 지원자의 다른 지원정보를 싹 업데이트해주는 순서(서로겹칠만한 프로젝트는 여기서 찾아 DENIED로 바꿔주기
         applyInfo.choiceMember(ApplyInfo.ApplyState.ACCEPTED);
         //applyInfo.setApplyState(ApplyInfo.ApplyState.ACCEPTED); 일부러 Setter 방법 피한거겠죠?!
-        LocalDateTime begin = applyInfo.getTeam().getBegin();
-        LocalDateTime end = applyInfo.getTeam().getEnd();
-
-        List<ApplyInfo> applyInfoOfApplicantList = applyInfoRepository.findAllByUserId(user.getId());
-        for (ApplyInfo applyInfoOfApplicant : applyInfoOfApplicantList) {
-
-            if (!(applyInfoOfApplicant.getTeam().getEnd().isBefore(begin) || applyInfoOfApplicant.getTeam().getBegin().isAfter(end))) {
-                applyInfoOfApplicant.choiceMember(ApplyInfo.ApplyState.DENIED);
-            }
-        }
+//        LocalDateTime begin = applyInfo.getTeam().getBegin();
+//        LocalDateTime end = applyInfo.getTeam().getEnd();
+//        List<ApplyInfo> applyInfoOfApplicantList = applyInfoRepository.findAllByUserId(user.getId());
+//        for (ApplyInfo applyInfoOfApplicant : applyInfoOfApplicantList) {
+//
+//            if (!(applyInfoOfApplicant.getTeam().getEnd().isBefore(begin) || applyInfoOfApplicant.getTeam().getBegin().isAfter(end))) {
+//                applyInfoOfApplicant.choiceMember(ApplyInfo.ApplyState.DENIED);
+//            }
+//        }
         List<Map<String, Integer>> info = new ArrayList<>();
         Map<String, Integer> map = new HashMap<>();
         int front = team.getFront() - curPositionCnt(team, "프론트엔드");
