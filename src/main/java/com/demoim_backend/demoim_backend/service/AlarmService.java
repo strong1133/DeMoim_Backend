@@ -1,6 +1,7 @@
 package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.AlarmRequestDto;
+import com.demoim_backend.demoim_backend.dto.AlarmSaveDto;
 import com.demoim_backend.demoim_backend.model.Alarm;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.AlarmRepository;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +22,30 @@ public class AlarmService {
     private final UserService userService;
 
     // 알람 조회
+    @Transactional
     public List<Alarm> getAlarm(Authentication authentication) {
         User user = userService.findCurUser(authentication).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
         );
         Long userId = user.getId();
-        return alarmRepository.findByUserIdOrderByCreatedAtDesc(userId);
+
+        //조회된 알림!
+        List<Alarm> alarmList = alarmRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        for (Alarm alarm : alarmList) {
+            AlarmSaveDto alarmSaveDto = new AlarmSaveDto();
+            alarmSaveDto.setCheckStateAlarm(true);
+            alarm.updateAlarm(alarmSaveDto);
+        }
+        return alarmList;
+    }
+
+    // 안읽은 알림 카운트
+    public Integer beforeCheckAlarmCnt(Authentication authentication) {
+        User user = userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+        Long userId = user.getId();
+        return alarmRepository.countAlarmByUserIdAndCheckStateAlarm(userId, false);
     }
 
     // 알람 생성
@@ -56,6 +76,16 @@ public class AlarmService {
         alarmRepository.deleteById(alarmId);
         map.put("msg", "Success");
         return map;
+    }
 
+    @Transactional
+    public Map<String, String> deleteAllAlarm(Authentication authentication){
+        User user = userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+        alarmRepository.deleteAlarmByUserId(user.getId());
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", "Success");
+        return map;
     }
 }

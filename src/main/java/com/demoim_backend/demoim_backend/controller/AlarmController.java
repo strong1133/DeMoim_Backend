@@ -26,6 +26,12 @@ public class AlarmController {
         return alarmRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
+    //안읽은 알림 카운트
+    @GetMapping("/api/alarm/before")
+    public Integer beforeCheckAlarmCnt(Authentication authentication){
+        return alarmService.beforeCheckAlarmCnt(authentication);
+    }
+
     // 알람 조회
     @GetMapping("/api/alarm")
     public List<Alarm> getAlarm(Authentication authentication){
@@ -37,4 +43,14 @@ public class AlarmController {
     public Map<String, String> deleteAlarm(Authentication authentication, @RequestParam(value ="alarm_id" )Long alarmId){
         return alarmService.deleteAlarm(authentication,alarmId);
     }
+
+    // 알람 삭제
+    @DeleteMapping("/api/alarm/all")
+    public Map<String, String> deleteAllAlarm(Authentication authentication){
+        return alarmService.deleteAllAlarm(authentication);
+    }
+
+
+
+
 }

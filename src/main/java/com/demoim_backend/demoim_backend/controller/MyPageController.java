@@ -64,7 +64,6 @@ public class MyPageController {
 
     //마이페이지 중 프로젝트 히스토리(내가 지원한 프로젝트 / 내가 진행중, 참여한 프로젝트 / 내가 리더인 프로젝트)
     @GetMapping("/api/mypage/team")
-
     public Map<String, Object> findMyActiveTeam(@Valid Authentication authentication, @RequestParam(required = false, name = "user_id") Long userId) {
         Map<String, Object> myJoinedTeam;
         if (userId==null){

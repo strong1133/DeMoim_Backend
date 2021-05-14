@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ApplyInfoRepository extends JpaRepository<ApplyInfo, Long> {
 //    List<ApplyInfo> findByTeamId(Long teamId);
     ApplyInfo findByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
-    Optional<ApplyInfo> findByUserId(Long userId);
+    Optional<ApplyInfo> findTopByUserId(Long userId);
 
 //    List<ApplyInfo> findAllByTeamIdAndMembership(Long teamId, ApplyInfo.Membership membership);
     List<ApplyInfo> findAllByUserIdAndApplyStateOrUserIdAndMembership(Long userId, ApplyInfo.ApplyState applyState, Long userId2,  ApplyInfo.Membership membership);

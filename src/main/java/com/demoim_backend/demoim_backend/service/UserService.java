@@ -99,11 +99,8 @@ public class UserService {
                 ()-> new IllegalArgumentException("해당 유저 정보가 없습니다")
         );
         System.out.println("=1=");
-        Optional<ApplyInfo> applyInfo = applyInfoRepository.findByUserId(user.getId());
+        Optional<ApplyInfo> applyInfo = applyInfoRepository.findTopByUserId(user.getId());
         System.out.println("applyInfo :" + applyInfo);
-        if (applyInfo.isPresent()){
-            throw new IllegalArgumentException("지원 내역이나 팀 활동 내역이 있어 포지션 변경이 불가합니다!");
-        }
 
         String profileImage;
         if (file == null){
@@ -118,9 +115,16 @@ public class UserService {
         String position=jsonObject.getString("position");
         String description=jsonObject.getString("description");
 
+        if (applyInfo.isPresent()){
+            if (!position.equals(user.getPosition())){
+                throw new IllegalArgumentException("지원 내역이나 팀 활동 내역이 있어 포지션 변경이 불가합니다!");
+            }
+        }
+
         userUpdateProfileRequestDto.setNickname(nickname);
         userUpdateProfileRequestDto.setDescription(description);
         userUpdateProfileRequestDto.setPosition(position);
+
 
         UserUpdateProfileSaveRequestDto userUpdateProfileSaveDto = new UserUpdateProfileSaveRequestDto();
         userUpdateProfileSaveDto.setNickname(userUpdateProfileRequestDto.getNickname());
