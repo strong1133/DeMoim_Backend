@@ -23,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final ApplyInfoRepository applyInfoRepository;
     private final CorsConfig corsConfig;
-    private NowTeamCount nowTeamCount;
+    private final NowTeamCount nowTeamCount;
+
 
     // 패스워드 인코더 DI
     @Bean
