@@ -45,7 +45,12 @@ dependencies {
     //test
     testCompile('org.springframework.security:spring-security-test')
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
+
+    //coolSms
+    compile group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+
 }
+
 
 test {
     useJUnitPlatform()

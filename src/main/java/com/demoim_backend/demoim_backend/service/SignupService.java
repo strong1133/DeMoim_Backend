@@ -1,11 +1,16 @@
 package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.AlarmRequestDto;
+import com.demoim_backend.demoim_backend.dto.CheckNumSaveDto;
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
+import com.demoim_backend.demoim_backend.model.CheckNum;
 import com.demoim_backend.demoim_backend.model.User;
+import com.demoim_backend.demoim_backend.repository.CheckNumRepository;
 import com.demoim_backend.demoim_backend.repository.SignupRepository;
 import com.demoim_backend.demoim_backend.util.DuplicateChecker;
 import com.demoim_backend.demoim_backend.util.SignupValidator;
+import com.demoim_backend.demoim_backend.util.coolsms.CertificateCertNumber;
+import com.demoim_backend.demoim_backend.util.coolsms.CoolSmsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,9 +23,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SignupService {
     private final PasswordEncoder passwordEncoder;
-    private final SignupRepository signupRepository;
-    private final AlarmService alarmService;
+    private final CertificateCertNumber certificateCertNumber;
     private final DuplicateChecker duplicateChecker;
+
+    private final SignupRepository signupRepository;
+    private final CheckNumRepository checkNumRepository;
+
+    private final AlarmService alarmService;
+    private final CoolSmsUtil coolSmsUtil;
+
     private static final String SCERET_KEY = "AWDSDV+/asdwzwr3434@#$vvadflf00ood/[das";
 
     //중복체크_이메일
@@ -55,6 +66,10 @@ public class SignupService {
         String username = signupRequestDto.getUsername();
         String nickname = signupRequestDto.getNickname();
 
+        //문자 인증 했는 지 검사
+        String isChecked ="true";
+        CheckNum checkNum = checkNumRepository.findByUsernameAndIsChecked(signupRequestDto.getUsername(),isChecked);
+
         if (!SignupValidator.usernameValid(username)) {
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
         }
@@ -74,6 +89,15 @@ public class SignupService {
             throw new IllegalArgumentException("비밀번호 형식이 잘못되었습니다.");
         }
 
+        //없다면 인증이 되지않은 username
+        if(checkNum == null){
+            throw new IllegalArgumentException("인증을해주세요");
+
+            //있다면 인증이 완료되었다면 username과 관련된 checkNum 삭제.
+        }else{
+            checkNumRepository.deleteAllByUsername(signupRequestDto.getUsername());
+        }
+
         // password 암호화
         String encodedPassword = passwordEncoder.encode(lawPassword + SCERET_KEY);
         signupRequestDto.setPassword(encodedPassword);
@@ -90,5 +114,76 @@ public class SignupService {
 
 
         return user;
+    }
+
+
+    public Map<String,String> sendCertNumber(String username, String phoneNum) {
+
+        String certNumber = certificateCertNumber.excuteGenerate();
+
+        if (certNumber == null) {
+            throw new NullPointerException("인증 번호 생성 오류가 발생했습니다.관리자에게 문의해주세요");
+        } else {
+            CheckNumSaveDto checkNumSaveDto = CheckNumSaveDto.builder()
+                    .username(username)
+                    .certNumber(certNumber)
+                    .build();
+
+            CheckNum checkNum = checkNumSaveDto.CheckNumDtoToEntity();
+            checkNumRepository.save(checkNum);
+
+            coolSmsUtil.sendCertNumberSms(phoneNum, certNumber);
+            Map<String, String> map = new HashMap<>();
+            map.put("msg","true");
+            return map;
+        }
+
+    }
+
+
+    public Map<String, String> duplicatePhoneCheck(String username, String certNumber) {
+
+        CheckNum checkNum = checkNumRepository.findByUsernameAndCertNumber(username,certNumber);
+
+        Map<String, String> map;
+
+        if(checkNum == null){
+            map = new HashMap<>();
+            map.put("msg","false");
+
+        }else{
+
+            // isChecked 를 true로 바꿔줌
+            checkNum.updateIsChecked();
+            checkNumRepository.save(checkNum);
+
+            map = new HashMap<>();
+            map.put("msg","true");
+        }
+        return map;
+    }
+
+    public void get(){
+        CheckNum checkNum=CheckNum.builder()
+                .username("test123@naver.com")
+                .certNumber("123456").build();
+
+        CheckNum checkNum2=CheckNum.builder()
+                .username("test123@naver.com")
+                .certNumber("789456").build();
+
+        CheckNum checkNum3=CheckNum.builder()
+                .username("test123@naver.com")
+                .certNumber("124578").build();
+
+        CheckNum checkNum4=CheckNum.builder()
+                .username("test123@naver.com")
+                .certNumber("235689").build();
+
+
+        checkNumRepository.save(checkNum);
+        checkNumRepository.save(checkNum2);
+        checkNumRepository.save(checkNum3);
+        checkNumRepository.save(checkNum4);
     }
 }
