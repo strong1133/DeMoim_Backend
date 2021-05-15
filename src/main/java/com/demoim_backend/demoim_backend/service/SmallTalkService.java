@@ -28,8 +28,6 @@ public class SmallTalkService {
     private final UserService userService;
     private final CommentService commentService;
 
-
-
     // SmallTalk 엔티티를 DTo로 담아주는 메소드
     public SmallTalkResponseDto entityToDto(SmallTalk smallTalk) {
 
@@ -57,9 +55,7 @@ public class SmallTalkService {
     //smallTalk 생성
     public SmallTalkResponseDto createSmallTalk(Authentication authentication, SmallTalkDto smallTalkDto) {
 
-        User user = userService.findCurUser(authentication).orElseThrow(
-                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = userService.findMyUserInfo(authentication);
 
         SmallTalk smallTalk = SmallTalk.builder()
                 .contents(smallTalkDto.getContents())
@@ -67,13 +63,12 @@ public class SmallTalkService {
 
         //양방향 매핑을 위해 객체 참조
         smallTalk.setUser(user);
+
         // DB에 저장
         SmallTalk smallTalkResponse = smallTalkRepository.save(smallTalk);
 
         //Dto에 담아서 반환.
-        SmallTalkResponseDto responseDto = this.entityToDto(smallTalkResponse);
-
-        return responseDto;
+        return this.entityToDto(smallTalkResponse);
     }
 
 
@@ -100,26 +95,21 @@ public class SmallTalkService {
         SmallTalkResponseDto responseDto;
 
         // user객체 가져옴
-        User user = userService.findCurUser(authentication).orElseThrow(
-                ()-> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = userService.findMyUserInfo(authentication);
 
         // SmallTalk 존재 여부 확인
         SmallTalk smallTalk = this.findSmallTalk(smallTalkId);
 
 
         // user와 smallTalk작성자가 일치한다면
-        if (user.getId() == smallTalk.getSmallTalkUser().getId()) {
+        if (user.getId().equals(smallTalk.getSmallTalkUser().getId())) {
             smallTalk.Update(smallTalkDto);
             smallTalk.setUser(user);
-
             responseDto = this.entityToDto(smallTalk);
-            return responseDto;
-
         } else {
             responseDto = null;
-            return responseDto;
         }
+        return responseDto;
     }
 
     // 삭제

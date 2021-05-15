@@ -1,11 +1,9 @@
 package com.demoim_backend.demoim_backend.service;
 
-import com.demoim_backend.demoim_backend.Exception.GlobalExceptionHandler;
 import com.demoim_backend.demoim_backend.dto.*;
 import com.demoim_backend.demoim_backend.model.*;
 import com.demoim_backend.demoim_backend.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,9 +58,7 @@ public class MypageService {
         for (Exhibition exhibition : exhibitions) {
             exhibitionResponseDtoList.add(exhibitionResponseDto.entityToDto(exhibition));
         }
-
         return exhibitionResponseDtoList;
-
     }
 
     // 마이페이지의 히스토리 _ 현재유저가 지원한 프로젝트 보기
@@ -94,9 +90,6 @@ public class MypageService {
                 user.getId(), ApplyInfo.Membership.LEADER);
 
         System.out.println("applyInfoList :" + myApplyInfoList);
-        //멤버리스트 생성
-        //memberList for문 안에 넣기 18:12
-//        List<ResponseUserDto> memberList = new ArrayList<>();
 
 
         for (ApplyInfo myApplyInfo : myApplyInfoList) {
@@ -113,10 +106,8 @@ public class MypageService {
             ResponseUserDto leaderDto = ResponseUserDto.builder().build().entityToDto(team.getLeader());
             memberList.add(leaderDto);
 
-
             //if 현재 진행중인 프로젝트의 경우, else 끝난 프로젝트들
             List<ApplyInfo> membersApplyInfoList = applyInfoRepository.findAllByteamIdAndApplyState(team.getId(), ApplyInfo.ApplyState.ACCEPTED);
-
 
             for (ApplyInfo memberApplyInfo : membersApplyInfoList) {
                 User member = memberApplyInfo.getUser();
@@ -127,10 +118,6 @@ public class MypageService {
 
                 ResponseUserDto memberDto = ResponseUserDto.builder().build().entityToDto(member);
                 memberList.add(memberDto);
-
-//                ResponseUserDto responseUserDto = ResponseUserDto.builder().build().entityToDto(leader);
-//                memberList.add(responseUserDto);
-
             }
             System.out.println("memberList :" + memberList);
 

@@ -3,6 +3,7 @@ package com.demoim_backend.demoim_backend.service;
 import com.demoim_backend.demoim_backend.dto.AlarmRequestDto;
 import com.demoim_backend.demoim_backend.dto.AlarmSaveDto;
 import com.demoim_backend.demoim_backend.model.Alarm;
+import com.demoim_backend.demoim_backend.model.Team;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +21,17 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final UserService userService;
 
+    // 유저 정보 반환
+    public User findAlarmUser(Authentication authentication){
+        return userService.findCurUser(authentication).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
+        );
+    }
+
     // 알람 조회
     @Transactional
     public List<Alarm> getAlarm(Authentication authentication) {
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = findAlarmUser(authentication);
         Long userId = user.getId();
 
         //조회된 알림!
@@ -41,9 +46,7 @@ public class AlarmService {
 
     // 안읽은 알림 카운트
     public Integer beforeCheckAlarmCnt(Authentication authentication) {
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = findAlarmUser(authentication);
         Long userId = user.getId();
         return alarmRepository.countAlarmByUserIdAndCheckStateAlarm(userId, false);
     }
@@ -62,9 +65,7 @@ public class AlarmService {
         Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(
                 () -> new IllegalArgumentException("해당 알람이 존재하지않습니다.")
         );
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
+        User user = findAlarmUser(authentication);
         Long curUser = user.getId();
         Long userId = alarm.getUserId();
 
@@ -78,6 +79,8 @@ public class AlarmService {
         return map;
     }
 
+
+    // 알람 전체 삭제
     @Transactional
     public Map<String, String> deleteAllAlarm(Authentication authentication){
         User user = userService.findCurUser(authentication).orElseThrow(
@@ -87,5 +90,23 @@ public class AlarmService {
         Map<String, String> map = new HashMap<>();
         map.put("msg", "Success");
         return map;
+    }
+
+    //알람 메이커 for Not leader
+    public void alarmMaker(String commentsAlarm, User user, Team team) {
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setUserId(team.getLeader().getId());
+        alarmRequestDto.setContents(commentsAlarm);
+        if (!user.getId().equals(team.getLeader().getId())) {
+            createAlarm(alarmRequestDto);
+        }
+    }
+
+    //알람 메이커 for leader
+    public void alarmMakerForLeader(String commentsAlarm, User leader){
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setUserId(leader.getId());
+        alarmRequestDto.setContents(commentsAlarm);
+        createAlarm(alarmRequestDto);
     }
 }

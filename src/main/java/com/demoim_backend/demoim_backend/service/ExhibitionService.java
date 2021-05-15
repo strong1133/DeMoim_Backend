@@ -2,9 +2,7 @@ package com.demoim_backend.demoim_backend.service;
 
 import com.demoim_backend.demoim_backend.dto.ExhibitionDto;
 import com.demoim_backend.demoim_backend.dto.ExhibitionResponseDto;
-import com.demoim_backend.demoim_backend.dto.SmallTalkResponseDto;
 import com.demoim_backend.demoim_backend.model.Exhibition;
-import com.demoim_backend.demoim_backend.model.SmallTalk;
 import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ExhibitionRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
@@ -88,12 +86,9 @@ public class ExhibitionService {
     // 이미지 저장.
     public String createExhibitionImg(Authentication authentication, MultipartFile file) {
         //user 조회
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
-        );
-        String thumbnail = fileUploadService.uploadImage(file);
+        User user = userService.findMyUserInfo(authentication);
 
-        return thumbnail;
+        return fileUploadService.uploadImage(file);
     }
 
 
@@ -147,7 +142,7 @@ public class ExhibitionService {
         ExhibitionDto exhibitionDto = jsonToExhibition(requestBody);
 
         // 작성자와 로그인한 사용자가 같다면
-        if (user.getId() == exhibition.getExhibitionUser().getId()) {
+        if (user.getId().equals(exhibition.getExhibitionUser().getId())) {
 
             if (file == null) {
                 exhibitionDto.setThumbnail(exhibition.getThumbnail());
@@ -164,8 +159,7 @@ public class ExhibitionService {
 
             // 작성자와 로그인한 사용자가 다르다면
         } else {
-            exhibitionResponseDto = null;
-            return exhibitionResponseDto;
+            return null;
         }
     }
 
@@ -174,15 +168,13 @@ public class ExhibitionService {
     public ExhibitionResponseDto updateExhibitionImg(Authentication authentication, Long exhibitionId, MultipartFile file) {
         ExhibitionResponseDto exhibitionResponseDto;
         //user 조회
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
-        );
+        User user = userService.findMyUserInfo(authentication);
 
         //Exhibition 존재 여부 확인
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
         // 작성자와 로그인한 같다면
-        if (user.getId() == exhibition.getExhibitionUser().getId()) {
+        if (user.getId().equals(exhibition.getExhibitionUser().getId())) {
 
             String thumbnail = fileUploadService.uploadImage(file);
             exhibition.updateImg(thumbnail);
@@ -203,24 +195,18 @@ public class ExhibitionService {
     public String deleteExhibition(Authentication authentication, Long exhibitionId) {
 
         //user 조회
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다")
-        );
+        User user = userService.findMyUserInfo(authentication);
 
         //Exhibition 존재 여부 확인
         Exhibition exhibition = this.findExhibition(exhibitionId);
 
         //user와 Exhibition 작성자가 일치한다면
-        if (user.getId() == exhibition.getExhibitionUser().getId()) {
+        if (user.getId().equals(exhibition.getExhibitionUser().getId())) {
             user.getExhibitions().remove(exhibition);
             exhibitionRepository.deleteById(exhibitionId);
-
             return "Success";
         } else {
             return "fail";
         }
     }
-
-
-
 }

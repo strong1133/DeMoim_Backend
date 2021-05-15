@@ -10,6 +10,7 @@ import com.demoim_backend.demoim_backend.model.User;
 import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.service.ApplyService;
 import com.demoim_backend.demoim_backend.service.SignupService;
+import com.demoim_backend.demoim_backend.util.NowTeamCount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,7 @@ import java.util.*;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final ApplyInfoRepository applyInfoRepository;
+    private final NowTeamCount nowTeamCount;
     private static final String SCERET_KEY = "AWDSDV+/asdwzwr3434@#$vvadflf00ood/[das";
 
     @Override
@@ -85,13 +87,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("jwtToken : " + jwtToken);
         ObjectMapper objectMapper = new ObjectMapper();
         User user = principalDetails.getUser();
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.YET);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
-                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
 
-        int nowTeamCnt = memberCnt + leadCnt;
+        int nowTeamCnt = nowTeamCount.nowTeamCnt(user);
 
         Map<String, String> users = new HashMap<>();
         users.put("Id", user.getId().toString());
@@ -110,18 +107,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         applyTeamId.put("applyTeamId", applyInfoList );
         System.out.println("applyTeamId :" +applyTeamId );
-//        Map<String, Map<String, String>> map = new HashMap<>();
-//        Map<String, Map<String, String>> map = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
-//        Map<String, Map<String, List<Long>>> map2 = new HashMap<>();
         map.put("userInfo", users);
         map.put("applyTeamId", applyInfoList);
-//
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.setContentType("application/json");
-//        response.getWriter().write(objectMapper.writeValueAsString(map));
-//        response.getWriter().write(objectMapper.writeValueAsString(map2));
         response.getWriter().write(objectMapper.writeValueAsString(map));
 
     }

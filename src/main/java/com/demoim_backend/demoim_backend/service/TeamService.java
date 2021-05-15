@@ -45,24 +45,24 @@ public class TeamService {
     }
 
     public List<Team> getContentTeam(Page<Team> teamPage) {
-        List<Team> teamList = teamPage.getContent();
-        return teamList;
+        return teamPage.getContent();
+    }
+
+    public List<TeamResponseDto> teamResponseDtoList(Page<Team> teamPage){
+        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
+        for (Team team : getContentTeam(teamPage)) {
+            User leader = team.getLeader();
+            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
+            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
+            teamResponseDtoList.add(responseDto);
+        }
+        return teamResponseDtoList;
     }
 
     //팀메이킹 작성글 생성 _ auth 필요 (return type을 Dto로 내보내는게 맞을까? Team 아니고? -> 보안과 비용면에서 Dto로 내보내는게 맞다는 생각)
     public TeamResponseDto createTeam(Authentication authentication, String requestBody, MultipartFile file) {
         //User 정보 검증(from UserService.findCurUser)
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED) +  applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.YET);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)
-                + applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
-//        if (memberCnt+leadCnt>=1){
-//            throw new IllegalArgumentException("현재 진행 중인 프로젝트가 있습니다. 동일 기간 진행 가능한 프로젝트는 1개입니다.");
-//        }
+        User user = userService.findMyUserInfo(authentication);
 
         Random random = new Random();
         TeamRequestDto teamRequestDto;
@@ -97,8 +97,7 @@ public class TeamService {
         System.out.println("밀리초 변환 1안(아마 초변환인듯) : " + team.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
         System.out.println("밀리초 변환 1안(아마 초변환인듯) : " + Long.toString(team.getCreatedAt().toEpochSecond(ZoneOffset.UTC)).length());
 
-//        Long nowtime = team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
-//        String len = Long.toString(nowtime);
+
 
         System.out.println("밀리초 변환 2안 : " + team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
         System.out.println("밀리초 변환 2안 길이 : " + Long.toString(team.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()).length());
@@ -119,54 +118,26 @@ public class TeamService {
     public String createTeamImg(Authentication authentication, MultipartFile file) {
 
         //User 정보 검증(from UserService.findCurUser)
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("회원 정보가 존재하지 않습니다.")
-        );
-
-        String thumbnail = fileUploadService.uploadImage(file);
-
-        return thumbnail;
+        User user = userService.findMyUserInfo(authentication);
+        return fileUploadService.uploadImage(file);
     }
 
-
-//    public Page<Team> getAllTeams(Pageable pageable) {
-//        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1); // page 는 index 처럼 0 부터 시작
-//        pageable = PageRequest.of(page, 10);
-//        return teamRepository.findAll(pageable);
-//    }
 
     //팀메이킹 작성글 전체조회 with 페이지네이션 _ auth 불필요
     public List<TeamResponseDto> getTeamList(int page, int size) { //(int page, int size, String sortBy, boolean isAsc)
 
         Page<Team> pageTeam = teamRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
-
         //페이징한 Page<Team>를 List<TeamResponseDto>에 담기
-//        List<Team> listTeam = pageTeam.getContent(); // toList 메소드와 getContent 차이는?
-
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
-
-        for (Team team : getContentTeam(pageTeam)) {
-            User leader = team.getLeader();
-            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
-            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
-            teamResponseDtoList.add(responseDto);
-        }
-
-        return teamResponseDtoList;
+        return teamResponseDtoList(pageTeam);
     }
 
 
     //특정 팀메이킹 작성글 조회(작성글 id로) _ auth 불필요
     public TeamResponseDto getTeam(Long teamId) {
-
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = this.findTeam(teamId);
-
         UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(team.getLeader());
-        TeamResponseDto teamResponseDto = new TeamResponseDto(team, leaderProfile);
-
-
-        return teamResponseDto;
+        return new TeamResponseDto(team, leaderProfile);
     }
 
     //팀메이킹 작성글 수정 _ auth 필요
@@ -177,10 +148,7 @@ public class TeamService {
         TeamResponseDto teamResponseDto;
 
         //User 정보 검증(from UserService.findCurUser)
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
-        );
-
+        User user = userService.findMyUserInfo(authentication);
         UserUpdateProfileSaveRequestDto leaderProfileDto = new UserUpdateProfileSaveRequestDto(user);
 
         //team 작성글 존재여부 검증(from TeamService.findTeam)
@@ -227,14 +195,10 @@ public class TeamService {
             recruitState = Team.StateNow.FINISHED;
         }
         //지금 시간 기준으로 projectState 값 재설정
-//        if (now.after(team.getBegin()) && now.before(team.getEnd())) {
         if (now.compareTo(team.getBegin()) >= 0 && now.compareTo(team.getEnd()) < 0) {
-//                team.setProjectState(Team.StateNow.ACTIVATED);
             System.out.println("프로젝트상태 변경 YET -> ACTIVATED");
             projectState = Team.StateNow.ACTIVATED;
-//        } else if (now.after(team.getEnd()) || now.equals(team.getEnd())) {
         } else if (now.compareTo(team.getEnd()) >= 0) {
-//                team.setProjectState(Team.StateNow.FINISHED);
             System.out.println("프로젝트상태 변경 ACTIVATED -> FINISHED");
             projectState = Team.StateNow.FINISHED;
         }
@@ -250,10 +214,7 @@ public class TeamService {
     public String deleteTeam(Authentication authentication, Long teamId) {
 
         //User 정보 검증(from UserService.findCurUser)
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
-
+        User user = userService.findMyUserInfo(authentication);
         //team 작성글 존재여부 검증(from TeamService.findTeam)
         Team team = this.findTeam(teamId);
 
@@ -268,57 +229,25 @@ public class TeamService {
     // Front 필터링
     public List<TeamResponseDto> findTeamWhereFront(int page, int size) {
         Page<Team> teamPage = teamRepository.findAllByFrontGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
-
-        for (Team team : getContentTeam(teamPage)) {
-            User leader = team.getLeader();
-            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
-            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
-            teamResponseDtoList.add(responseDto);
-        }
-        return teamResponseDtoList;
+        return teamResponseDtoList(teamPage);
     }
 
     // Back 필터링
     public List<TeamResponseDto> findTeamWhereBack(int page, int size) {
         Page<Team> teamPage = teamRepository.findAllByBackGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
-
-        for (Team team : getContentTeam(teamPage)) {
-            User leader = team.getLeader();
-            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
-            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
-            teamResponseDtoList.add(responseDto);
-        }
-        return teamResponseDtoList;
+        return teamResponseDtoList(teamPage);
     }
 
     // Designer 필터링
     public List<TeamResponseDto> findTeamWhereDesigner(int page, int size) {
         Page<Team> teamPage = teamRepository.findAllByDesignerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
-
-        for (Team team : getContentTeam(teamPage)) {
-            User leader = team.getLeader();
-            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
-            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
-            teamResponseDtoList.add(responseDto);
-        }
-        return teamResponseDtoList;
+        return teamResponseDtoList(teamPage);
     }
 
     // Planner 필터링
     public List<TeamResponseDto> findTeamWherePlanner(int page, int size) {
         Page<Team> teamPage = teamRepository.findAllByPlannerGreaterThan(0, PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt"));
-        List<TeamResponseDto> teamResponseDtoList = new ArrayList<>();
-
-        for (Team team : getContentTeam(teamPage)) {
-            User leader = team.getLeader();
-            UserUpdateProfileSaveRequestDto leaderProfile = new UserUpdateProfileSaveRequestDto(leader);
-            TeamResponseDto responseDto = new TeamResponseDto(team, leaderProfile);
-            teamResponseDtoList.add(responseDto);
-        }
-        return teamResponseDtoList;
+        return teamResponseDtoList(teamPage);
     }
 }
 
