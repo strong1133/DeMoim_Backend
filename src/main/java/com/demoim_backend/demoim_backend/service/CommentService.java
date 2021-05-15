@@ -28,10 +28,7 @@ public class CommentService {
 
     // 현재 로그인 user 객체로 찾아주는 매서드
     public User curUser(Authentication authentication) {
-        User user = userService.findCurUser(authentication).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지않습니다.")
-        );
-        return user;
+        return userService.findMyUserInfo(authentication);
     }
 
     // SmallTalk 객체 찾아주는 매서드
@@ -50,14 +47,22 @@ public class CommentService {
 
     // responseUser 코팅
     public ResponseUserDto responseUser(User user) {
-        ResponseUserDto responseUserDto = new ResponseUserDto(user.getId(), user.getUsername(), user.getNickname(), user.getPosition(), user.getDescription(), user.getProfileImage());
-        return responseUserDto;
+        return new ResponseUserDto(user.getId(), user.getUsername(), user.getNickname(), user.getPosition(), user.getDescription(), user.getProfileImage());
     }
 
     // response 객체로 만들어주는 매서드
     public CommentResponseDto entityToDto(Comment comment, ResponseUserDto responseUserDto) {
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment, responseUserDto);
-        return commentResponseDto;
+        return new CommentResponseDto(comment, responseUserDto);
+    }
+
+    public List<CommentResponseDto> commentResponseDtoList (List<Comment> commentList){
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            User user = comment.getCommentUser();
+            ResponseUserDto responseUserDto = responseUser(user);
+            commentResponseDtoList.add(this.entityToDto(comment, responseUserDto));
+        }
+        return commentResponseDtoList;
     }
 
 
@@ -85,17 +90,8 @@ public class CommentService {
 
     // SmallTalk Comments 조회
     public List<CommentResponseDto> getCommentForSmallTalk(Long smallTalkId) {
-
         List<Comment> commentList = commentRepository.findBySmallTalkId(smallTalkId);
-        List<CommentResponseDto> commentResponseDto = new ArrayList<>();
-//        ResponseUser responseUser = new ResponseUser()
-
-        for (Comment comment : commentList) {
-            User user = comment.getCommentUser();
-            ResponseUserDto responseUserDto = responseUser(user);
-            commentResponseDto.add(this.entityToDto(comment, responseUserDto));
-        }
-        return commentResponseDto;
+        return commentResponseDtoList(commentList);
     }
 
 
@@ -121,16 +117,8 @@ public class CommentService {
 
     // Exhibition Comments 조회
     public List<CommentResponseDto> getCommentForExhibition(Long exhibitionId) {
-
         List<Comment> commentList = commentRepository.findByExhibitionId(exhibitionId);
-        List<CommentResponseDto> commentResponseDto = new ArrayList<>();
-
-        for (Comment comment : commentList) {
-            User user = comment.getCommentUser();
-            ResponseUserDto responseUserDto = responseUser(user);
-            commentResponseDto.add(this.entityToDto(comment, responseUserDto));
-        }
-        return commentResponseDto;
+        return commentResponseDtoList(commentList);
     }
 
 

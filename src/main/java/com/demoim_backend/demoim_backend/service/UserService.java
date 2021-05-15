@@ -10,6 +10,7 @@ import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.repository.TeamRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
 import com.demoim_backend.demoim_backend.s3.FileUploadService;
+import com.demoim_backend.demoim_backend.util.NowTeamCount;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,7 @@ public class UserService {
     private final FileUploadService fileUploadService;
     private final TeamRepository teamRepository;
     private final ApplyInfoRepository applyInfoRepository;
+    private final NowTeamCount nowTeamCount;
 
     // response 객체로 만들어주는 매서드
     public MypageResponseDto entityToDto(User user, List<Team> team) {
@@ -37,16 +39,8 @@ public class UserService {
         for(ApplyInfo applyInfo : applyInfos){
             applyInfoList.add(applyInfo.getTeam().getId());
         }
-
-        int memberCnt = applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.ACTIVATED)+applyInfoRepository.countByUserIdAndMembershipAndApplyStateAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.MEMBER, ApplyInfo.ApplyState.ACCEPTED,
-                Team.StateNow.YET);
-        int leadCnt = applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.ACTIVATED)+
-                applyInfoRepository.countByUserIdAndMembershipAndTeam_ProjectState(user.getId(), ApplyInfo.Membership.LEADER, Team.StateNow.YET);
-        int nowTeamCnt = memberCnt + leadCnt;
-        MypageResponseDto mypageResponseDto = new MypageResponseDto(user, nowTeamCnt, applyInfoList, team);
-
-        return mypageResponseDto;
+        int nowTeamCnt = nowTeamCount.nowTeamCnt(user);
+        return new MypageResponseDto(user, nowTeamCnt, applyInfoList, team);
     }
 
     // 현재 로그인 한 유저 정보 반환
@@ -60,10 +54,9 @@ public class UserService {
     public User findMyUserInfo(Authentication authentication){
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         Long userId = principalDetails.getUser().getId();
-        User user = userRepository.findById(userId).orElseThrow(
+        return userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("해당 유저가 없습니다.")
         );
-        return user;
     }
 
     // 현재 로그인 한 유저 정보 반환22

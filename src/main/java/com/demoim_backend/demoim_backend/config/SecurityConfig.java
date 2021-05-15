@@ -4,6 +4,7 @@ import com.demoim_backend.demoim_backend.config.jwt.JwtAuthenticationFilter;
 import com.demoim_backend.demoim_backend.config.jwt.JwtAuthorizationFilter;
 import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import com.demoim_backend.demoim_backend.repository.UserRepository;
+import com.demoim_backend.demoim_backend.util.NowTeamCount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
     private final ApplyInfoRepository applyInfoRepository;
     private final CorsConfig corsConfig;
+    private NowTeamCount nowTeamCount;
 
     // 패스워드 인코더 DI
     @Bean
@@ -31,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager(), applyInfoRepository);
+        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager(), applyInfoRepository, nowTeamCount);
         JwtAuthorizationFilter authorizationFilter = new JwtAuthorizationFilter(authenticationManager(), userRepository);
         authenticationFilter.setFilterProcessesUrl("/api/login");
 
