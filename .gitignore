@@ -1,7 +1,7 @@
 application-credentials.yml
 application-aws.yml
-/src/main/java/com/demoim_backend/demoim_backend/util/coolsms/CoolsmsProperties.java
-CoolsmsProperties.java
+
+./CoolsmsProperties.java
 
 HELP.md
 
