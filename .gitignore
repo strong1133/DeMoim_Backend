@@ -1,8 +1,10 @@
 application-credentials.yml
 application-aws.yml
 
+CoolsmsProperties.java
 **/CoolsmsProperties.java
 
+com/demoim_backend/demoim_backend/util/coolsms/CoolsmsProperties.java
 HELP.md
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,netbeans,vscode,macos,java,gradle
