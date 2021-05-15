@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class TeamController {
 
     //팀 게시물 작성 _ Post _ /api/team _ auth 필요
     @PostMapping("/api/team")
-    public TeamResponseDto createTeam(Authentication authentication,@RequestPart(value ="requestBody" ) String requestBody,
+    public TeamResponseDto createTeam(Authentication authentication, @RequestPart(value ="requestBody" ) @Valid String requestBody,
                                       @RequestPart(required = false) MultipartFile file) {
 
         System.out.println("TeamService 진입 전");
@@ -58,7 +59,7 @@ public class TeamController {
     //특정 팀 게시물 수정 _ Put _ /api/team/detail?team_id={team_id} _ auth 필요
     @PutMapping("/api/team/detail")
     public TeamResponseDto editTeam(Authentication authentication, @RequestParam("team_id") Long teamId,
-                                    @RequestPart(value ="requestBody" ) String requestBody,
+                                    @RequestPart(value ="requestBody" ) @Valid String requestBody,
                                     @RequestPart(required = false) MultipartFile file) {
 
         return teamService.update(authentication, teamId, requestBody,file);
