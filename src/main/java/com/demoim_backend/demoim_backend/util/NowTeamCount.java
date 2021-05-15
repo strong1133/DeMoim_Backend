@@ -7,12 +7,11 @@ import com.demoim_backend.demoim_backend.repository.ApplyInfoRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 @Getter
-@Setter
+@Service
 @RequiredArgsConstructor
-@Configuration
 public class NowTeamCount {
     private final ApplyInfoRepository applyInfoRepository;
 
