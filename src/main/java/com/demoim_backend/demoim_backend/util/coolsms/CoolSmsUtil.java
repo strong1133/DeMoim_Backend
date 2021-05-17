@@ -18,7 +18,7 @@ public class CoolSmsUtil {
         HashMap<String, String> params = new HashMap<String, String>();
 
         params.put("to",phoneNum );
-        params.put("from",CoolsmsProperties.toNumber );
+        params.put("from",CoolsmsProperties.fromNumber );
         params.put("type", "SMS");
         params.put("text", "[DeMoim]인증번호는"+certNumber+"입니다.");
         params.put("app_version", "test app 1.2");
