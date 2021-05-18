@@ -1,6 +1,5 @@
 package com.demoim_backend.demoim_backend.controller;
 
-import com.demoim_backend.demoim_backend.dto.CheckNumCertNumReuqestDto;
 import com.demoim_backend.demoim_backend.dto.CheckNumRequestDto;
 import com.demoim_backend.demoim_backend.dto.SignupRequestDto;
 import com.demoim_backend.demoim_backend.model.User;
@@ -49,19 +48,9 @@ public class SignupController {
     }
 
     // certNumber 전송
-    @PostMapping("/api/signup/certNumber")
-    private Map<String,String> sendCertNumber(@RequestBody @Valid CheckNumRequestDto checkNumRequestDto){
-        return signupService.sendCertNumber(checkNumRequestDto.getUsername(),checkNumRequestDto.getPhoneNum());
-    }
-
-    // certNumber 확인
     @GetMapping("/api/signup/certNumber")
-    private Map<String,String> duplicatePhoneCheck(@RequestBody @Valid CheckNumCertNumReuqestDto checkNumCertNumReuqestDto){
-        return signupService.duplicatePhoneCheck(checkNumCertNumReuqestDto.getUsername(), checkNumCertNumReuqestDto.getCertNumber());
+    private Map<String,String> sendCertNumber(@RequestBody @Valid CheckNumRequestDto checkNumRequestDto){
+        return signupService.sendCertNumber(checkNumRequestDto.getPhoneNum());
     }
 
-    @GetMapping("/api/c")
-    public void dd(){
-        signupService.get();
-    }
 }
