@@ -11,10 +11,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class CheckNumRequestDto {
 
-    @NotBlank(message = "공백으로 둘 수 없습니다.")
-    @Email(message = "이메일 형식으로 써주세요.")
-    private String username;
-
     @NotBlank(message = "번호를 입력하세요.")
     private String phoneNum;
 }
