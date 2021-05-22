@@ -24,12 +24,19 @@ public class CoolSmsUtil {
         params.put("app_version", "test app 1.2");
 
         try {
+
             JSONObject obj = (JSONObject) coolsms.send(params);
             System.out.println(obj.toString());
+
+            //에러가 발생하면
+            if(obj.containsKey("error_list")){
+                throw new IllegalArgumentException("문자메세지가 발송되지못했습니다.");
+            }
+
         } catch (
                 CoolsmsException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCode());
+            throw new IllegalArgumentException("문자메세지가 발송되지못했습니다.");
+
         }
     }
 }
