@@ -48,7 +48,7 @@ public class SignupController {
     }
 
     // certNumber 전송
-    @GetMapping("/api/signup/certNumber")
+    @PostMapping("/api/signup/certNumber")
     private Map<String,String> sendCertNumber(@RequestBody @Valid CheckNumRequestDto checkNumRequestDto){
         return signupService.sendCertNumber(checkNumRequestDto.getPhoneNum());
     }
