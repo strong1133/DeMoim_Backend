@@ -5,6 +5,8 @@ CoolsmsProperties.java
 **/CoolsmsProperties.java
 com/demoim_backend/demoim_backend/util/coolsms/CoolsmsProperties.java
 
+/src/main/java/com/demoim_backend/demoim_backend/config/SwaggerConfig.java
+
 HELP.md
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,netbeans,vscode,macos,java,gradle
