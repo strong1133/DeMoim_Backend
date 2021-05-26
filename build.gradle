@@ -49,6 +49,9 @@ dependencies {
     //coolSms
     compile group: 'net.nurigo', name: 'javaSDK', version: '2.2'
 
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+
+
 }
 
 
