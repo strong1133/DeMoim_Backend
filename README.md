@@ -1,112 +1,100 @@
-# DeMoim_Backend
 
 
- <h1 align="center" style="color:mediumpurple"> Demoim  </h1>
+## DeMoim 서비스 소개
+
+- 협업경험이 필요한 취준생들을 위한 팀원 모집 플랫폼
+- 그외에도 자신이 작업한 프로젝트에 대한 정보를 공유
+- 지원과 지원취소 기능을 통해 간편하게 지원가능
+
+<br>
+
+## DeMoim Frontend 
+https://github.com/holasim91/demoim_fe
+
+<br>
+
+## 개요
+
+- 프로젝트 명 :: DeMiom
+
+- 프로젝트 소개 :: 프로젝트 팀원을 모집할 수 있는 웹 플랫폼.
+
+- 개발 인원 :: 백엔드 3명, 프론트엔드 3명, 디자이너 1명
+
+- 개발 언어 ::  Java 8 , React
+
+- 개발 기간 :: 2021.04.23 ~2021.05.19
+
+- 운영 기간 :: 2021.05.19 ~ (사용자의 피드백을 받아 서비스 개선)
+
+- 담당 업무  
+  * 이은지
+    + 구현 기능 별 테이블 설계
+    +  Coolsms를 이용한 문자인증 
+    +  SmallTalk 및 프로젝트 자랑하기(게시판) 기능 구현
+    +  관련 테스트 코드 작성 
+  * 김준엽
+    + 구현 기능별 테이블 설계
+    + 팀 메이킹, 지원 ,마이페이지 Api 구현
+    + 배포
+  * 정석진
+    + 구현  테이블 설계
+    + 회원가입 및 로그인,알림,마이페이지,지원,댓글 api구현
+    + 배포
+
+- 개발 환경 :: Springboot 2.4.5, jdk 1.8 , Spring data JPA , Spring security, Junit4
+
+- 배포환경 :: Gradle, AWS S3, AWS EC2
+
+- 데이터 베이스 :: Mysql(AWS RDS)
+
+- 형성 관리 툴 :: git
+
+- 일정 관리 툴 :: Notion,Slack
+
+- 주요 기능 
+  * 마이페이지 
+  * 프로젝트 지원 및 지원 취소
+  * smalltalk,프로젝트 자랑하기 게시글 및 댓글 CRUD
+  * 서비스 데이터 자동 최신화(프로젝트 모집글)
+
+<br>
+
+## 테이블 설계 
+
+![image](https://user-images.githubusercontent.com/78028746/119464301-8da69b80-bd7d-11eb-9f0e-b94edf8f95c2.png)
 
 
-## 🌏 홈페이지 주소 http://demoim.co.kr
-## ▶️ 유튜브 링크 
-## 🄽 Notion 링크 
+<br>
+
+## 기술소개
+
+### Quill 에디터를 사용해 s3에 이미지 업로드 
+
+* Quill-Editor은 가볍고 커스터마이징하기에 용이
+* 에디터에 이미지를 첨부하는 경우 s3 업로드 api에 요청을 보내 s3_url을 리턴받아 <mg src=""/>형태로 만들어줌.
+* ![image](https://user-images.githubusercontent.com/78028746/119853471-31917200-bf4b-11eb-9536-e670e32a1cb1.png)
+
+<br>
+<br>
+
+### CoolSms 발송 api를 통한 인증 번호 조회
+* 알리고, NHN Cloud 서비스 후 coolSms 선택 
+* 선택 사유 : 많이 사용하는 서비스이다보니 관련 레퍼런스가 많아 트러블 슈팅이 용이, 토스& 한국투자 증권등의 기업에서도 사용할정도의 안전성
+![image](https://user-images.githubusercontent.com/78028746/120095121-14cd8800-c15f-11eb-8e3b-f8c71a55099f.png)
+
+### @Entity Graph를 이용해 n+1문제 해결
+* join fetch를 통해 n+1 문제를 해결하고자했지만 n+1문제해결 시도.
+* paging되어있는 경우 join fetch이 적용되지않는 다는 문제를 발견 -> @Entity Graph를 통해 n+1 문제 해결
+![image](https://user-images.githubusercontent.com/78028746/120094693-e5b61700-c15c-11eb-8e3e-3ba2ec694117.png)
 
 
-##🖥 프로젝트 소개
-취업과 커리어준비 등 직업적 공백기에 있는 사람들에게 <br>
-각자의 아이디어를 활용하여 팀 프로젝트를 만들어 진행해나갈 수 있는 소셜 커뮤니티 서비스입니다.
-
-## 🔎 요약
-
-예비개발자/디자이너/기획자 들이 직접 프로젝트 팀을 모집하고 지원 할 수 있는 팀빌딩 플랫폼
-
-* 프로젝트 모집공고를 작성하고, 지원자를 선택하여 프로젝트 팀 구성
-* 회원 간 프로필 열람을 통해 상호간 기본적인 정보 제공(포지션,연락처,간단한 소개)
-* 본인이 뽐내고 싶은 프로젝트들을 공유할 수 있고, 회원 간 스몰톡을 나눌 수 있는 커뮤니티
-
-##📆 기간
-2021년 4월 23일 ~ 2021년 5월 28일
-
-## 🗣 커뮤니케이션 툴
-Github, Slack, Gather
-
-## 🤠 팀원소개  ([Notion](https://www.notion.so/Demoim-87856b49c18545358ee657b434bff365))
-
-총 6명
-* 백엔드
-  * 정석진(Spring, React)
-  * 이은지(Spring)
-  * 김준엽(Spring)
-* 프론트엔드 ([FrontEnd Github](https://github.com/holasim91/demoim_fe))
-  * 심현인(React)
-  * 고정원(React)
-* UX/UI 디자이너 ([Zeplin](https://app.zeplin.io/project/608a507a3f3d51355497c44c))
-  * 김민경
-
-## 🚀 기능
-
-###[회원가입/로그인 페이지]MySQL
-* 회원가입 및 로그인 기능 _ Spring Security, JWT Authentication, MySQL, Spring Data JPA
-  * Cool SMS API(문자발송 API)
-
-###[메인 페이지(팀메이킹, Detalk)]
-* 팀메이킹(프로젝트 모집) _ MySQL, Spring Data JPA
-  
-  ```
-  주최자의 경우
-  Quill-Editor를 사용해서 작성자가 원하는 모집글을 쓸 수 있다.
-  프론트엔드 / 백엔드 / 디자이너 / 기획자를 모집할 수 있고, 최대 인원은 총 10명이다.
-  원하는 기간만큼 모집을 할 수 있으며, 지원자를 선택하여 팀원으로 뽑을 수 있다.
-  주최자가 희망인원을 다 선택을 하거나 모집 기간이 지나면 모집이 마감된다
-  
-  참가자의 경우
-  원하는 프로젝트를 지원 할 수 있다.
-  ```
-* Detalk
-  * Exhibition(프로젝트 자랑하기) _ MySQL, Spring Data JPA
-    ```
-    Quill-Editor을 이용하여 사용자가 자신이 했던 프로젝트를 다른 회원들과 공유할 수 있다.
-    댓글로 해당 프로젝트에 대한 피드백을 주고받을 수 있다.
-    ```
-  * Smalltalk(스몰톡 피드) _ MySQL, Spring Data JPA
-    ```
-    소소한 잡담및 정보를 나눌 수 있는 공간이다.
-    댓글로 질문을 주고 받을 수 있다.
-    ```
-    
-###[나의 로그]
-* 로그인 회원의 프로필 관리(MySQL, Spring Data JPA, Storage - AWS S3)
-* 나의 프로젝트 참가 이력과, 현재 참가 하고 있는 프로젝트, 내가 주최한 프로젝트 확인
-* 자신이 참여중인 프로젝트의 다른 유저의 정보 확인
-* 자신이 작성한 스몰톡과 프로젝트 자랑하기 피드
 
 
-## 🦄 프로젝트 썸네일
-
-<p align="center">
-<img src=></img>
-</p>
-
-
-## 🔖 기술스택
-
-####  백엔드 협업 툴
-* Host Server: ubuntu18.04 - t2.micro(AWS EC2)
-* File Storage: AWS S3 Bucket
-* Database: MySQL 8.0.20(AWS RDS)
-
-* Framework : SpringBoot 2.4.5
-* Java: JDK 1.8.0
-* IDE: IntelliJ IDEA 2021.1.1 x64
-* Build Management: Gradle
-* ORM: Spring Data JPA
-* Sub-Framework: Spring Security, SpringBoot Websocket
-
-
-* View Template Engine: React.js(프론트엔드)
-
-
-### 👑 After 프로젝트
+## After 프로젝트
 
 * 웹사이트 보안 강화
-  * SSL 활용한 HTTPS 변경
+  * SSL 활용한 HTTPS 변경 -> 변경 완료 2021.05.27
 * 실시간 알림 및 채팅 서비스
   * Redis Pub/Sub 활용한 WebSocket 통신 또는 외부 API(채널톡) 도입 검토
 * 소셜로그인
