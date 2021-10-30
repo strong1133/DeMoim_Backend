@@ -4,7 +4,6 @@
  <h1 align="center" style="color:mediumpurple"> Demoim  </h1>
 
 
-## 🌏 홈페이지 주소 http://demoim.co.kr
 ## ▶️ 유튜브 링크 
 ## 🄽 Notion 링크 
 
