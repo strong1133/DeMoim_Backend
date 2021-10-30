@@ -8,7 +8,7 @@
 ## 🄽 Notion 링크 
 
 
-##🖥 프로젝트 소개
+## 🖥 프로젝트 소개
 취업과 커리어준비 등 직업적 공백기에 있는 사람들에게 <br>
 각자의 아이디어를 활용하여 팀 프로젝트를 만들어 진행해나갈 수 있는 소셜 커뮤니티 서비스입니다.
 
@@ -41,11 +41,11 @@ Github, Slack, Gather
 
 ## 🚀 기능
 
-###[회원가입/로그인 페이지]MySQL
+### [회원가입/로그인 페이지]MySQL
 * 회원가입 및 로그인 기능 _ Spring Security, JWT Authentication, MySQL, Spring Data JPA
   * Cool SMS API(문자발송 API)
 
-###[메인 페이지(팀메이킹, Detalk)]
+### [메인 페이지(팀메이킹, Detalk)]
 * 팀메이킹(프로젝트 모집) _ MySQL, Spring Data JPA
   
   ```
@@ -70,7 +70,7 @@ Github, Slack, Gather
     댓글로 질문을 주고 받을 수 있다.
     ```
     
-###[나의 로그]
+### [나의 로그]
 * 로그인 회원의 프로필 관리(MySQL, Spring Data JPA, Storage - AWS S3)
 * 나의 프로젝트 참가 이력과, 현재 참가 하고 있는 프로젝트, 내가 주최한 프로젝트 확인
 * 자신이 참여중인 프로젝트의 다른 유저의 정보 확인
